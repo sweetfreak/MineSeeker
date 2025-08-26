@@ -6,17 +6,26 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2F5183392E5914420045EB4A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F5183322E5914420045EB4A /* Assets.xcassets */; };
+		2F51833A2E5914420045EB4A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5183332E5914420045EB4A /* ContentView.swift */; };
+		2F51833B2E5914420045EB4A /* FieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5183342E5914420045EB4A /* FieldView.swift */; };
+		2F51833C2E5914420045EB4A /* MineSeekerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5183352E5914420045EB4A /* MineSeekerApp.swift */; };
+		2F51833D2E5914420045EB4A /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5183362E5914420045EB4A /* Tile.swift */; };
+		2F51833E2E5914420045EB4A /* TileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5183372E5914420045EB4A /* TileView.swift */; };
+		2F5183592E5CB82D0045EB4A /* FieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5183582E5CB82D0045EB4A /* FieldViewModel.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		2F5182102E5772070045EB4A /* MineSeeker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MineSeeker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F5183322E5914420045EB4A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2F5183332E5914420045EB4A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2F5183342E5914420045EB4A /* FieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldView.swift; sourceTree = "<group>"; };
+		2F5183352E5914420045EB4A /* MineSeekerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineSeekerApp.swift; sourceTree = "<group>"; };
+		2F5183362E5914420045EB4A /* Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
+		2F5183372E5914420045EB4A /* TileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileView.swift; sourceTree = "<group>"; };
+		2F5183582E5CB82D0045EB4A /* FieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		2F5182122E5772070045EB4A /* MineSeeker */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MineSeeker;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		2F51820D2E5772070045EB4A /* Frameworks */ = {
@@ -32,7 +41,7 @@
 		2F5182072E5772070045EB4A = {
 			isa = PBXGroup;
 			children = (
-				2F5182122E5772070045EB4A /* MineSeeker */,
+				2F5183382E5914420045EB4A /* MineSeeker */,
 				2F5182112E5772070045EB4A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +52,36 @@
 				2F5182102E5772070045EB4A /* MineSeeker.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2F5183382E5914420045EB4A /* MineSeeker */ = {
+			isa = PBXGroup;
+			children = (
+				2F5183322E5914420045EB4A /* Assets.xcassets */,
+				2F5183352E5914420045EB4A /* MineSeekerApp.swift */,
+				2F51835A2E5CF8280045EB4A /* Views */,
+			);
+			path = MineSeeker;
+			sourceTree = "<group>";
+		};
+		2F51835A2E5CF8280045EB4A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2F5183332E5914420045EB4A /* ContentView.swift */,
+				2F5183342E5914420045EB4A /* FieldView.swift */,
+				2F5183372E5914420045EB4A /* TileView.swift */,
+				2F51835B2E5CF8310045EB4A /* Models */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2F51835B2E5CF8310045EB4A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2F5183362E5914420045EB4A /* Tile.swift */,
+				2F5183582E5CB82D0045EB4A /* FieldViewModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -59,9 +98,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				2F5182122E5772070045EB4A /* MineSeeker */,
 			);
 			name = MineSeeker;
 			packageProductDependencies = (
@@ -109,6 +145,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F5183392E5914420045EB4A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +156,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F51833A2E5914420045EB4A /* ContentView.swift in Sources */,
+				2F51833B2E5914420045EB4A /* FieldView.swift in Sources */,
+				2F51833C2E5914420045EB4A /* MineSeekerApp.swift in Sources */,
+				2F51833D2E5914420045EB4A /* Tile.swift in Sources */,
+				2F51833E2E5914420045EB4A /* TileView.swift in Sources */,
+				2F5183592E5CB82D0045EB4A /* FieldViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
