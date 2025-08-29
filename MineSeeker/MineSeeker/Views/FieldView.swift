@@ -9,44 +9,33 @@ import SwiftUI
 
 struct FieldView: View {
     
-    @State var difficultyPercentage = 20
+    @State var difficultyPercentage = 15
     @State var gameOver: Bool = false
     @State var gameStarted = false
     @State var explosion = false
-
-    var viewModel = FieldViewModel( )
     
-    @State var gameTiles: [Tile] = []
+    
+    @State var vm: FieldViewModel
         
     var body: some View {
-        VStack {
-            if gameStarted == false {
-                Button {
-                    gameStarted.toggle()
-                    gameTiles = viewModel.createTiles()
-                    
-                } label: {
-                    Label("New Game", systemImage: "gauge")
-                }
-                .padding(30)
-            }
-            else {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(minimum: 10)), count: 10), spacing: 5) {
-                    ForEach(gameTiles) { tile in
-                        TileView(tile: tile)
-                            
-                    }
-                }
-                
-                
-            }
-        }
         
+        VStack {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: vm.columnCount), spacing: 0) {
+                ForEach(vm.gameTiles.indices) { i in
+                    TileView(tile: $vm.gameTiles[i], vm: vm)
+                }
+            }
+            FlagView()
+            if vm.gameState == .lost {
+                NewGameButton(vm: vm)
+            }
+            
+        }
     }
     
 }
 
 #Preview {
-    FieldView()
+    FieldView(vm: FieldViewModel())
 }
 

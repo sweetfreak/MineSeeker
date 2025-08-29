@@ -8,17 +8,20 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State var vm = FieldViewModel()
+    
     var body: some View {
         NavigationStack {
             VStack {
-                
-                
-                FieldView()
-                    .padding()
+                if vm.gameState == .home {
+                    NewGameButton(vm: vm)
+                } else {
+                    FieldView(vm: vm)
+                }
             }
             .navigationTitle("MineSeeker")
         }
-        
     }
 }
 

@@ -29,11 +29,7 @@ struct Tile: Identifiable {
 //        }
 //    }
     
-    mutating func GameOver() {
-        if gameOver {
-            isRevealed = true
-        }
-    }
+
 }
 
 
