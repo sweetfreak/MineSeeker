@@ -1,0 +1,27 @@
+//
+//  CheckButtonView.swift
+//  MineSeeker
+//
+//  Created by Jesse Sheehan on 9/1/25.
+//
+
+import SwiftUI
+
+struct CheckButtonView: View {
+    
+    @State var vm = FieldViewModel()
+    
+    var body: some View {
+        
+        Button {
+            vm.checkForMines()
+        } label: {
+            Text("Check")
+        }
+        
+    }
+}
+
+#Preview {
+    CheckButtonView()
+}

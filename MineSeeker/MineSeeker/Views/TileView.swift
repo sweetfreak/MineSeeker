@@ -13,21 +13,23 @@ struct TileView: View {
     @State private var droppedText: String = ""
     @State private var isDropTargeted: Bool = false
     @State var vm: FieldViewModel
+    @State var gameState: GameState = .playing
     
     var body: some View {
         
         ZStack {
             Rectangle()
-                .tileDimensions(fillColor: Color(.tileBack))
+                .tileDimensions(fillColor: tile.isMine ? .red : Color(.tileBack))
             
             //Text(tile.isMine ? "💣" : "\(tile.surroundingMineCount)")
                 
             Text(revealedText(tile:tile))
                 .font(Font.title.bold())
+                
             
             Rectangle()
                 
-                .tileDimensions(fillColor: tile.isRevealed ? Color.clear :Color(.tileTop))
+                .tileDimensions(fillColor: tile.isRevealed ? Color.clear :Color(vm.gameState == .won ? .green : .tileTop))
                 .onTapGesture {
                     if !tile.isRevealed {
                         tile.isRevealed = true
@@ -41,6 +43,7 @@ struct TileView: View {
                     }
                 }
                 
+                
             
             if isDropTargeted {
                 Rectangle()
@@ -51,9 +54,9 @@ struct TileView: View {
                 
             }
             
-            if !tile.isRevealed {
+            //if !tile.isRevealed {
                 Text(tile.isFlagged ? "🚩" : "")
-            }
+           // }
             
         }
         .dropDestination(for: String.self, ) { items, location in
@@ -62,7 +65,9 @@ struct TileView: View {
                 // Update the text with the dropped item
                 droppedText = firstItem
                 
-                tile.isFlagged = true
+                if !tile.isRevealed {
+                    tile.isFlagged = true
+                }
                 
             }
             return true // Indicate successful drop
@@ -96,5 +101,5 @@ extension Rectangle {
 }
 
 #Preview {
-  //  TileView(tile: Tile(row: 2, column: 2, isMine: false), vm: FieldViewModel())
+    TileView(tile: .constant(Tile(row: 1, column: 1, isMine: false)), vm: FieldViewModel())
 }

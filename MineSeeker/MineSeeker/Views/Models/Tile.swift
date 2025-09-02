@@ -7,7 +7,7 @@
 import SwiftUI
 //import Observation
 
-struct Tile: Identifiable {
+struct Tile: Identifiable, Equatable {
     var id = UUID()
     var row: Int
     var column: Int

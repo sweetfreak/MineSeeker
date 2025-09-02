@@ -16,18 +16,33 @@ struct FieldView: View {
     
     
     @State var vm: FieldViewModel
+    
+    
         
     var body: some View {
         
         VStack {
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: vm.columnCount), spacing: 0) {
-                ForEach(vm.gameTiles.indices) { i in
-                    TileView(tile: $vm.gameTiles[i], vm: vm)
+            if vm.gameState != .reloadingGame {
+                
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: vm.columnCount), spacing: 0) {
+                    
+                    ForEach(vm.gameTiles.indices, id: \.self) { i in
+                        TileView(tile: $vm.gameTiles[i], vm: vm)
+                        
+                    }
                 }
             }
-            FlagView()
-            if vm.gameState == .lost {
+            
+            if vm.gameState == .playing {
+                HStack {
+                    FlagView()
+                    CheckButtonView(vm: vm)
+                }
+            } else {
                 NewGameButton(vm: vm)
+                Button("Home", systemImage: "house.circle.fill") {
+                    vm.gameState = .home
+                }
             }
             
         }
@@ -38,4 +53,3 @@ struct FieldView: View {
 #Preview {
     FieldView(vm: FieldViewModel())
 }
-

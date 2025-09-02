@@ -15,8 +15,9 @@ struct NewGameButton: View {
     
     var body: some View {
         Button {
-            
-            vm.gameTiles = vm.createTiles()
+            vm.gameTiles.removeAll()
+            vm.gameState = .reloadingGame
+            vm.gameTiles = vm.createTiles(/*rowCount: vm.rowCount, columnCount: vm.columnCount*/)
             
             withAnimation(.spring(duration:1, bounce: 0.5)){
                 animationAmount += 720
@@ -29,7 +30,7 @@ struct NewGameButton: View {
         } label: {
             Label("New Game", systemImage: "gauge")
         }
-        .padding(30)
+        .padding()
         .rotation3DEffect(
             .degrees(animationAmount),
             axis: (x: 0, y: 1, z: 0)

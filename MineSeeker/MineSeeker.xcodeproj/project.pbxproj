@@ -14,6 +14,8 @@
 		2F51833D2E5914420045EB4A /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5183362E5914420045EB4A /* Tile.swift */; };
 		2F51833E2E5914420045EB4A /* TileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5183372E5914420045EB4A /* TileView.swift */; };
 		2F5183592E5CB82D0045EB4A /* FieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5183582E5CB82D0045EB4A /* FieldViewModel.swift */; };
+		2F8AD67B2E660934000A5BB2 /* CheckButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8AD67A2E660933000A5BB2 /* CheckButtonView.swift */; };
+		2F8AD67D2E661359000A5BB2 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8AD67C2E661359000A5BB2 /* HomeView.swift */; };
 		2FE0B9FA2E5E8A7F003589ED /* FlagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE0B9F92E5E8A7F003589ED /* FlagView.swift */; };
 		2FE0B9FC2E5E8E9C003589ED /* DropTargetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE0B9FB2E5E8E9C003589ED /* DropTargetView.swift */; };
 		2FE0B9FE2E5F6F61003589ED /* NewGameButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE0B9FD2E5F6F61003589ED /* NewGameButton.swift */; };
@@ -28,6 +30,8 @@
 		2F5183362E5914420045EB4A /* Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
 		2F5183372E5914420045EB4A /* TileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileView.swift; sourceTree = "<group>"; };
 		2F5183582E5CB82D0045EB4A /* FieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldViewModel.swift; sourceTree = "<group>"; };
+		2F8AD67A2E660933000A5BB2 /* CheckButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckButtonView.swift; sourceTree = "<group>"; };
+		2F8AD67C2E661359000A5BB2 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		2FE0B9F92E5E8A7F003589ED /* FlagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagView.swift; sourceTree = "<group>"; };
 		2FE0B9FB2E5E8E9C003589ED /* DropTargetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropTargetView.swift; sourceTree = "<group>"; };
 		2FE0B9FD2E5F6F61003589ED /* NewGameButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameButton.swift; sourceTree = "<group>"; };
@@ -74,10 +78,12 @@
 			isa = PBXGroup;
 			children = (
 				2F5183332E5914420045EB4A /* ContentView.swift */,
+				2F8AD67C2E661359000A5BB2 /* HomeView.swift */,
 				2F5183342E5914420045EB4A /* FieldView.swift */,
 				2FE0B9FD2E5F6F61003589ED /* NewGameButton.swift */,
 				2F5183372E5914420045EB4A /* TileView.swift */,
 				2FE0B9F92E5E8A7F003589ED /* FlagView.swift */,
+				2F8AD67A2E660933000A5BB2 /* CheckButtonView.swift */,
 				2F51835B2E5CF8310045EB4A /* Models */,
 				2FE0B9FF2E5F7035003589ED /* Unused */,
 			);
@@ -178,10 +184,12 @@
 				2F51833A2E5914420045EB4A /* ContentView.swift in Sources */,
 				2F51833B2E5914420045EB4A /* FieldView.swift in Sources */,
 				2F51833C2E5914420045EB4A /* MineSeekerApp.swift in Sources */,
+				2F8AD67D2E661359000A5BB2 /* HomeView.swift in Sources */,
 				2F51833D2E5914420045EB4A /* Tile.swift in Sources */,
 				2F51833E2E5914420045EB4A /* TileView.swift in Sources */,
 				2FE0B9FA2E5E8A7F003589ED /* FlagView.swift in Sources */,
 				2F5183592E5CB82D0045EB4A /* FieldViewModel.swift in Sources */,
+				2F8AD67B2E660934000A5BB2 /* CheckButtonView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

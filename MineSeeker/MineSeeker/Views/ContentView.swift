@@ -9,13 +9,19 @@ import SwiftUI
 
 struct ContentView: View {
     
+    
+    
     @State var vm = FieldViewModel()
     
     var body: some View {
         NavigationStack {
             VStack {
+                
                 if vm.gameState == .home {
+                    HomeView(vm: vm)
+                        .padding()
                     NewGameButton(vm: vm)
+                    
                 } else {
                     FieldView(vm: vm)
                 }
