@@ -14,20 +14,23 @@ struct ContentView: View {
     @State var vm = FieldViewModel()
     
     var body: some View {
-        NavigationStack {
-            VStack {
+        
+        VStack {
+            
+            if vm.gameState == .home || vm.gameState == .reloadingGame {
+                HomeView(vm: vm)
+                    .padding()
                 
-                if vm.gameState == .home {
-                    HomeView(vm: vm)
-                        .padding()
-                    NewGameButton(vm: vm)
-                    
-                } else {
-                    FieldView(vm: vm)
-                }
+                
+            } else if vm.gameState == .instructions {
+                InstructionsView(vm: vm)
+                
+            } else {
+                FieldView(vm: vm)
+                
             }
-            .navigationTitle("MineSeeker")
         }
+        
     }
 }
 

@@ -7,10 +7,11 @@
 
 import SwiftUI
 
-struct FlagView: View {
+struct DraggableItemView: View {
     
+    //@State var vm: FieldViewModel
     @State private var dragAmount = CGSize.zero
-    let textToDrag: String = "🚩"
+    var textToDrag: String
     
     var body: some View {
         ZStack {
@@ -41,7 +42,7 @@ struct FlagView: View {
 }
 
 #Preview {
-    FlagView()
+    DraggableItemView(textToDrag: "🚩")
 }
 
 

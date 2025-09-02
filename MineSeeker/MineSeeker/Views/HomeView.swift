@@ -13,8 +13,11 @@ struct HomeView: View {
     private let gridSizeOptions = [GridSize.small, GridSize.med, GridSize.big]
     
     var body: some View {
+        Text("MineFinder")
+            .font(.largeTitle)
+            .bold()
         
-        
+        Spacer()
         Text("Choose a minefield size:")
         Picker("Choose size of minefield", selection: $vm.gridSize) {
             ForEach(gridSizeOptions, id: \.self) { size in
@@ -22,9 +25,13 @@ struct HomeView: View {
             }
         }
         .pickerStyle(.segmented)
-        .frame(maxWidth: 250)
+        .frame(maxWidth: 275)
         .padding(0)
         
+        NewGameButton(vm: vm)
+            .padding(5)
+        InstructionsButtonView(vm: vm)
+        Spacer()
     }
     
     private func label(for size: GridSize) -> String {

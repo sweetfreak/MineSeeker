@@ -16,8 +16,9 @@ struct CheckButtonView: View {
         Button {
             vm.checkForMines()
         } label: {
-            Text("Check")
+            Text("Check ✅")
         }
+        .buttonStyle(.borderedProminent)
         
     }
 }

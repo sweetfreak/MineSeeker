@@ -20,6 +20,7 @@ enum GameState {
     case won
     case lost
     case reloadingGame
+    case instructions
 }
 
 @Observable
@@ -33,7 +34,6 @@ final class FieldViewModel {
     
     var gameState = GameState.home
     var gameTiles: [Tile] = []
-    
     
     
     
@@ -116,8 +116,8 @@ final class FieldViewModel {
 
     func gameOver() {
         gameState = .lost
-        
         for i in self.gameTiles.indices {
+            
             gameTiles[i].isRevealed = true
         }
     }

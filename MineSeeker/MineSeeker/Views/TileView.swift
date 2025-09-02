@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct TileView: View {
     
     @Binding var tile: Tile
@@ -14,6 +15,7 @@ struct TileView: View {
     @State private var isDropTargeted: Bool = false
     @State var vm: FieldViewModel
     @State var gameState: GameState = .playing
+    // var animationAmount = 180.0
     
     var body: some View {
         
@@ -25,22 +27,32 @@ struct TileView: View {
                 
             Text(revealedText(tile:tile))
                 .font(Font.title.bold())
-                
             
             Rectangle()
-                
-                .tileDimensions(fillColor: tile.isRevealed ? Color.clear :Color(vm.gameState == .won ? .green : .tileTop))
+                .tileDimensions(fillColor: tile.isRevealed ? Color.clear :Color(vm.gameState == .won && tile.isFlagged ? .green : .tileTop))
+            
+//                .rotation3DEffect(
+//                    .degrees(animationAmount),
+//                    axis: (x: 0, y: 1, z: 0)
+//                )
+            
                 .onTapGesture {
+//                    withAnimation(.spring(duration:1, bounce: 0.5)){
+//                       self.animationAmount += 180
+//                    }
                     if !tile.isRevealed {
                         tile.isRevealed = true
                         
                         vm.adjacentReveal(tile: self.tile)
                         
                         if tile.isMine {
+                            
                             vm.gameOver()
                             //print(String(tile.gameOver))
                         }
                     }
+                    
+                        
                 }
                 
                 
@@ -54,9 +66,9 @@ struct TileView: View {
                 
             }
             
-            //if !tile.isRevealed {
-                Text(tile.isFlagged ? "🚩" : "")
-           // }
+            
+            Text(tile.isFlagged && vm.gameState != .lost ? "🚩" : "")
+           
             
         }
         .dropDestination(for: String.self, ) { items, location in
@@ -65,8 +77,10 @@ struct TileView: View {
                 // Update the text with the dropped item
                 droppedText = firstItem
                 
-                if !tile.isRevealed {
+                if !tile.isRevealed && droppedText == "🚩" {
                     tile.isFlagged = true
+                } else {
+                    tile.isFlagged = false
                 }
                 
             }
@@ -101,5 +115,5 @@ extension Rectangle {
 }
 
 #Preview {
-    TileView(tile: .constant(Tile(row: 1, column: 1, isMine: false)), vm: FieldViewModel())
+    TileView(tile: .constant(Tile(row: 0, column: 0, isMine: true)), vm: FieldViewModel())
 }

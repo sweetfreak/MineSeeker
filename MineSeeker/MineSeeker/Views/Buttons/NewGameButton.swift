@@ -16,8 +16,8 @@ struct NewGameButton: View {
     var body: some View {
         Button {
             vm.gameTiles.removeAll()
-            vm.gameState = .reloadingGame
-            vm.gameTiles = vm.createTiles(/*rowCount: vm.rowCount, columnCount: vm.columnCount*/)
+            //vm.gameState = .reloadingGame
+            vm.gameTiles = vm.createTiles()
             
             withAnimation(.spring(duration:1, bounce: 0.5)){
                 animationAmount += 720
@@ -28,8 +28,9 @@ struct NewGameButton: View {
             
             
         } label: {
-            Label("New Game", systemImage: "gauge")
+            Label("New Game", systemImage: "plus.diamond.fill")
         }
+        .buttonStyle(.borderedProminent)
         .padding()
         .rotation3DEffect(
             .degrees(animationAmount),
