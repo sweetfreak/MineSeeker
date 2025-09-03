@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+//import Vortex
 
 struct TileView: View {
     
@@ -16,6 +16,9 @@ struct TileView: View {
     @State var vm: FieldViewModel
     @State var gameState: GameState = .playing
     // var animationAmount = 180.0
+    
+    
+    
     
     var body: some View {
         
@@ -36,27 +39,22 @@ struct TileView: View {
 //                    axis: (x: 0, y: 1, z: 0)
 //                )
             
-                .onTapGesture {
-//                    withAnimation(.spring(duration:1, bounce: 0.5)){
-//                       self.animationAmount += 180
-//                    }
+            
+                .onTapGesture { location in
+                
                     if !tile.isRevealed {
                         tile.isRevealed = true
                         
                         vm.adjacentReveal(tile: self.tile)
                         
                         if tile.isMine {
-                            
+                          //  vm.tapLocation = location
+                          //  vm.showExplosion = true
                             vm.gameOver()
                             //print(String(tile.gameOver))
                         }
                     }
-                    
-                        
                 }
-                
-                
-            
             if isDropTargeted {
                 Rectangle()
                     .fill(.blue)
@@ -68,9 +66,12 @@ struct TileView: View {
             
             
             Text(tile.isFlagged && vm.gameState != .lost ? "🚩" : "")
-           
+            
+            
+
             
         }
+        
         .dropDestination(for: String.self, ) { items, location in
             // Action to perform when items are dropped
             if let firstItem = items.first {
@@ -100,6 +101,8 @@ struct TileView: View {
             return String(tile.surroundingMineCount)
         }
     }
+    
+
 }
 
 
@@ -108,12 +111,18 @@ extension Rectangle {
         self
             .fill(fillColor)
             .aspectRatio(1, contentMode: .fit)
-            .frame(width: 48, height: 40)
+            .frame(width: 44, height: 40)
             .border(.secondary, width: 5)
             .cornerRadius(10)
     }
 }
 
 #Preview {
-    TileView(tile: .constant(Tile(row: 0, column: 0, isMine: true)), vm: FieldViewModel())
+    @Previewable @State var myTile = Tile(row: 0, column: 0, isMine: false, surroundingMineCount: 1)
+    @Previewable @State var mineTile = Tile(row: 1, column: 0, isMine: true)
+    
+    TileView(tile: $myTile, vm: FieldViewModel())
+    TileView(tile: $mineTile, vm: FieldViewModel())
+
 }
+

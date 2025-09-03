@@ -15,13 +15,15 @@ struct NewGameButton: View {
     
     var body: some View {
         Button {
+            vm.gameStarted = false
             vm.gameTiles.removeAll()
             //vm.gameState = .reloadingGame
             vm.gameTiles = vm.createTiles()
             
-            withAnimation(.spring(duration:1, bounce: 0.5)){
+            withAnimation(.spring(duration:0.3, bounce: 0.5)){
                 animationAmount += 720
             } completion: {
+                vm.gameStarted = true
                 vm.gameState = .playing
                 print("animation completed")
             }

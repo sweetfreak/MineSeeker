@@ -20,16 +20,31 @@ struct ContentView: View {
             if vm.gameState == .home || vm.gameState == .reloadingGame {
                 HomeView(vm: vm)
                     .padding()
+                    .transition(.asymmetric(
+                        insertion: .opacity.animation(.smooth),
+                        removal: .offset(x: 1000))
+                    )
                 
                 
             } else if vm.gameState == .instructions {
                 InstructionsView(vm: vm)
+                    .transition(.asymmetric(
+                        insertion: .opacity.animation(.smooth),
+                        removal: .offset(x: 1000))
+                    )
                 
             } else {
                 FieldView(vm: vm)
+                    .transition(.asymmetric(
+                        insertion: .offset(x: -1000),
+                        removal: .offset(x: 1000))
+                    )
                 
             }
+            
         }
+        //.animation(.smooth, value: vm.gameState)
+
         
     }
 }

@@ -28,27 +28,24 @@ final class FieldViewModel {
     
     var chanceOfMine: Int = 15
     
-    var gridSize = GridSize.med 
+    var gridSize = GridSize.big
     var rowCount = 5
     var columnCount = 5
     
     var gameState = GameState.home
     var gameTiles: [Tile] = []
+    var lostGame = false
+    var gameStarted = false
     
-    
-    
-//    init() {
-//        //just for previews!
-//        rowCount = getRowCount(size: gridSize)
-//        columnCount = getColumnCount(size: gridSize)
-//        gameTiles = createTiles(rowCount: rowCount, columnCount: columnCount)
-//    }
+    //var tapLocation: CGPoint = .zero
+    //var showExplosion = false
     
     func createTiles(/*rowCount: Int, columnCount: Int*/) -> [Tile] {
         rowCount = getRowCount(size: gridSize)
         columnCount = getColumnCount(size: gridSize)
         
         
+        lostGame = false
         var tiles: [Tile] = []
         // Create the 10x10 tile field
         for row in 0..<rowCount {
@@ -116,16 +113,15 @@ final class FieldViewModel {
 
     func gameOver() {
         gameState = .lost
+        
+        lostGame = true
         for i in self.gameTiles.indices {
             
             gameTiles[i].isRevealed = true
         }
+        
     }
     
-//    func revealTile(tile: Tile, gameTiles: [Tile]) {
-//      //  tile.isRevealed = true
-//        adjacentReveal(gameTiles: gameTiles, tile: tile)
-//    }
     
     func adjacentReveal(tile: Tile) {
         //if tile is revealed and has 0 bombs

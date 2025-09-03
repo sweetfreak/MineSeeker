@@ -15,12 +15,6 @@ struct DraggableItemView: View {
     
     var body: some View {
         ZStack {
-//            Rectangle()
-//                .fill()
-//                .aspectRatio(1.0, contentMode: .fit)
-//                .frame(width: 35, height: 35)
-//                .cornerRadius(10)
-            
             Text(textToDrag)
                 .font(.custom("flag", fixedSize: 50))
                 
