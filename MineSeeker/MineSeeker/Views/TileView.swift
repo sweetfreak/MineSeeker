@@ -44,6 +44,7 @@ struct TileView: View {
                 
                     if !tile.isRevealed {
                         tile.isRevealed = true
+                        tile.isFlagged = false
                         
                         vm.adjacentReveal(tile: self.tile)
                         
@@ -93,6 +94,8 @@ struct TileView: View {
     }
     
     func revealedText(tile: Tile) -> String {
+        
+        
         if tile.isMine {
             return "💣"
         } else if tile.surroundingMineCount == 0 {

@@ -43,7 +43,7 @@ struct ContentView: View {
             }
             
         }
-        //.animation(.smooth, value: vm.gameState)
+        .animation(.smooth, value: vm.gameState)
 
         
     }

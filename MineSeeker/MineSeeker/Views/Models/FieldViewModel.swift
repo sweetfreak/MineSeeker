@@ -77,9 +77,6 @@ final class FieldViewModel {
         return tiles
     }
     
-    //
-    
-    
     func MineRandomizer(percentChance: Int) -> Bool {
         
         if percentChance >= Int.random(in: 0..<100) {
@@ -121,7 +118,6 @@ final class FieldViewModel {
         }
         
     }
-    
     
     func adjacentReveal(tile: Tile) {
         //if tile is revealed and has 0 bombs

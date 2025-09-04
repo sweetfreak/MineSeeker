@@ -13,7 +13,7 @@ struct HomeView: View {
     private let gridSizeOptions = [GridSize.small, GridSize.med, GridSize.big]
     
     var body: some View {
-        Text("MineFinder")
+        Text("MineFind")
             .font(.largeTitle)
             .bold()
         
