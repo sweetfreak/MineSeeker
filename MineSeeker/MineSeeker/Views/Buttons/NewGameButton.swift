@@ -25,7 +25,6 @@ struct NewGameButton: View {
             } completion: {
                 vm.gameStarted = true
                 vm.gameState = .playing
-                print("animation completed")
             }
             
             

@@ -11,101 +11,118 @@ import SwiftUI
 struct TileView: View {
     
     @Binding var tile: Tile
-    @State private var droppedText: String = ""
+    //@State private var droppedText: String = ""
     @State private var isDropTargeted: Bool = false
     @State var vm: FieldViewModel
     @State var gameState: GameState = .playing
+    var imageCache: ImageCache = ImageCache()
     // var animationAmount = 180.0
     
-    
-    
+    //@State private var cachedBombImg: Image? = nil
     
     var body: some View {
         
         ZStack {
             Rectangle()
                 .tileDimensions(fillColor: tile.isMine ? .red : Color(.tileBack))
-            
-            //Text(tile.isMine ? "💣" : "\(tile.surroundingMineCount)")
-                
-            Text(revealedText(tile:tile))
-                .font(Font.title.bold())
-            
+                .padding(0)
+
             Rectangle()
                 .tileDimensions(fillColor: tile.isRevealed ? Color.clear :Color(vm.gameState == .won && tile.isFlagged ? .green : .tileTop))
-            
-//                .rotation3DEffect(
-//                    .degrees(animationAmount),
-//                    axis: (x: 0, y: 1, z: 0)
-//                )
-            
-            
+                .padding(0)
+            //                .rotation3DEffect(
+            //                    .degrees(animationAmount),
+            //                    axis: (x: 0, y: 1, z: 0)
+            //                )
                 .onTapGesture { location in
-                
+                    
                     if !tile.isRevealed {
                         tile.isRevealed = true
                         tile.isFlagged = false
-                        
                         vm.adjacentReveal(tile: self.tile)
                         
                         if tile.isMine {
-                          //  vm.tapLocation = location
-                          //  vm.showExplosion = true
                             vm.gameOver()
-                            //print(String(tile.gameOver))
                         }
                     }
                 }
-            if isDropTargeted {
-                Rectangle()
-                    .fill(.blue)
-                    .frame(width: 48, height: 40)
-                    //.border(.blue, width: 10)
-                    .cornerRadius(10)
-                
-            }
             
             
-            Text(tile.isFlagged && vm.gameState != .lost ? "🚩" : "")
-            
+            tileContent(tile:tile)
+                .padding(0)
+                .allowsHitTesting(false)
             
 
+//            if isDropTargeted {
+//                Rectangle()
+//                    .fill(.blue)
+//                    .frame(width: 48, height: 40)
+//                //.border(.blue, width: 10)
+//                    .cornerRadius(10)
+//                
+//            }
             
-        }
+            
+//            Image(tile.droppedText)
+//                .onLongPressGesture {
+//                    if !tile.isRevealed {
+//                        tile.droppedText = "Flag"
+//                        tile.isFlagged.toggle()
+//                    }
+//          }
         
-        .dropDestination(for: String.self, ) { items, location in
-            // Action to perform when items are dropped
-            if let firstItem = items.first {
-                // Update the text with the dropped item
-                droppedText = firstItem
-                
-                if !tile.isRevealed && droppedText == "🚩" {
-                    tile.isFlagged = true
-                } else {
-                    tile.isFlagged = false
-                }
-                
-            }
-            return true // Indicate successful drop
-        } isTargeted: { targeted in
-            isDropTargeted = targeted
         }
         .padding(0)
-    }
-    
-    func revealedText(tile: Tile) -> String {
-        
-        
-        if tile.isMine {
-            return "💣"
-        } else if tile.surroundingMineCount == 0 {
-            return ""
-        } else {
-            return String(tile.surroundingMineCount)
-        }
-    }
-    
+//        .dropDestination(for: String.self, ) { items, location in
+//            // Action to perform when items are dropped
+//            if let firstItem = items.first {
+//                // Update the text with the dropped item
+//                tile.droppedText = firstItem
+//                
+//                if !tile.isRevealed {
+//                    if tile.droppedText == "Flag" {
+//                    tile.isFlagged = true
+//                    } else if tile.droppedText == "" {
+//                        tile.isFlagged = false
+//                    }
+//                }
+//                
+//            }
+//            return true // Indicate successful drop
+//        } isTargeted: { targeted in
+//            isDropTargeted = targeted
+//        }
 
+    }
+    
+    func tileContent(tile: Tile) -> some View {
+      
+            if !tile.isRevealed && tile.isFlagged {
+                return AnyView(
+                    imageCache.image(named: "Flag")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 44, height: 40)
+                )
+            } else if tile.isMine && tile.isRevealed {
+                return AnyView(
+                    imageCache.image(named: "BombOutline")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 44, height: 40)
+                )
+            } else if tile.isRevealed && tile.surroundingMineCount > 0 {
+                return AnyView(
+                    Text("\(tile.surroundingMineCount)")
+                        .font(Font.title.bold())
+                    
+                )
+            } else {
+                return AnyView(EmptyView())
+                
+            }
+        
+    }
 }
 
 
@@ -126,6 +143,14 @@ extension Rectangle {
     
     TileView(tile: $myTile, vm: FieldViewModel())
     TileView(tile: $mineTile, vm: FieldViewModel())
-
+    
 }
 
+//        } else if tile.surroundingMineCount == 0 {
+//            return AnyView(Text(""))
+//        } else {
+//            return AnyView(
+//                Text(String(tile.surroundingMineCount))
+//                    .font(Font.title.bold())
+//            )
+//        }

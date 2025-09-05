@@ -19,7 +19,6 @@ struct FieldView: View {
     
     @State var vm: FieldViewModel
     
-    
         
     var body: some View {
         ZStack {
@@ -59,7 +58,6 @@ struct FieldView: View {
 
                         removal: .offset(x: 1000))
                     )
-                    //.matchedGeometryEffect(id: "buttons", in: gameSpace)
                 }
                 
             }
@@ -70,6 +68,7 @@ struct FieldView: View {
             }
         }
         .padding()
+        
     }
     
 
@@ -82,8 +81,8 @@ struct StandardGameOptionsView: View {
     
     var body: some View {
             HStack {
-                DraggableItemView(textToDrag: "🚩")
-                DraggableItemView(textToDrag: "🪏")
+                DraggableItemView(vm: vm, textToDrag: "Flag", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
+                DraggableItemView(vm: vm, textToDrag: "Shovel", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
                 CheckButtonView(vm: vm)
             }
         
@@ -92,20 +91,28 @@ struct StandardGameOptionsView: View {
 
 struct StandardGridView: View {
     @State var vm: FieldViewModel
-    
-
+        
     
     var body: some View {
         if vm.gameStarted {
             LazyVGrid(columns: Array(repeating: GridItem(.fixed(42)), count: vm.columnCount), spacing: 1) {
                 ForEach(vm.gameTiles.indices, id: \.self) { i in
                     TileView(tile: $vm.gameTiles[i], vm: vm)
+                        .overlay(GeometryReader {geo in
+                            Color.clear
+                                .onAppear {
+                                    //REFACTOR EVENTUALLY SO THIS ISN'T HARDCODED TIME BASED
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+                                        let frame = geo.frame(in: .global)
+                                        //print("Setting frame for tile \(i): \(frame)")
+                                        vm.tileFrames[i] = frame
+                                    }
+                            }
+                        })
                 }
             }
             .padding()
-            
         }
-        
     }
 }
 

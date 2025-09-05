@@ -37,6 +37,11 @@ final class FieldViewModel {
     var lostGame = false
     var gameStarted = false
     
+    var tileFrames: [CGRect] = [] //(repeating: .zero, count: vm.gameTiles.count)
+    var framesReady = false
+    var shouldMeasureFrames = false
+    
+    
     //var tapLocation: CGPoint = .zero
     //var showExplosion = false
     
@@ -44,6 +49,8 @@ final class FieldViewModel {
         rowCount = getRowCount(size: gridSize)
         columnCount = getColumnCount(size: gridSize)
         
+        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
+        framesReady = false
         
         lostGame = false
         var tiles: [Tile] = []
@@ -73,6 +80,7 @@ final class FieldViewModel {
             }
             
             tiles[i].surroundingMineCount = mineCount
+            
         }
         return tiles
     }
@@ -102,12 +110,12 @@ final class FieldViewModel {
         
         // Stay in bounds
         //NOTE: apple AI did this, i should learn why/how it works
-            //$0.0 is the key and $0.1 is the value. so in other words:
-            // filter out: row ($0.0) is more/equal to 0 and less than 10
-            //         and column ($0.1) is more/equal to 0 and less than 10
+        //$0.0 is the key and $0.1 is the value. so in other words:
+        // filter out: row ($0.0) is more/equal to 0 and less than 10
+        //         and column ($0.1) is more/equal to 0 and less than 10
         return neighbors.filter { $0.0 >= 0 && $0.0 < rowCount && $0.1 >= 0 && $0.1 < columnCount }
     }
-
+    
     func gameOver() {
         gameState = .lost
         
@@ -166,7 +174,7 @@ final class FieldViewModel {
         }
         
         if mineTiles == flaggedTiles {
-                gameState = .won
+            gameState = .won
         }
     }
     
@@ -192,4 +200,70 @@ final class FieldViewModel {
         }
     }
     
+    
+    func itemMoved(location: CGPoint, textToDrag: String) -> DragState {
+        guard let index = tileFrames.firstIndex(where: {
+            $0.contains(location) }) else  { return .notOnTile}
+        
+        let thisTile = gameTiles[index]
+        let canPlace: Bool
+        
+        switch textToDrag {
+        case "Flag":
+            canPlace = !thisTile.isRevealed
+        case "Shovel":
+            canPlace = !thisTile.isRevealed && thisTile.isFlagged
+        default:
+            canPlace = false
+        }
+        return canPlace ? .canPlaceOnTile : .cannotPlaceOnTile
+    }
+    
+    
+    
+    func itemDropped(location: CGPoint, textToDrop: String) {
+        guard let index = tileFrames.firstIndex(where: { $0.contains(location)}) else {return }
+        guard !gameTiles[index].isRevealed else {return }
+        
+        
+        switch textToDrop {
+        case "Flag":
+            gameTiles[index].isFlagged = true
+        case "Shovel":
+            gameTiles[index].isFlagged = false
+        default:
+            break
+        }
+        
+        
+        
+    }
+
+    
+    func setTileFrame(index: Int, frame: CGRect) {
+        tileFrames[index] = frame
+        if !tileFrames.contains(.zero) {
+            framesReady = true
+        }
+    }
 }
+
+//    func refreshTileFrames() {
+//        // This will trigger a refresh of all tile frames
+//        // You might need to add a @Published property that triggers frame remeasurement
+//        frameRefreshTrigger.toggle()
+//    }
+
+//print("Drag location: \(location)")
+//print("TileFrames count: \(tileFrames.count)")
+
+
+//        for i in 0..<min(5, tileFrames.count) {
+//            print("Frame \(i): \(tileFrames[i])")
+//        }
+//        let matchingFrames = tileFrames.enumerated().filter { $0.element.contains(location) }
+//            print("Frames containing location: \(matchingFrames.map { $0.offset })")
+
+//print("Found match at index: \(match), frame: \(tileFrames[match])")
+//print($0)
+//print(location)

@@ -17,19 +17,26 @@ struct Tile: Identifiable, Equatable {
     var isFlagged = false
     var gameOver = false
     
-    var coordinates: (Int, Int) {
-        return (self.row, self.column)
-    }
-    
-//    mutating func assignMine(chance: Int) {
-//        if chance <= Int.random(in: 1...100) {
-//            isMine = true
+    var tileText: String = ""
+//    {
+//        if !isRevealed {
+//            if isFlagged {
+//                return "Flag"
+//            } else {
+//                return ""
+//            }
 //        } else {
-//            isMine = false
+//            if surroundingMineCount > 0  {
+//                return "\(surroundingMineCount)"
+//            } else {
+//                return ""
+//            }
 //        }
 //    }
     
-
+    var coordinates: (Int, Int) {
+        return (self.row, self.column)
+    }
 }
 
 

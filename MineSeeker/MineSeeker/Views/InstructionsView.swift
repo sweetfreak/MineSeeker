@@ -65,8 +65,9 @@ struct InstructionsView: View {
                                 .fill(Color("tileBack"))
                                 .frame(width: 40, height: 40)
                             
-                            Text ("🚩")
-                                .font(.title)
+                            Image("Flag")
+                                .resizable()
+                                .frame(width: 50, height: 50)
                         }
                         //TileView(tile: $demoTileFlag, vm: vm)
                         
