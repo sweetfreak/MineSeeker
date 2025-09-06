@@ -15,6 +15,7 @@ struct NewGameButton: View {
     
     var body: some View {
         Button {
+            vm.gameScore = 0
             vm.gameStarted = false
             vm.gameTiles.removeAll()
             //vm.gameState = .reloadingGame

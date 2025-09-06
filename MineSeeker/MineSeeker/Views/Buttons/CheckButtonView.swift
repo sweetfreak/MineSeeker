@@ -14,7 +14,9 @@ struct CheckButtonView: View {
     var body: some View {
         
         Button {
-            vm.checkForMines()
+            if vm.gameState == .playing {
+                vm.checkForMines()
+            }
         } label: {
             Text("Check ✅")
         }
