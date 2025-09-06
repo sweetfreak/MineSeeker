@@ -23,9 +23,13 @@ struct FieldView: View {
     var body: some View {
         ZStack {
             VStack {
+                
+                ScoreView(vm: vm)
+                
                 ZStack {
-                    Color.clear
-                        .frame(width: 350, height: 350)
+                    //this was so the newGame buttons mostly stay in place
+//                    Color.clear
+//                        .frame(width: 350, height: 350)
                     ScrollView(.vertical, showsIndicators: false) {
                         StandardGridView(vm: vm)
                             .allowsHitTesting(vm.gameState == .playing ? true : false)
@@ -39,27 +43,27 @@ struct FieldView: View {
                     .frame(width: .infinity, height: vm.gridSize == .big ? .infinity : 350)
                     
                 }
-                
-                if vm.gameState == .playing {
-                    StandardGameOptionsView(vm: vm)
+                VStack {
+                    if vm.gameState == .playing {
+                        StandardGameOptionsView(vm: vm)
+                            .transition(.asymmetric(
+                                insertion: .opacity,
+                                //insertion: .offset(x: 1000),
+                                removal: .offset(x: 1000))
+                            )
+                    } else {
+                        HStack{
+                            NewGameButton(vm: vm)
+                            HomeButtonView(vm: vm)
+                        }
                         .transition(.asymmetric(
                             insertion: .opacity,
                             //insertion: .offset(x: 1000),
+                            
                             removal: .offset(x: 1000))
                         )
-                } else {
-                    HStack{
-                        NewGameButton(vm: vm)
-                        HomeButtonView(vm: vm)
                     }
-                    .transition(.asymmetric(
-                        insertion: .opacity,
-                        //insertion: .offset(x: 1000),
-
-                        removal: .offset(x: 1000))
-                    )
-                }
-                
+                }                
             }
             .animation(.smooth, value: vm.gameState)
             
@@ -74,47 +78,9 @@ struct FieldView: View {
 
 }
     
-struct StandardGameOptionsView: View {
-    //@Environment(\.horizontalSizeClass) var horizontalSizeClass
-    @State var vm: FieldViewModel
-    
-    
-    var body: some View {
-            HStack {
-                DraggableItemView(vm: vm, textToDrag: "Flag", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
-                DraggableItemView(vm: vm, textToDrag: "Shovel", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
-                CheckButtonView(vm: vm)
-            }
-        
-    }
-}
 
-struct StandardGridView: View {
-    @State var vm: FieldViewModel
-        
-    
-    var body: some View {
-        if vm.gameStarted {
-            LazyVGrid(columns: Array(repeating: GridItem(.fixed(42)), count: vm.columnCount), spacing: 1) {
-                ForEach(vm.gameTiles.indices, id: \.self) { i in
-                    TileView(tile: $vm.gameTiles[i], vm: vm)
-                        .overlay(GeometryReader {geo in
-                            Color.clear
-                                .onAppear {
-                                    //REFACTOR EVENTUALLY SO THIS ISN'T HARDCODED TIME BASED
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
-                                        let frame = geo.frame(in: .global)
-                                        //print("Setting frame for tile \(i): \(frame)")
-                                        vm.tileFrames[i] = frame
-                                    }
-                            }
-                        })
-                }
-            }
-            .padding()
-        }
-    }
-}
+
+
 
 #Preview {
     FieldView(vm: FieldViewModel())

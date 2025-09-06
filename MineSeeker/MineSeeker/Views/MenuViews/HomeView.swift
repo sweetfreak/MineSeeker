@@ -31,6 +31,8 @@ struct HomeView: View {
         NewGameButton(vm: vm)
             .padding(5)
         InstructionsButtonView(vm: vm)
+        
+        HighScoreListButtonView(vm: vm)
         Spacer()
     }
     

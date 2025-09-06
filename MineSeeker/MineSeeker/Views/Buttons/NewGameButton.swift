@@ -32,7 +32,6 @@ struct NewGameButton: View {
             Label("New Game", systemImage: "plus.diamond.fill")
         }
         .buttonStyle(.borderedProminent)
-        .padding()
         .rotation3DEffect(
             .degrees(animationAmount),
             axis: (x: 0, y: 1, z: 0)

@@ -21,6 +21,7 @@ enum GameState {
     case lost
     case reloadingGame
     case instructions
+    case highScoreList
 }
 
 @Observable
@@ -40,6 +41,10 @@ final class FieldViewModel {
     var tileFrames: [CGRect] = [] //(repeating: .zero, count: vm.gameTiles.count)
     var framesReady = false
     var shouldMeasureFrames = false
+    
+    var gameScore = 0
+    var newHighScore = false
+    
     
     
     //var tapLocation: CGPoint = .zero
@@ -146,6 +151,7 @@ final class FieldViewModel {
                     //HOW DO I MAKE WORK!?
                     if !self.gameTiles[index].isRevealed {
                         self.gameTiles[index].isRevealed = true
+                        gameScore += gameTiles[index].surroundingMineCount * 10
                     } else {
                         continue
                     }
@@ -174,7 +180,10 @@ final class FieldViewModel {
         }
         
         if mineTiles == flaggedTiles {
+            gameScore += 200 * mineTiles.count
             gameState = .won
+        } else {
+            gameScore -= 500
         }
     }
     

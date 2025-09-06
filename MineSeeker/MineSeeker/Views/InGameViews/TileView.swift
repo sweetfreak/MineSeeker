@@ -40,6 +40,7 @@ struct TileView: View {
                         tile.isRevealed = true
                         tile.isFlagged = false
                         vm.adjacentReveal(tile: self.tile)
+                        vm.gameScore += tile.surroundingMineCount * 50
                         
                         if tile.isMine {
                             vm.gameOver()

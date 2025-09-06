@@ -20,6 +20,12 @@
 		2F539E4E2E676281009032A3 /* Vortex in Frameworks */ = {isa = PBXBuildFile; productRef = 2F539E4D2E676281009032A3 /* Vortex */; };
 		2F539E502E6763B2009032A3 /* ExplosionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F539E4F2E6763B2009032A3 /* ExplosionView.swift */; };
 		2F87F22E2E69F5B000BA99D0 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F87F22D2E69F5B000BA99D0 /* ImageCache.swift */; };
+		2F87F2302E6C9EFE00BA99D0 /* ScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F87F22F2E6C9EFE00BA99D0 /* ScoreView.swift */; };
+		2F87F2342E6CA27800BA99D0 /* StandardGameOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F87F2332E6CA27800BA99D0 /* StandardGameOptionsView.swift */; };
+		2F87F2362E6CA28400BA99D0 /* StandardGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F87F2352E6CA28400BA99D0 /* StandardGridView.swift */; };
+		2F87F2382E6CA95400BA99D0 /* HighScoreListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F87F2372E6CA95400BA99D0 /* HighScoreListView.swift */; };
+		2F87F23A2E6CA9A500BA99D0 /* HighScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F87F2392E6CA9A500BA99D0 /* HighScore.swift */; };
+		2F87F23C2E6CACA900BA99D0 /* HighScoreListButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F87F23B2E6CACA900BA99D0 /* HighScoreListButtonView.swift */; };
 		2F8AD67B2E660934000A5BB2 /* CheckButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8AD67A2E660933000A5BB2 /* CheckButtonView.swift */; };
 		2F8AD67D2E661359000A5BB2 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8AD67C2E661359000A5BB2 /* HomeView.swift */; };
 		2FE0B9FA2E5E8A7F003589ED /* DraggableItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE0B9F92E5E8A7F003589ED /* DraggableItemView.swift */; };
@@ -41,6 +47,12 @@
 		2F539E492E675A3B009032A3 /* InstructionsButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsButtonView.swift; sourceTree = "<group>"; };
 		2F539E4F2E6763B2009032A3 /* ExplosionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplosionView.swift; sourceTree = "<group>"; };
 		2F87F22D2E69F5B000BA99D0 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		2F87F22F2E6C9EFE00BA99D0 /* ScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreView.swift; sourceTree = "<group>"; };
+		2F87F2332E6CA27800BA99D0 /* StandardGameOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardGameOptionsView.swift; sourceTree = "<group>"; };
+		2F87F2352E6CA28400BA99D0 /* StandardGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardGridView.swift; sourceTree = "<group>"; };
+		2F87F2372E6CA95400BA99D0 /* HighScoreListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighScoreListView.swift; sourceTree = "<group>"; };
+		2F87F2392E6CA9A500BA99D0 /* HighScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighScore.swift; sourceTree = "<group>"; };
+		2F87F23B2E6CACA900BA99D0 /* HighScoreListButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighScoreListButtonView.swift; sourceTree = "<group>"; };
 		2F8AD67A2E660933000A5BB2 /* CheckButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckButtonView.swift; sourceTree = "<group>"; };
 		2F8AD67C2E661359000A5BB2 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		2FE0B9F92E5E8A7F003589ED /* DraggableItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableItemView.swift; sourceTree = "<group>"; };
@@ -90,12 +102,8 @@
 			isa = PBXGroup;
 			children = (
 				2F5183332E5914420045EB4A /* ContentView.swift */,
-				2F8AD67C2E661359000A5BB2 /* HomeView.swift */,
-				2F5183342E5914420045EB4A /* FieldView.swift */,
-				2F539E452E6754C4009032A3 /* InstructionsView.swift */,
-				2F5183372E5914420045EB4A /* TileView.swift */,
-				2FE0B9F92E5E8A7F003589ED /* DraggableItemView.swift */,
-				2F539E4F2E6763B2009032A3 /* ExplosionView.swift */,
+				2F87F2322E6C9F6600BA99D0 /* MenuViews */,
+				2F87F2312E6C9F4700BA99D0 /* InGameViews */,
 				2F539E4B2E675A9E009032A3 /* Buttons */,
 				2F51835B2E5CF8310045EB4A /* Models */,
 				2FE0B9FF2E5F7035003589ED /* Unused */,
@@ -108,6 +116,7 @@
 			children = (
 				2F87F22D2E69F5B000BA99D0 /* ImageCache.swift */,
 				2F5183362E5914420045EB4A /* Tile.swift */,
+				2F87F2392E6CA9A500BA99D0 /* HighScore.swift */,
 				2F5183582E5CB82D0045EB4A /* FieldViewModel.swift */,
 			);
 			path = Models;
@@ -120,8 +129,33 @@
 				2FE0B9FD2E5F6F61003589ED /* NewGameButton.swift */,
 				2F539E472E6758CB009032A3 /* HomeButtonView.swift */,
 				2F8AD67A2E660933000A5BB2 /* CheckButtonView.swift */,
+				2F87F23B2E6CACA900BA99D0 /* HighScoreListButtonView.swift */,
 			);
 			path = Buttons;
+			sourceTree = "<group>";
+		};
+		2F87F2312E6C9F4700BA99D0 /* InGameViews */ = {
+			isa = PBXGroup;
+			children = (
+				2F5183342E5914420045EB4A /* FieldView.swift */,
+				2F87F2352E6CA28400BA99D0 /* StandardGridView.swift */,
+				2F87F2332E6CA27800BA99D0 /* StandardGameOptionsView.swift */,
+				2F5183372E5914420045EB4A /* TileView.swift */,
+				2F539E4F2E6763B2009032A3 /* ExplosionView.swift */,
+				2FE0B9F92E5E8A7F003589ED /* DraggableItemView.swift */,
+				2F87F22F2E6C9EFE00BA99D0 /* ScoreView.swift */,
+			);
+			path = InGameViews;
+			sourceTree = "<group>";
+		};
+		2F87F2322E6C9F6600BA99D0 /* MenuViews */ = {
+			isa = PBXGroup;
+			children = (
+				2F8AD67C2E661359000A5BB2 /* HomeView.swift */,
+				2F539E452E6754C4009032A3 /* InstructionsView.swift */,
+				2F87F2372E6CA95400BA99D0 /* HighScoreListView.swift */,
+			);
+			path = MenuViews;
 			sourceTree = "<group>";
 		};
 		2FE0B9FF2E5F7035003589ED /* Unused */ = {
@@ -208,20 +242,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F87F2342E6CA27800BA99D0 /* StandardGameOptionsView.swift in Sources */,
+				2F87F23C2E6CACA900BA99D0 /* HighScoreListButtonView.swift in Sources */,
+				2F87F23A2E6CA9A500BA99D0 /* HighScore.swift in Sources */,
 				2FE0B9FE2E5F6F61003589ED /* NewGameButton.swift in Sources */,
 				2F539E462E6754C4009032A3 /* InstructionsView.swift in Sources */,
 				2F87F22E2E69F5B000BA99D0 /* ImageCache.swift in Sources */,
 				2FE0B9FC2E5E8E9C003589ED /* DropTargetView.swift in Sources */,
 				2F51833A2E5914420045EB4A /* ContentView.swift in Sources */,
+				2F87F2302E6C9EFE00BA99D0 /* ScoreView.swift in Sources */,
 				2F51833B2E5914420045EB4A /* FieldView.swift in Sources */,
 				2F51833C2E5914420045EB4A /* MineSeekerApp.swift in Sources */,
 				2F539E502E6763B2009032A3 /* ExplosionView.swift in Sources */,
 				2F8AD67D2E661359000A5BB2 /* HomeView.swift in Sources */,
+				2F87F2362E6CA28400BA99D0 /* StandardGridView.swift in Sources */,
 				2F51833D2E5914420045EB4A /* Tile.swift in Sources */,
 				2F51833E2E5914420045EB4A /* TileView.swift in Sources */,
 				2F539E4A2E675A3B009032A3 /* InstructionsButtonView.swift in Sources */,
 				2FE0B9FA2E5E8A7F003589ED /* DraggableItemView.swift in Sources */,
 				2F5183592E5CB82D0045EB4A /* FieldViewModel.swift in Sources */,
+				2F87F2382E6CA95400BA99D0 /* HighScoreListView.swift in Sources */,
 				2F539E482E6758CB009032A3 /* HomeButtonView.swift in Sources */,
 				2F8AD67B2E660934000A5BB2 /* CheckButtonView.swift in Sources */,
 			);
