@@ -10,7 +10,13 @@ import SwiftUI
 struct HomeView: View {
     
     @State var vm: FieldViewModel
-    private let gridSizeOptions = [GridSize.small, GridSize.med, GridSize.big]
+    private var gridSizeOptions: [GridSize] {
+        if UIDevice.isIPhone {
+            return [.small, .med, .big]
+        } else {
+            return [.small, .med, .big, .huge]
+        }
+    }
     
     var body: some View {
         Text("MineFind")
@@ -21,7 +27,8 @@ struct HomeView: View {
         Text("Choose a minefield size:")
         Picker("Choose size of minefield", selection: $vm.gridSize) {
             ForEach(gridSizeOptions, id: \.self) { size in
-                Text(label(for: size)).tag(size)
+                Text(label(for: size))
+                    .tag(size)
             }
         }
         .pickerStyle(.segmented)
@@ -41,8 +48,18 @@ struct HomeView: View {
         case .small: return "Small"
         case .med: return "Medium"
         case .big: return "Big"
+        case .huge: return "Huge"
         }
     }
+    
+//    private func iPadLabel(for size: iPadGridSize) -> String {
+//        switch size {
+//        case .small: return "Small"
+//        case .med: return "Medium"
+//        case .big: return "Big"
+//        case .huge: return "Huge"
+//        }
+//    }
 }
 
 #Preview {

@@ -15,7 +15,7 @@ struct InstructionsView: View {
     @State var vm: FieldViewModel
     
     var body: some View {
-        VStack{
+        LazyVStack{
             Text("How to play MineFinder")
                 .font(.largeTitle)
                 .padding(10)
@@ -38,7 +38,7 @@ struct InstructionsView: View {
             
            
             
-            HStack {
+          HStack {
                 VStack(alignment: .leading) {
                     Text("Directions:")
                         .bold()
@@ -80,8 +80,9 @@ struct InstructionsView: View {
                             Circle()
                                 .fill(Color("tileBack"))
                                 .frame(width: 40, height: 40)
-                            Text ("🪏")
-                                .font(.title)
+                            Image("Shovel")
+                                .resizable()
+                                .frame(width: 50, height: 50)
                         }
                     }
                 }

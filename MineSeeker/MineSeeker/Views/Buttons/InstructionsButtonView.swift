@@ -14,9 +14,10 @@ struct InstructionsButtonView: View {
             vm.gameState = .instructions
         } label: {
             Label("How to Play ", systemImage: "questionmark.text.page.fill")
-                
+                .symbolRenderingMode(.multicolor)
+                .symbolEffect(.bounce)
         }
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.glassProminent)
     }
 }
     

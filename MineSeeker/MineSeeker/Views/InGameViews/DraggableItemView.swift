@@ -79,6 +79,7 @@ struct DraggableItemView: View {
                         }
                 )
         }
+        .padding(0)
     }
 }
 

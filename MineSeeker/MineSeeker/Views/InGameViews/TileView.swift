@@ -16,19 +16,25 @@ struct TileView: View {
     @State var vm: FieldViewModel
     @State var gameState: GameState = .playing
     var imageCache: ImageCache = ImageCache()
-    // var animationAmount = 180.0
+
+    var onPhoneW = 44.0
+    var onPhoneH = 40.0
+    var onPadW = 66.0
+    var onPadH = 60.0
+    var width: Double { UIDevice.isIPhone ? onPhoneW : onPadW }
+    var height: Double { UIDevice.isIPhone ? onPhoneH : onPadH }
     
-    //@State private var cachedBombImg: Image? = nil
+    
     
     var body: some View {
         
         ZStack {
             Rectangle()
-                .tileDimensions(fillColor: tile.isMine ? .red : Color(.tileBack))
+                .tileDimensions(fillColor: tile.isMine ? .red : Color(.tileBack), width: width, height: height)
                 .padding(0)
 
             Rectangle()
-                .tileDimensions(fillColor: tile.isRevealed ? Color.clear :Color(vm.gameState == .won && tile.isFlagged ? .green : .tileTop))
+                .tileDimensions(fillColor: tile.isRevealed ? Color.clear :Color(vm.gameState == .won && tile.isFlagged ? .green : .tileTop), width: width, height: height)
                 .padding(0)
             //                .rotation3DEffect(
             //                    .degrees(animationAmount),
@@ -97,20 +103,19 @@ struct TileView: View {
     }
     
     func tileContent(tile: Tile) -> some View {
-      
             if !tile.isRevealed && tile.isFlagged {
                 return AnyView(
                     imageCache.image(named: "Flag")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 44, height: 40)
+                        .frame(width: width, height: height)
                 )
             } else if tile.isMine && tile.isRevealed {
                 return AnyView(
                     imageCache.image(named: "BombOutline")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 44, height: 40)
+                        .frame(width: width, height: height)
                 )
             } else if tile.isRevealed && tile.surroundingMineCount > 0 {
                 return AnyView(
@@ -128,11 +133,11 @@ struct TileView: View {
 
 
 extension Rectangle {
-    func tileDimensions(fillColor: Color) -> some View {
+    func tileDimensions(fillColor: Color, width: Double, height: Double) -> some View {
         self
             .fill(fillColor)
             .aspectRatio(1, contentMode: .fit)
-            .frame(width: 44, height: 40)
+            .frame(width: width, height: height)
             .border(.secondary, width: 5)
             .cornerRadius(10)
     }
@@ -155,3 +160,4 @@ extension Rectangle {
 //                    .font(Font.title.bold())
 //            )
 //        }
+

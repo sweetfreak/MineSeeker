@@ -16,7 +16,9 @@ struct HomeButtonView: View {
         Button("Home", systemImage: "house.circle.fill") {
             vm.gameState = .home
         }
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.glassProminent)
+        .symbolRenderingMode(.multicolor)
+        .symbolEffect(.bounce)
         
         
     }

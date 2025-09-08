@@ -6,27 +6,29 @@
 //
 
 import SwiftUI
+import SwiftData
 //import Vortex
 
 struct FieldView: View {
+    @Environment(\.modelContext) var modelContext
    // @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
-    @Namespace private var gameSpace
-    
-    @State var difficultyPercentage = 15
-    
+        
     @State var explosion = false
     
     @State var vm: FieldViewModel
     
-        
+    
+    //TEMP VARS?
+    @State var name = ""
+    
+    
     var body: some View {
         ZStack {
             VStack {
                 
                 ScoreView(vm: vm)
-                
-                ZStack {
+              
                     //this was so the newGame buttons mostly stay in place
 //                    Color.clear
 //                        .frame(width: 350, height: 350)
@@ -40,9 +42,12 @@ struct FieldView: View {
                             .animation(nil, value: vm.gameState)
                     }
                     .scrollDisabled(true)
-                    .frame(width: .infinity, height: vm.gridSize == .big ? .infinity : 350)
-                    
-                }
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: (UIDevice.isIPad || vm.gridSize == .big) ? .infinity : 350)
+           
+                
+              
                 VStack {
                     if vm.gameState == .playing {
                         StandardGameOptionsView(vm: vm)
@@ -58,8 +63,6 @@ struct FieldView: View {
                         }
                         .transition(.asymmetric(
                             insertion: .opacity,
-                            //insertion: .offset(x: 1000),
-                            
                             removal: .offset(x: 1000))
                         )
                     }
@@ -67,20 +70,55 @@ struct FieldView: View {
             }
             .animation(.smooth, value: vm.gameState)
             
-            if vm.lostGame {
+            if vm.gameState == .lost {
                 ExplosionView()
             }
+            
+            if vm.gameState == .won {
+                CelebrationView()
+            }
         }
+        
+        //ALERTS
+        .alert("New High Score!", isPresented: ($vm.newHighScore)) {
+                TextField("New High Score!\nEnter your name", text: $name)
+            Button("Enter") { saveHighScore(name: name)}
+            Button("Cancel", role: .cancel) {}
+        } message: {Text("You scored \(vm.gameScore) points!")}
+        
+        
+        
+        .alert(isPresented: $vm.showGameStatusAlert, content: {
+            
+            if vm.gameState == .won {
+                Alert(title: Text("You Won"), message: Text("You scored \(vm.gameScore) points!"), dismissButton: .default(Text("OK")))
+            } else if vm.gameState == .lost {
+                Alert(title: Text("You Lost"), message: Text("Better luck next time!"), dismissButton: .default(Text("OK")))
+            } else  {
+                Alert(title: Text("You haven't flagged every mine yet"), message: Text("Minus 500 points."), dismissButton: .default(Text("OK")))
+            }
+            
+        })
         .padding()
         
     }
     
+    @MainActor
+    func saveHighScore(name: String) {
+        let newestHighScore = HighScore(id: UUID(), name: name, score: vm.gameScore, date: .now)
+        modelContext.insert(newestHighScore)
+        if vm.hsvm.highScores.count > 10 {
+            vm.hsvm.fetchHighScores(from: modelContext)
+            let scoresToDelete = vm.hsvm.highScores.suffix(from: 10)
+            for score in scoresToDelete {
+                modelContext.delete(score)
+            }
+        }
+        vm.newHighScore = false
+        
+    }
 
 }
-    
-
-
-
 
 #Preview {
     FieldView(vm: FieldViewModel())

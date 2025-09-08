@@ -9,22 +9,41 @@ import SwiftUI
 
 struct CheckButtonView: View {
     
-    @State var vm = FieldViewModel()
+    @State var vm: FieldViewModel
+    @Environment(\.modelContext) private var modelContext
+
+    //@State var showCheckAlert = false
     
     var body: some View {
         
         Button {
             if vm.gameState == .playing {
                 vm.checkForMines()
+                if vm.gameState == .won {
+                    
+                    vm.hsvm.fetchHighScores(from: modelContext)
+                    
+                    print("lowest Score: \(vm.hsvm.getLowestHighScore(using: modelContext))")
+                    
+                    if vm.gameScore > vm.hsvm.getLowestHighScore(using: modelContext) {
+                        vm.newHighScore = true
+                    } else {
+                        vm.showGameStatusAlert = true
+                    }
+                }
+                
             }
         } label: {
-            Text("Check ✅")
+            Label("Check", systemImage: "checkmark.circle.fill")
+            //.symbolRenderingMode()
+                .symbolEffect(.bounce)
         }
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.glassProminent)
+        //.disabled(vm.gameScore <= 0 ? true : false)
         
     }
 }
 
 #Preview {
-    CheckButtonView()
+    CheckButtonView(vm: FieldViewModel())
 }

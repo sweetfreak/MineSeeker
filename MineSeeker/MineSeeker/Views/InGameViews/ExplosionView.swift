@@ -13,60 +13,50 @@ struct ExplosionView: View {
     //@State var vm: FieldViewModel
 //    var xCoord: CGFloat
 //    var yCoord: CGFloat
+    @State var tapThrough = false
     
     var body: some View {
         VortexViewReader { proxy in
             VortexView(createExplosion()) {
-                Circle()
-                    .fill(.red)
-                    .frame(width: 20)
+                Rectangle()
+                   // .fill(.red)
+                    .fill(.white)
                     .blur(radius: 3)
                     //.blendMode(.plusLighter)
+                    .frame(width: 20, height: 20)
                     .tag("one")
-                
-                Circle()
-                    .fill(.orange)
-                    .frame(width: 30)
-                    .blur(radius: 3)
-                    //.blendMode(.plusLighter)
-                    .tag("two")
-                
-                Circle()
-                    .fill(.yellow)
-                    .frame(width: 25)
-                    .blur(radius: 3)
-                    .blendMode(.plusLighter)
-                    .tag("three")
-                
-                Circle()
-                    .fill(.gray)
-                    .frame(width: 20)
-                    .blur(radius: 3)
-                    .blendMode(.plusLighter)
-                    .tag("four")
+
             }
             .onAppear { //location in
                 proxy.burst()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+                    tapThrough = true
+                }
             }
+            
+//            Button("burst", action: proxy.burst)
         }
-        .allowsHitTesting(false)
+        .allowsHitTesting(tapThrough ? false : true)
         //.zIndex(100)
     }
     
     func createExplosion() -> VortexSystem {
-        let system = VortexSystem(tags: ["one", "two", "three", "four"])
-        system.position = [0.5, 0.5]//[xCoord, yCoord]
+        let system = VortexSystem(tags: ["one"])
+        //system.position = [0.5, 0.5]//[xCoord, yCoord]
         system.speed = 1
-        system.speedVariation = 1
-        system.lifespan = 0.75
+        system.speedVariation = 0.75
+        system.lifespan = 2
         system.angleRange = .degrees(360)
         system.size = 0.75
-        system.dampingFactor = 7
+        system.shape = .box(width: 0.5, height: 0.5)
+        system.dampingFactor = 5
         system.sizeVariation = 0.75
-        system.emissionLimit = 10
-        system.emissionDuration = 0.2
-        system.burstCount = 100
-        system.stretchFactor = 10.0
+        system.emissionLimit = 200
+        system.emissionDuration = 1.5
+        system.burstCount = 200
+        system.stretchFactor = 2.0
+        system.colors = .random(.red, .orange, .yellow, .gray)
+        system.sizeMultiplierAtDeath = 0.001
         
 
         return system

@@ -8,11 +8,11 @@ import SwiftUI
 
 struct StandardGridView: View {
     @State var vm: FieldViewModel
-        
+    var width: Double { UIDevice.isIPhone ? 42.0 : 62.0 }
     
     var body: some View {
         if vm.gameStarted {
-            LazyVGrid(columns: Array(repeating: GridItem(.fixed(42)), count: vm.columnCount), spacing: 1) {
+            LazyVGrid(columns: Array(repeating: GridItem(.fixed(width)), count: vm.columnCount), alignment: .center, spacing: 1) {
                 ForEach(vm.gameTiles.indices, id: \.self) { i in
                     TileView(tile: $vm.gameTiles[i], vm: vm)
                         .overlay(GeometryReader {geo in

@@ -11,6 +11,7 @@ enum GridSize {
     case small
     case med
     case big
+    case huge
 }
 
 enum GameState {
@@ -29,7 +30,7 @@ final class FieldViewModel {
     
     var chanceOfMine: Int = 15
     
-    var gridSize = GridSize.big
+    var gridSize = GridSize.med
     var rowCount = 5
     var columnCount = 5
     
@@ -37,13 +38,18 @@ final class FieldViewModel {
     var gameTiles: [Tile] = []
     var lostGame = false
     var gameStarted = false
+    var gameIsOver = false
+    var showGameStatusAlert = false
     
-    var tileFrames: [CGRect] = [] //(repeating: .zero, count: vm.gameTiles.count)
+    var tileFrames: [CGRect] = []
     var framesReady = false
     var shouldMeasureFrames = false
     
     var gameScore = 0
+    //var lowestHighScore = 0
     var newHighScore = false
+    
+    var hsvm = HighScoresViewModel()
     
     
     
@@ -53,6 +59,7 @@ final class FieldViewModel {
     func createTiles(/*rowCount: Int, columnCount: Int*/) -> [Tile] {
         rowCount = getRowCount(size: gridSize)
         columnCount = getColumnCount(size: gridSize)
+        gameIsOver = false
         
         tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
         framesReady = false
@@ -123,11 +130,17 @@ final class FieldViewModel {
     
     func gameOver() {
         gameState = .lost
-        
+        gameIsOver = true
+        //showGameStatusAlert = true
+
         lostGame = true
         for i in self.gameTiles.indices {
             
             gameTiles[i].isRevealed = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.showGameStatusAlert = true
         }
         
     }
@@ -182,9 +195,16 @@ final class FieldViewModel {
         if mineTiles == flaggedTiles {
             gameScore += 200 * mineTiles.count
             gameState = .won
+            gameIsOver = true
+
         } else {
             gameScore -= 500
+            showGameStatusAlert = true
         }
+        
+        
+        
+        
     }
     
     func getRowCount(size: GridSize) -> Int {
@@ -194,6 +214,8 @@ final class FieldViewModel {
         case .med:
             return 7
         case .big:
+            return 14
+        case .huge:
             return 15
         }
     }
@@ -206,6 +228,8 @@ final class FieldViewModel {
             return 7
         case .big:
             return 8
+        case .huge:
+            return 10
         }
     }
     
@@ -255,6 +279,32 @@ final class FieldViewModel {
             framesReady = true
         }
     }
+    
+//    func getLowestHighScore() -> Int {
+//        //find score from swiftData
+//        var scores = hsvm.fetchHighScores(from: odelContext)
+//        
+//        return scores.last?.score ?? 0
+//    }
+    
+}
+
+extension UIDevice {
+    static var isIPad: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad
+    }
+    
+    static var isIPhone: Bool {
+        UIDevice.current.userInterfaceIdiom == .phone
+    }
+    
+    static var isVision: Bool {
+        UIDevice.current.userInterfaceIdiom == .vision
+    }
+    
+//    static var isOther: Bool {
+//        UIDevice.current.userInterfaceIdiom ==
+//    }
 }
 
 //    func refreshTileFrames() {

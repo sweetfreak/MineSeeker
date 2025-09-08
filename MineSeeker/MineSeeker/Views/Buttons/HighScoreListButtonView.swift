@@ -16,9 +16,11 @@ struct HighScoreListButtonView: View {
         Button {
             vm.gameState = .highScoreList
         } label: {
-            Label("High Scores", systemImage: "list.bullet.clipboard.fill")
+            Label("High Scores", systemImage: "list.number")
+                .symbolRenderingMode(.multicolor)
+                .symbolEffect(.bounce)
         }
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.glassProminent)
         
     }
 }
