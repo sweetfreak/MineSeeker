@@ -29,6 +29,10 @@ enum GameState {
 @Observable
 final class FieldViewModel {
     
+    //@Environment(\.verticalSizeClass) var verticalSizeClass
+   
+    var isLandscape = false
+    
     //App Setup
     var gameState = GameState.home
     var hsvm = HighScoresViewModel()
@@ -63,8 +67,8 @@ final class FieldViewModel {
     
     func setUpGame() {
         
-        rowCount = getRowCount(size: gridSize)
-        columnCount = getColumnCount(size: gridSize)
+        rowCount = getRowCount(size: gridSize, isLandscape: isLandscape)
+        columnCount = getColumnCount(size: gridSize, isLandscape: isLandscape)
         mineCount = 0
         
         isFirstTile = true
@@ -142,6 +146,34 @@ final class FieldViewModel {
             self.gameTiles[i].surroundingMineCount = thisMineCount
         }
     }
+    
+    func rotateGrid() {
+        let newRowCount = columnCount
+        let newColumnCount = rowCount
+        
+        var newGameTiles: [Tile] = []
+        
+        for row in 0..<newRowCount {
+            for col in 0..<newColumnCount {
+                if let oldTile = gameTiles.first(where: {$0.row == col && $0.column == row}) {
+                    var newTile = oldTile
+                    newTile.row = row
+                    newTile.column = col
+                    newGameTiles.append(newTile)
+                }
+            }
+        }
+        
+        rowCount = newRowCount
+        columnCount = newColumnCount
+        
+        gameTiles = newGameTiles
+        
+        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
+        recountSurroundingMines(gameTiles: gameTiles)
+        
+    }
+    
     
     
     func MineRandomizer(percentChance: Int) -> Bool {
@@ -259,29 +291,29 @@ final class FieldViewModel {
         
     }
     
-    func getRowCount(size: GridSize) -> Int {
+    func getRowCount(size: GridSize, isLandscape: Bool) -> Int {
         switch size {
         case .small:
             return 4
         case .med:
             return 7
         case .big:
-            return 14
+            return isLandscape ? 8 : 14
         case .huge:
-            return 15
+            return isLandscape ? 10 : 15
         }
     }
     
-    func getColumnCount(size: GridSize) -> Int {
+    func getColumnCount(size: GridSize, isLandscape: Bool) -> Int {
         switch size {
         case .small:
             return 4
         case .med:
             return 7
         case .big:
-            return 8
+            return isLandscape ? 14 : 8
         case .huge:
-            return 10
+            return isLandscape ? 15 : 10
         }
     }
     
