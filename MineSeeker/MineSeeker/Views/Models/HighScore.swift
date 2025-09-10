@@ -5,7 +5,7 @@
 //  Created by Jesse Sheehan on 9/6/25.
 //
 
-import Foundation
+import SwiftUI
 import SwiftData
 
 @Model
@@ -14,7 +14,12 @@ class HighScore {
     var name: String
     var score: Int
     var date: Date
-    //var rank:
+    var gridSize: GridSize = GridSize.small
+    var hintsUsed: Int = 0
+    var duration: TimeInterval? = nil
+    var mineCount: Int = 0
+    
+
     
     
     static func < (lhs: HighScore, rhs: HighScore) -> Bool {
@@ -22,10 +27,14 @@ class HighScore {
         }
     
     
-    init(id: UUID, name: String, score: Int, date: Date) {
+    init(id: UUID, name: String, score: Int, date: Date, gridSize: GridSize, hintsUsed: Int, duration: TimeInterval?, mineCount: Int) {
         self.id = id
         self.name = name
         self.score = score
         self.date = date
+        self.gridSize = gridSize
+        self.hintsUsed = hintsUsed
+        self.duration = duration
+        self.mineCount = mineCount
     }
 }

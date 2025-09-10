@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-enum GridSize {
+//the string/codable/caseIterable are so it cane be stored in the high score model w/ swiftdata
+enum GridSize: String, Codable, CaseIterable {
     case small
     case med
     case big
@@ -28,48 +29,72 @@ enum GameState {
 @Observable
 final class FieldViewModel {
     
+    //App Setup
+    var gameState = GameState.home
+    var hsvm = HighScoresViewModel()
+    
+    //MineField SetUp
+    var gridSize = GridSize.med
+    var rowCount: Int = 5
+    var columnCount: Int = 5
+    var gameTiles: [Tile] = []
+    
+    var lastWasMine: Bool = false
     var chanceOfMine: Int = 15
     
-    var gridSize = GridSize.med
-    var rowCount = 5
-    var columnCount = 5
-    
-    var gameState = GameState.home
-    var gameTiles: [Tile] = []
+    //Tile Setup (Draggable)
+    var tileFrames: [CGRect] = []
+    var framesReady = false
+    var shouldMeasureFrames = false
+
+    //GameState Details
     var lostGame = false
     var gameStarted = false
     var gameIsOver = false
     var showGameStatusAlert = false
+    var isFirstTile = true
     
-    var tileFrames: [CGRect] = []
-    var framesReady = false
-    var shouldMeasureFrames = false
-    
-    var gameScore = 0
-    //var lowestHighScore = 0
+   
+    //Scoring (and Saving)
     var newHighScore = false
+    //
+    var gameScore: Int = 0
+    var mineCount: Int = 0
     
-    var hsvm = HighScoresViewModel()
-    
-    
-    
-    //var tapLocation: CGPoint = .zero
-    //var showExplosion = false
-    
-    func createTiles(/*rowCount: Int, columnCount: Int*/) -> [Tile] {
+    func setUpGame() {
+        
         rowCount = getRowCount(size: gridSize)
         columnCount = getColumnCount(size: gridSize)
-        gameIsOver = false
+        mineCount = 0
         
+        isFirstTile = true
+        gameIsOver = false
         tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
         framesReady = false
-        
         lostGame = false
+        
+        gameTiles = createTiles()
+    }
+    
+    
+    //CREAT TILES/set up
+    func createTiles(/*rowCount: Int, columnCount: Int*/) -> [Tile] {
+        
+        //CREATE TILES FOR TILEVIEW
         var tiles: [Tile] = []
-        // Create the 10x10 tile field
         for row in 0..<rowCount {
             for column in 0..<columnCount {
                 tiles.append(Tile(row: row, column: column, isMine: MineRandomizer(percentChance: chanceOfMine)))
+                
+            }
+        }
+        
+        //if no mines found, adds one
+        if mineCount == 0, !tiles.isEmpty {
+            if let randomIndex = tiles.indices.randomElement() {
+                tiles[randomIndex].isMine = true
+                print("added a mine to \(tiles[randomIndex].row), + \(tiles[randomIndex].column) ")
+                mineCount += 1
             }
         }
         
@@ -82,24 +107,50 @@ final class FieldViewModel {
             //collect it's neighbors...
             let neighbors = neighborCoordinates(tile: tile)
             //take each neighbor...
-            let mineCount = neighbors.reduce(0) { count, coord in
+            let thisMineCount = neighbors.reduce(0) { count, coord in
                 //find a tile (if it exists) that has the same row/column properties as the neighborTile coordinates
                 if let neighborTile = tiles.first(where: { $0.row == coord.0 && $0.column == coord.1 }) {
+                
+                    
+                    //return the current count + 1 if the neighborTile was a mine
+                    return count + (neighborTile.isMine ? 1 : 0)
+                    
+                }
+                print(count)
+                return count
+            }
+            tiles[i].surroundingMineCount = thisMineCount
+        }
+        
+        return tiles
+    }
+    
+    //THIS IS MOSTLY REPEATED CODE, BUT WHATEVER
+    func recountSurroundingMines(gameTiles: [Tile]) {
+        for i in gameTiles.indices {
+            //for each tile...
+            let neighbors = neighborCoordinates(tile: gameTiles[i])
+            //take each neighbor...
+            let thisMineCount = neighbors.reduce(0) { count, coord in
+                //find a tile (if it exists) that has the same row/column properties as the neighborTile coordinates
+                if let neighborTile = gameTiles.first(where: { $0.row == coord.0 && $0.column == coord.1 }) {
                     //return the current count + 1 if the neighborTile was a mine
                     return count + (neighborTile.isMine ? 1 : 0)
                 }
                 return count
             }
-            
-            tiles[i].surroundingMineCount = mineCount
-            
+            self.gameTiles[i].surroundingMineCount = thisMineCount
         }
-        return tiles
     }
     
+    
     func MineRandomizer(percentChance: Int) -> Bool {
+       // var minegoal = floor(Double((rowCount * columnCount)/4))
+        //print("minegoal is \(minegoal)")
+
         
         if percentChance >= Int.random(in: 0..<100) {
+            mineCount += 1
             return true
         } else {
             return false
@@ -194,6 +245,7 @@ final class FieldViewModel {
         
         if mineTiles == flaggedTiles {
             gameScore += 200 * mineTiles.count
+            mineCount = mineTiles.count
             gameState = .won
             gameIsOver = true
 
@@ -280,13 +332,6 @@ final class FieldViewModel {
         }
     }
     
-//    func getLowestHighScore() -> Int {
-//        //find score from swiftData
-//        var scores = hsvm.fetchHighScores(from: odelContext)
-//        
-//        return scores.last?.score ?? 0
-//    }
-    
 }
 
 extension UIDevice {
@@ -301,6 +346,7 @@ extension UIDevice {
     static var isVision: Bool {
         UIDevice.current.userInterfaceIdiom == .vision
     }
+    
     
 //    static var isOther: Bool {
 //        UIDevice.current.userInterfaceIdiom ==
@@ -326,3 +372,4 @@ extension UIDevice {
 //print("Found match at index: \(match), frame: \(tileFrames[match])")
 //print($0)
 //print(location)
+

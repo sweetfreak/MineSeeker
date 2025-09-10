@@ -105,7 +105,7 @@ struct FieldView: View {
     
     @MainActor
     func saveHighScore(name: String) {
-        let newestHighScore = HighScore(id: UUID(), name: name, score: vm.gameScore, date: .now)
+        let newestHighScore = HighScore(id: UUID(), name: name, score: vm.gameScore, date: .now, gridSize: vm.gridSize, hintsUsed: 0, duration: nil, mineCount: vm.mineCount)
         modelContext.insert(newestHighScore)
         if vm.hsvm.highScores.count > 10 {
             vm.hsvm.fetchHighScores(from: modelContext)

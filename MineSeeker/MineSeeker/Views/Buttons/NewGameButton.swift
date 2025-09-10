@@ -19,7 +19,7 @@ struct NewGameButton: View {
             vm.gameStarted = false
             vm.gameTiles.removeAll()
             //vm.gameState = .reloadingGame
-            vm.gameTiles = vm.createTiles()
+            vm.setUpGame()
             
             withAnimation(.spring(duration:0.3, bounce: 0.5)){
                 animationAmount += 720

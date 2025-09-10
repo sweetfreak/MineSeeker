@@ -15,14 +15,14 @@ struct HighScoreListView: View {
     @Environment(\.modelContext) private var modelContext
     @State var vm: FieldViewModel
     
-    var highScoresExample: [HighScore] = [
-        HighScore(id: UUID(), name: "Jesse", score: 10000, date: Date()),
-        HighScore(id: UUID(), name: "Max", score: 8000, date: Date()),
-        HighScore(id: UUID(), name: "Sophia", score: 9000, date: Date()),
-        HighScore(id: UUID(), name: "Shiraz", score: 6000, date: Date()),
-        HighScore(id: UUID(), name: "Jamiesen", score: 5000, date: Date()),
-        HighScore(id: UUID(), name: "Zoe", score: 7000, date: Date())
-    ]
+//    var highScoresExample: [HighScore] = [
+//        HighScore(id: UUID(), name: "Jesse", score: 10000, date: Date(), gridSize: .med),
+//        HighScore(id: UUID(), name: "Max", score: 8000, date: Date()),
+//        HighScore(id: UUID(), name: "Sophia", score: 9000, date: Date()),
+//        HighScore(id: UUID(), name: "Shiraz", score: 6000, date: Date()),
+//        HighScore(id: UUID(), name: "Jamiesen", score: 5000, date: Date()),
+//        HighScore(id: UUID(), name: "Zoe", score: 7000, date: Date())
+//    ]
     
     
     var body: some View {
@@ -53,6 +53,7 @@ struct HighScoreListView: View {
                             Text(highScore.name)
                             Spacer()
                             Text("\(highScore.score)")
+                            Text("\(label(for: highScore.gridSize))")
                             Text(highScore.date, style: .date)
                                 .padding(.leading, 20)
                         }
@@ -64,6 +65,15 @@ struct HighScoreListView: View {
         }
         .onAppear {
             vm.hsvm.fetchHighScores(from: modelContext)
+        }
+    }
+    
+    private func label(for size: GridSize) -> String {
+        switch size {
+        case .small: return "Small"
+        case .med: return "Medium"
+        case .big: return "Big"
+        case .huge: return "Huge"
         }
     }
 }

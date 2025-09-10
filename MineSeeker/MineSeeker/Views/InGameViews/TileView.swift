@@ -40,7 +40,16 @@ struct TileView: View {
             //                    .degrees(animationAmount),
             //                    axis: (x: 0, y: 1, z: 0)
             //                )
-                .onTapGesture { location in
+                .onTapGesture {
+                    if vm.isFirstTile {
+                        vm.isFirstTile = false
+                        if tile.isMine {
+                            tile.isMine.toggle()
+                            print("this was a mine!")
+                            vm.recountSurroundingMines(gameTiles: vm.gameTiles)
+                        }
+                    }
+                    
                     
                     if !tile.isRevealed {
                         tile.isRevealed = true
@@ -53,6 +62,7 @@ struct TileView: View {
                         }
                     }
                 }
+            
             
             
             tileContent(tile:tile)
