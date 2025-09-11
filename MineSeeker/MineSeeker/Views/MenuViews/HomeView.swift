@@ -35,12 +35,18 @@ struct HomeView: View {
         .frame(maxWidth: 275)
         .padding(0)
         
-        NewGameButton(vm: vm)
-            .padding(5)
-        InstructionsButtonView(vm: vm)
-        
-        HighScoreListButtonView(vm: vm)
+        HStack {
+            NewGameButton(vm: vm)
+                .padding(5)
+            InstructionsButtonView(vm: vm)
+        }
+        HStack {
+            HighScoreListButtonView(vm: vm)
+            OptionsButton(vm: vm)
+        }
         Spacer()
+        
+        
     }
     
     private func label(for size: GridSize) -> String {

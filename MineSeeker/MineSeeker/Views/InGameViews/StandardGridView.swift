@@ -8,10 +8,10 @@ import SwiftUI
 
 struct StandardGridView: View {
     @State var vm: FieldViewModel
-    @Environment(\.verticalSizeClass) var verticalSizeClass
-    
+//    @Environment(\.verticalSizeClass) var verticalSizeClass
+//    var isLandscape: Bool { verticalSizeClass == .compact }
+
     var width: Double { UIDevice.isIPhone ? 42.0 : 62.0 }
-    var isLandscape: Bool { verticalSizeClass == .compact }
     
     var body: some View {
         if vm.gameStarted {
@@ -32,20 +32,27 @@ struct StandardGridView: View {
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
                                         let frame = geo.frame(in: .global)
                                         //print("Setting frame for tile \(i): \(frame)")
-                                        vm.tileFrames[i] = frame
+                                        //vm.tileFrames[i] = frame
+                                        vm.setTileFrame(index: i, frame: frame)
                                     }
+                                    
                             }
+                                .onChange(of: geo.frame(in: .global)) {_, newFrame in
+                                    
+                                    vm.setTileFrame(index: i, frame: newFrame)
+                                }
+                                
                         })
                 }
             }
+            
             .padding(0)
-            .onAppear {
-                vm.isLandscape = isLandscape
-            }
-            .onChange(of: isLandscape) {_, newValue in
-                vm.isLandscape = newValue
-                vm.rotateGrid()
-            }
+//            .onAppear {
+//                vm.isLandscape = isLandscape
+//            }
+//            .onChange(of: isLandscape) {_, newValue in
+//                vm.applyOrientation(isLandscape: newValue)
+//            }
         }
     }
 }

@@ -30,15 +30,17 @@ struct NewGameButton: View {
             
             
         } label: {
-            Label("New Game", systemImage: "plus.diamond.fill")
+            Label("New Game", systemImage: "plus.circle.fill")
                 .symbolRenderingMode(.multicolor)
+                .symbolEffect(.bounce)
                 .symbolEffect(.rotate)
         }
         .buttonStyle(.glassProminent)
-        .rotation3DEffect(
-            .degrees(animationAmount),
-            axis: (x: 0, y: 1, z: 0)
-        )
+        
+//        .rotation3DEffect(
+//            .degrees(animationAmount),
+//            axis: (x: 0, y: 1, z: 0)
+//        )
     }
 }
 

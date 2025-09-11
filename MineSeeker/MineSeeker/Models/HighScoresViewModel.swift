@@ -12,6 +12,7 @@ import SwiftData
 @Observable
 class HighScoresViewModel {
     
+    
      var highScores: [HighScore] = []
     
     var descriptor = FetchDescriptor<HighScore>(
@@ -35,4 +36,12 @@ class HighScoresViewModel {
                 return 0
             }
         }
+}
+
+extension Date {
+    var shortFormat: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yy"
+        return formatter.string(from: self)
+    }
 }

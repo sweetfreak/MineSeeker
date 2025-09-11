@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F17192D2E735F7B0050AC6C /* bombsfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2F17192C2E735F7B0050AC6C /* bombsfx.mp3 */; };
+		2F17192F2E73610A0050AC6C /* InbetweenLoop.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2F17192E2E73610A0050AC6C /* InbetweenLoop.mp3 */; };
+		2F1719312E7361380050AC6C /* OptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1719302E7361380050AC6C /* OptionsButton.swift */; };
+		2F1719332E7362470050AC6C /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1719322E7362470050AC6C /* OptionsView.swift */; };
+		2F1719352E73734A0050AC6C /* fanfare.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2F1719342E73734A0050AC6C /* fanfare.mp3 */; };
 		2F5183392E5914420045EB4A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F5183322E5914420045EB4A /* Assets.xcassets */; };
 		2F51833A2E5914420045EB4A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5183332E5914420045EB4A /* ContentView.swift */; };
 		2F51833B2E5914420045EB4A /* FieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5183342E5914420045EB4A /* FieldView.swift */; };
@@ -31,11 +36,15 @@
 		2F8AD67B2E660934000A5BB2 /* CheckButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8AD67A2E660933000A5BB2 /* CheckButtonView.swift */; };
 		2F8AD67D2E661359000A5BB2 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8AD67C2E661359000A5BB2 /* HomeView.swift */; };
 		2FE0B9FA2E5E8A7F003589ED /* DraggableItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE0B9F92E5E8A7F003589ED /* DraggableItemView.swift */; };
-		2FE0B9FC2E5E8E9C003589ED /* DropTargetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE0B9FB2E5E8E9C003589ED /* DropTargetView.swift */; };
 		2FE0B9FE2E5F6F61003589ED /* NewGameButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE0B9FD2E5F6F61003589ED /* NewGameButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2F17192C2E735F7B0050AC6C /* bombsfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bombsfx.mp3; sourceTree = "<group>"; };
+		2F17192E2E73610A0050AC6C /* InbetweenLoop.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = InbetweenLoop.mp3; sourceTree = "<group>"; };
+		2F1719302E7361380050AC6C /* OptionsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsButton.swift; sourceTree = "<group>"; };
+		2F1719322E7362470050AC6C /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
+		2F1719342E73734A0050AC6C /* fanfare.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fanfare.mp3; sourceTree = "<group>"; };
 		2F5182102E5772070045EB4A /* MineSeeker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MineSeeker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F5183322E5914420045EB4A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2F5183332E5914420045EB4A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -60,7 +69,6 @@
 		2F8AD67A2E660933000A5BB2 /* CheckButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckButtonView.swift; sourceTree = "<group>"; };
 		2F8AD67C2E661359000A5BB2 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		2FE0B9F92E5E8A7F003589ED /* DraggableItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableItemView.swift; sourceTree = "<group>"; };
-		2FE0B9FB2E5E8E9C003589ED /* DropTargetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropTargetView.swift; sourceTree = "<group>"; };
 		2FE0B9FD2E5F6F61003589ED /* NewGameButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -96,8 +104,12 @@
 			isa = PBXGroup;
 			children = (
 				2F5183322E5914420045EB4A /* Assets.xcassets */,
+				2F17192C2E735F7B0050AC6C /* bombsfx.mp3 */,
+				2F1719342E73734A0050AC6C /* fanfare.mp3 */,
+				2F17192E2E73610A0050AC6C /* InbetweenLoop.mp3 */,
 				2F5183352E5914420045EB4A /* MineSeekerApp.swift */,
 				2F51835A2E5CF8280045EB4A /* Views */,
+				2F51835B2E5CF8310045EB4A /* Models */,
 			);
 			path = MineSeeker;
 			sourceTree = "<group>";
@@ -109,8 +121,6 @@
 				2F87F2322E6C9F6600BA99D0 /* MenuViews */,
 				2F87F2312E6C9F4700BA99D0 /* InGameViews */,
 				2F539E4B2E675A9E009032A3 /* Buttons */,
-				2F51835B2E5CF8310045EB4A /* Models */,
-				2FE0B9FF2E5F7035003589ED /* Unused */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -135,6 +145,7 @@
 				2F539E472E6758CB009032A3 /* HomeButtonView.swift */,
 				2F8AD67A2E660933000A5BB2 /* CheckButtonView.swift */,
 				2F87F23B2E6CACA900BA99D0 /* HighScoreListButtonView.swift */,
+				2F1719302E7361380050AC6C /* OptionsButton.swift */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -150,6 +161,7 @@
 				2F87F23D2E6F458C00BA99D0 /* CelebrationView.swift */,
 				2FE0B9F92E5E8A7F003589ED /* DraggableItemView.swift */,
 				2F87F22F2E6C9EFE00BA99D0 /* ScoreView.swift */,
+				2F1719322E7362470050AC6C /* OptionsView.swift */,
 			);
 			path = InGameViews;
 			sourceTree = "<group>";
@@ -162,14 +174,6 @@
 				2F87F2372E6CA95400BA99D0 /* HighScoreListView.swift */,
 			);
 			path = MenuViews;
-			sourceTree = "<group>";
-		};
-		2FE0B9FF2E5F7035003589ED /* Unused */ = {
-			isa = PBXGroup;
-			children = (
-				2FE0B9FB2E5E8E9C003589ED /* DropTargetView.swift */,
-			);
-			path = Unused;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,7 +241,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F1719352E73734A0050AC6C /* fanfare.mp3 in Resources */,
+				2F17192D2E735F7B0050AC6C /* bombsfx.mp3 in Resources */,
 				2F5183392E5914420045EB4A /* Assets.xcassets in Resources */,
+				2F17192F2E73610A0050AC6C /* InbetweenLoop.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,8 +261,9 @@
 				2FE0B9FE2E5F6F61003589ED /* NewGameButton.swift in Sources */,
 				2F539E462E6754C4009032A3 /* InstructionsView.swift in Sources */,
 				2F87F22E2E69F5B000BA99D0 /* ImageCache.swift in Sources */,
-				2FE0B9FC2E5E8E9C003589ED /* DropTargetView.swift in Sources */,
+				2F1719312E7361380050AC6C /* OptionsButton.swift in Sources */,
 				2F51833A2E5914420045EB4A /* ContentView.swift in Sources */,
+				2F1719332E7362470050AC6C /* OptionsView.swift in Sources */,
 				2F87F2302E6C9EFE00BA99D0 /* ScoreView.swift in Sources */,
 				2F51833B2E5914420045EB4A /* FieldView.swift in Sources */,
 				2F51833C2E5914420045EB4A /* MineSeekerApp.swift in Sources */,
@@ -414,7 +422,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -447,7 +456,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

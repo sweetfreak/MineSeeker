@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+//import AVFoundation
 
 //the string/codable/caseIterable are so it cane be stored in the high score model w/ swiftdata
 enum GridSize: String, Codable, CaseIterable {
@@ -24,6 +25,7 @@ enum GameState {
     case reloadingGame
     case instructions
     case highScoreList
+    case options
 }
 
 @Observable
@@ -58,6 +60,11 @@ final class FieldViewModel {
     var showGameStatusAlert = false
     var isFirstTile = true
     
+    //SOUNDS
+    var sfx = true
+    var music = true
+//    var bombSfx: AVAudioPlayer?
+    
    
     //Scoring (and Saving)
     var newHighScore = false
@@ -65,10 +72,16 @@ final class FieldViewModel {
     var gameScore: Int = 0
     var mineCount: Int = 0
     
+    //**added these
+//    private var baselineTiles: [Tile] = []
+//    private var baselineRowCount: Int = 0
+//    private var baselineColumnCount: Int = 0
+    
     func setUpGame() {
         
-        rowCount = getRowCount(size: gridSize, isLandscape: isLandscape)
-        columnCount = getColumnCount(size: gridSize, isLandscape: isLandscape)
+        //**changed isLandscape to false
+        rowCount = getRowCount(size: gridSize, isLandscape: false)
+        columnCount = getColumnCount(size: gridSize, isLandscape: false)
         mineCount = 0
         
         isFirstTile = true
@@ -78,7 +91,55 @@ final class FieldViewModel {
         lostGame = false
         
         gameTiles = createTiles()
+        
+        //**added these
+//        baselineTiles = createTiles()
+//        baselineRowCount = rowCount
+//        baselineColumnCount = columnCount
+        
+        //gameTiles = baselineTiles
     }
+    
+//    func applyOrientation(isLandscape: Bool) {
+//        if isLandscape {
+//            rotateBaselineToLandscape()
+//        } else {
+//            rowCount = baselineRowCount
+//            columnCount = baselineColumnCount
+//            gameTiles = baselineTiles
+//            tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
+//        }
+//    }
+//    
+//    func rotateBaselineToLandscape() {
+//        let newRowCount = baselineColumnCount
+//        let newColumnCount = baselineRowCount
+//        
+//        var newGameTiles: [Tile] = Array(
+//            repeating: Tile(row: 0, column: 0, isMine: false),
+//            count: baselineRowCount * baselineColumnCount
+//        )
+//        
+//        for oldRow in 0..<baselineRowCount {
+//            for oldCol in 0..<baselineColumnCount {
+//                let oldIndex = oldRow * baselineColumnCount + oldCol
+//                let newRow = oldCol
+//                let newCol = newColumnCount - 1 - oldRow
+//                let newIndex = newRow * newColumnCount + newCol
+//                
+//                var newTile = baselineTiles[oldIndex]
+//                newTile.row = newRow
+//                newTile.column = newCol
+//                newGameTiles[newIndex] = newTile
+//            }
+//        }
+//        
+//        rowCount = newRowCount
+//        columnCount = newColumnCount
+//        gameTiles = newGameTiles
+//        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
+//        
+//    }
     
     
     //CREAT TILES/set up
@@ -147,32 +208,34 @@ final class FieldViewModel {
         }
     }
     
-    func rotateGrid() {
-        let newRowCount = columnCount
-        let newColumnCount = rowCount
-        
-        var newGameTiles: [Tile] = []
-        
-        for row in 0..<newRowCount {
-            for col in 0..<newColumnCount {
-                if let oldTile = gameTiles.first(where: {$0.row == col && $0.column == row}) {
-                    var newTile = oldTile
-                    newTile.row = row
-                    newTile.column = col
-                    newGameTiles.append(newTile)
-                }
-            }
-        }
-        
-        rowCount = newRowCount
-        columnCount = newColumnCount
-        
-        gameTiles = newGameTiles
-        
-        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
-        recountSurroundingMines(gameTiles: gameTiles)
-        
-    }
+//    func rotateGrid() {
+//        let newRowCount = columnCount
+//        let newColumnCount = rowCount
+//        
+//        var newGameTiles: [Tile] = Array(repeating: Tile(row:0,column:0,isMine:false), count: rowCount * columnCount)
+//        
+//        for oldRow in 0..<rowCount {
+//            for oldCol in 0..<columnCount {
+//                let oldIndex = oldRow * columnCount + oldCol
+//                let newRow = oldCol
+//                let newCol = newColumnCount - 1 - oldRow
+//                let newIndex = newRow * newColumnCount + newCol
+//                
+//                var newTile = gameTiles[oldIndex]
+//                newTile.row = newRow
+//                newTile.column = newCol
+//                newGameTiles[newIndex] = newTile
+//            }
+//        }
+//        
+//        // Update counts and replace tiles
+//        rowCount = newRowCount
+//        columnCount = newColumnCount
+//        gameTiles = newGameTiles
+//        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
+//        
+//        recountSurroundingMines(gameTiles: gameTiles)
+//    }
     
     
     
@@ -247,6 +310,7 @@ final class FieldViewModel {
                     //HOW DO I MAKE WORK!?
                     if !self.gameTiles[index].isRevealed {
                         self.gameTiles[index].isRevealed = true
+                        self.gameTiles[index].isFlagged = false
                         gameScore += gameTiles[index].surroundingMineCount * 10
                     } else {
                         continue

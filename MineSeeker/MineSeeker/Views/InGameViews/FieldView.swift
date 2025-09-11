@@ -26,8 +26,11 @@ struct FieldView: View {
     var body: some View {
         ZStack {
             VStack {
-                
+//                if !vm.isLandscape {
+//                    ScoreView(vm: vm)
+//                }
                 ScoreView(vm: vm)
+
               
                     //this was so the newGame buttons mostly stay in place
 //                    Color.clear
@@ -47,35 +50,42 @@ struct FieldView: View {
                         maxHeight: (UIDevice.isIPad || vm.gridSize == .big) ? .infinity : 350)
            
                 
-              
-                VStack {
-                    if vm.gameState == .playing {
-                        StandardGameOptionsView(vm: vm)
+                HStack {
+                    
+                    
+                    VStack {
+                        if vm.gameState == .playing {
+                            StandardGameOptionsView(vm: vm)
+                                .transition(.asymmetric(
+                                    insertion: .opacity,
+                                    //insertion: .offset(x: 1000),
+                                    removal: .offset(x: 1000))
+                                )
+                        } else {
+                            HStack{
+//                                if vm.isLandscape {
+//                                    ScoreView(vm: vm)
+//                                }
+                                NewGameButton(vm: vm)
+                                HomeButtonView(vm: vm)
+                            }
                             .transition(.asymmetric(
                                 insertion: .opacity,
-                                //insertion: .offset(x: 1000),
                                 removal: .offset(x: 1000))
                             )
-                    } else {
-                        HStack{
-                            NewGameButton(vm: vm)
-                            HomeButtonView(vm: vm)
                         }
-                        .transition(.asymmetric(
-                            insertion: .opacity,
-                            removal: .offset(x: 1000))
-                        )
                     }
-                }                
+                }
             }
             .animation(.smooth, value: vm.gameState)
             
             if vm.gameState == .lost {
-                ExplosionView()
+                ExplosionView(vm: vm)
+                
             }
             
             if vm.gameState == .won {
-                CelebrationView()
+                CelebrationView(vm: vm)
             }
         }
         

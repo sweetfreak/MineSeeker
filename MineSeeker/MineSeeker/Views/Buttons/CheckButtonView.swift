@@ -25,7 +25,7 @@ struct CheckButtonView: View {
                     
                     print("lowest Score: \(vm.hsvm.getLowestHighScore(using: modelContext))")
                     
-                    if vm.gameScore > vm.hsvm.getLowestHighScore(using: modelContext) {
+                    if vm.hsvm.highScores.count <= 10 || vm.gameScore > vm.hsvm.getLowestHighScore(using: modelContext) {
                         vm.newHighScore = true
                     } else {
                         vm.showGameStatusAlert = true

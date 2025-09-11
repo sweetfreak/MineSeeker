@@ -10,6 +10,9 @@ import SwiftUI
 
 struct TileView: View {
     
+    @Environment(\.verticalSizeClass) var verticalSizeClass
+    var isLandscape: Bool { verticalSizeClass == .compact }
+    
     @Binding var tile: Tile
     //@State private var droppedText: String = ""
     @State private var isDropTargeted: Bool = false
@@ -89,6 +92,8 @@ struct TileView: View {
 //          }
         
         }
+        .rotationEffect(isLandscape ? .degrees(90) : .degrees(0))
+        //.rotationEffect(<#T##angle: Angle##Angle#>, anchor: .center)
         .padding(0)
 //        .dropDestination(for: String.self, ) { items, location in
 //            // Action to perform when items are dropped

@@ -7,8 +7,13 @@
 
 import SwiftUI
 import Vortex
+import AVFoundation
 
 struct ExplosionView: View {
+
+    var vm: FieldViewModel
+    
+    @State private var bombSfx: AVAudioPlayer?
 
     //@State var vm: FieldViewModel
 //    var xCoord: CGFloat
@@ -31,6 +36,21 @@ struct ExplosionView: View {
                 proxy.burst()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
                     tapThrough = true
+                }
+                if vm.sfx {
+                    if let url = Bundle.main.url(forResource: "bombsfx", withExtension: "mp3") {
+                        do {
+                            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
+                            try AVAudioSession.sharedInstance().setActive(true, options: [])
+                            bombSfx = try AVAudioPlayer(contentsOf: url)
+                            bombSfx?.prepareToPlay()
+                            bombSfx?.play()
+                        } catch {
+                            print("[ExplosionView] Failed to play sound: \(error)")
+                        }
+                    } else {
+                        print("[ExplosionView] Missing resource bombExplosionSfx.mp3")
+                    }
                 }
             }
             
@@ -67,5 +87,5 @@ struct ExplosionView: View {
 //extension
 
 #Preview {
-    ExplosionView()//xCoord: 0.5, yCoord: 0.5)
+    ExplosionView(vm: FieldViewModel())//xCoord: 0.5, yCoord: 0.5)
 }
