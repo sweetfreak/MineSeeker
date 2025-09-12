@@ -27,8 +27,8 @@ struct InstructionsView: View {
                         .bold()
                     HStack{
                         Text("Use flags to mark each tile that contains a mine.")
-//                        Spacer()
-//                        TileView(tile: $demoTileBomb, vm: vm)
+                        //                        Spacer()
+                        //                        TileView(tile: $demoTileBomb, vm: vm)
                     }
                 }
                 
@@ -36,9 +36,9 @@ struct InstructionsView: View {
             .padding(5)
             
             
-           
             
-          HStack {
+            
+            HStack {
                 VStack(alignment: .leading) {
                     Text("Directions:")
                         .bold()
@@ -89,8 +89,16 @@ struct InstructionsView: View {
             }
             .padding()
             
-            HomeButtonView(vm: vm)
-            
+            if vm.gameStarted {
+                Button{
+                vm.gameState = .playing
+            } label: {
+                Label("Back", systemImage: "arrow.left")
+            }
+                
+            } else {
+                HomeButtonView(vm: vm)
+            }
         }
         
     }

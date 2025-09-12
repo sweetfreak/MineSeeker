@@ -14,6 +14,7 @@ struct HomeButtonView: View {
     var body: some View {
         
         Button("Home", systemImage: "house.circle.fill") {
+            vm.gameStarted = false
             vm.gameState = .home
         }
         //.buttonStyle(.glassProminent)

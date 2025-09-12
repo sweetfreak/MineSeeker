@@ -13,11 +13,21 @@ struct StandardGameOptionsView: View {
     
     
     var body: some View {
-        HStack {
+        VStack(alignment: .center, spacing: 1) {
+            HStack {
+                
                 DraggableItemView(vm: vm, textToDrag: "Flag", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
                 DraggableItemView(vm: vm, textToDrag: "Shovel", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
                 CheckButtonView(vm: vm)
             }
+            VStack {
+                InstructionsButtonView(vm: vm)
+            }
+            .font(.caption.bold())
+                
+            
+                
+        }
             .ignoresSafeArea()
 
             
