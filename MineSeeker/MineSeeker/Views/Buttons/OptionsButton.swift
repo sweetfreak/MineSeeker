@@ -20,7 +20,8 @@ struct OptionsButton: View {
                 .symbolRenderingMode(.multicolor)
                 .symbolEffect(.rotate)
         }
-        .buttonStyle(.glassProminent)
+        //.buttonStyle(.glassProminent)
+        .buttonStyle(.borderedProminent)
     }
 }
 

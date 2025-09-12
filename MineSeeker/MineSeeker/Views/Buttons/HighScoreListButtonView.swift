@@ -20,7 +20,8 @@ struct HighScoreListButtonView: View {
                 .symbolRenderingMode(.multicolor)
                 .symbolEffect(.bounce)
         }
-        .buttonStyle(.glassProminent)
+        //.buttonStyle(.glassProminent)
+        .buttonStyle(.borderedProminent)
         
     }
 }

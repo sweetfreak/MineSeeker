@@ -35,7 +35,8 @@ struct NewGameButton: View {
                 .symbolEffect(.bounce)
                 .symbolEffect(.rotate)
         }
-        .buttonStyle(.glassProminent)
+        //.buttonStyle(.glassProminent)
+        .buttonStyle(.borderedProminent)
         
 //        .rotation3DEffect(
 //            .degrees(animationAmount),

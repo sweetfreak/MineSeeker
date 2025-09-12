@@ -38,7 +38,8 @@ struct CheckButtonView: View {
             //.symbolRenderingMode()
                 .symbolEffect(.bounce)
         }
-        .buttonStyle(.glassProminent)
+        //.buttonStyle(.glassProminent)
+        .buttonStyle(.borderedProminent)
         //.disabled(vm.gameScore <= 0 ? true : false)
         // .sensoryFeedback(.impact(weight: .heavy, intensity: 1), trigger: vm.gameState == .lost)
     }
