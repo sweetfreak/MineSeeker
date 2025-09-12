@@ -12,6 +12,7 @@
 		2F1719312E7361380050AC6C /* OptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1719302E7361380050AC6C /* OptionsButton.swift */; };
 		2F1719332E7362470050AC6C /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1719322E7362470050AC6C /* OptionsView.swift */; };
 		2F1719352E73734A0050AC6C /* fanfare.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2F1719342E73734A0050AC6C /* fanfare.mp3 */; };
+		2F1C2E252E74A15500E97C54 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F1C2E242E74A15500E97C54 /* Launch Screen.storyboard */; };
 		2F5183392E5914420045EB4A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F5183322E5914420045EB4A /* Assets.xcassets */; };
 		2F51833A2E5914420045EB4A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5183332E5914420045EB4A /* ContentView.swift */; };
 		2F51833B2E5914420045EB4A /* FieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5183342E5914420045EB4A /* FieldView.swift */; };
@@ -45,6 +46,8 @@
 		2F1719302E7361380050AC6C /* OptionsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsButton.swift; sourceTree = "<group>"; };
 		2F1719322E7362470050AC6C /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		2F1719342E73734A0050AC6C /* fanfare.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fanfare.mp3; sourceTree = "<group>"; };
+		2F1719532E749E9A0050AC6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2F1C2E242E74A15500E97C54 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		2F5182102E5772070045EB4A /* MineSeeker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MineSeeker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F5183322E5914420045EB4A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2F5183332E5914420045EB4A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -87,6 +90,7 @@
 		2F5182072E5772070045EB4A = {
 			isa = PBXGroup;
 			children = (
+				2F1C2E242E74A15500E97C54 /* Launch Screen.storyboard */,
 				2F5183382E5914420045EB4A /* MineSeeker */,
 				2F5182112E5772070045EB4A /* Products */,
 			);
@@ -103,6 +107,7 @@
 		2F5183382E5914420045EB4A /* MineSeeker */ = {
 			isa = PBXGroup;
 			children = (
+				2F1719532E749E9A0050AC6C /* Info.plist */,
 				2F5183322E5914420045EB4A /* Assets.xcassets */,
 				2F17192C2E735F7B0050AC6C /* bombsfx.mp3 */,
 				2F1719342E73734A0050AC6C /* fanfare.mp3 */,
@@ -244,6 +249,7 @@
 				2F1719352E73734A0050AC6C /* fanfare.mp3 in Resources */,
 				2F17192D2E735F7B0050AC6C /* bombsfx.mp3 in Resources */,
 				2F5183392E5914420045EB4A /* Assets.xcassets in Resources */,
+				2F1C2E252E74A15500E97C54 /* Launch Screen.storyboard in Resources */,
 				2F17192F2E73610A0050AC6C /* InbetweenLoop.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -412,16 +418,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X3MYNPLVQY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MineSeeker/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MineFind;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.puzzle-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -429,7 +438,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = me.jesse.sheehan.MineSeeker;
+				PRODUCT_BUNDLE_IDENTIFIER = me.jesse.sheehan.MineFind;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -446,16 +455,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X3MYNPLVQY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MineSeeker/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MineFind;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.puzzle-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -463,7 +475,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = me.jesse.sheehan.MineSeeker;
+				PRODUCT_BUNDLE_IDENTIFIER = me.jesse.sheehan.MineFind;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;

@@ -14,6 +14,7 @@ struct ExplosionView: View {
     var vm: FieldViewModel
     
     @State private var bombSfx: AVAudioPlayer?
+    @State var hapticTrigger = false
 
     //@State var vm: FieldViewModel
 //    var xCoord: CGFloat
@@ -32,8 +33,10 @@ struct ExplosionView: View {
                     .tag("one")
 
             }
+          
             .onAppear { //location in
                 proxy.burst()
+                hapticTrigger = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
                     tapThrough = true
                 }
@@ -53,6 +56,7 @@ struct ExplosionView: View {
                     }
                 }
             }
+            
             
 //            Button("burst", action: proxy.burst)
         }
