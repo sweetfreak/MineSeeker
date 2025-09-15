@@ -11,9 +11,10 @@ import SwiftData
 
 struct FieldView: View {
     @Environment(\.modelContext) var modelContext
-   // @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @EnvironmentObject var orientation: OrientationModel
+    // @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
-        
+    
     @State var explosion = false
     
     @State var vm: FieldViewModel
@@ -24,17 +25,18 @@ struct FieldView: View {
     
     
     var body: some View {
-        ZStack {
-            VStack {
-//                if !vm.isLandscape {
-//                    ScoreView(vm: vm)
-//                }
-                ScoreView(vm: vm)
-
-              
+//        OrientationReader { isLandscape in
+            ZStack {
+                VStack {
+                    if !orientation.isLandscape {
+                        ScoreView(vm: vm)
+                    }
+                    //ScoreView(vm: vm)
+                    
+                    
                     //this was so the newGame buttons mostly stay in place
-//                    Color.clear
-//                        .frame(width: 350, height: 350)
+                    //                    Color.clear
+                    //                        .frame(width: 350, height: 350)
                     ScrollView(.vertical, showsIndicators: false) {
                         StandardGridView(vm: vm)
                             .allowsHitTesting(vm.gameState == .playing ? true : false)
@@ -44,73 +46,80 @@ struct FieldView: View {
                             )
                             .animation(nil, value: vm.gameState)
                     }
+                    .padding(0)
                     .scrollDisabled(true)
                     .frame(
                         maxWidth: .infinity,
                         maxHeight: (UIDevice.isIPad || vm.gridSize == .big) ? .infinity : 350)
-           
-                
-                HStack {
                     
                     
-                    VStack {
-                        if vm.gameState == .playing {
-                            StandardGameOptionsView(vm: vm)
+                    HStack {
+                        
+                        
+                        VStack {
+                            if vm.gameState == .playing {
+                                StandardGameOptionsView(vm: vm)
+                                    .transition(.asymmetric(
+                                        insertion: .opacity,
+                                        //insertion: .offset(x: 1000),
+                                        removal: .offset(x: 1000))
+                                    )
+                            } else {
+                                HStack{
+                                    if orientation.isLandscape {
+                                        ScoreView(vm: vm)
+                                            //.font(Font.title2)
+                                    }
+                                    NewGameButton(vm: vm)
+                                    HomeButtonView(vm: vm)
+                                }
                                 .transition(.asymmetric(
                                     insertion: .opacity,
-                                    //insertion: .offset(x: 1000),
                                     removal: .offset(x: 1000))
                                 )
-                        } else {
-                            HStack{
-//                                if vm.isLandscape {
-//                                    ScoreView(vm: vm)
-//                                }
-                                NewGameButton(vm: vm)
-                                HomeButtonView(vm: vm)
                             }
-                            .transition(.asymmetric(
-                                insertion: .opacity,
-                                removal: .offset(x: 1000))
-                            )
                         }
                     }
                 }
-            }
-            .animation(.smooth, value: vm.gameState)
-            
-            if vm.gameState == .lost {
-                ExplosionView(vm: vm)
+                .animation(.smooth, value: vm.gameState)
                 
+                if vm.gameState == .lost {
+                    ExplosionView(vm: vm)
+                    
+                }
+                
+                if vm.gameState == .won {
+                    CelebrationView(vm: vm)
+                }
+            }
+            .padding(0)
+            .onChange(of: orientation.isLandscape) {_, newValue in
+                
+                vm.rotateForOrientation(isLandscape: newValue)
             }
             
-            if vm.gameState == .won {
-                CelebrationView(vm: vm)
-            }
-        }
-        
-        //ALERTS
-        .alert("New High Score!", isPresented: ($vm.newHighScore)) {
+            //ALERTS
+            .alert("New High Score!", isPresented: ($vm.newHighScore)) {
                 TextField("New High Score!\nEnter your name", text: $name)
-            Button("Enter") { saveHighScore(name: name)}
-            Button("Cancel", role: .cancel) {}
-        } message: {Text("You scored \(vm.gameScore) points!")}
-        
-        
-        
-        .alert(isPresented: $vm.showGameStatusAlert, content: {
+                Button("Enter") { saveHighScore(name: name)}
+                Button("Cancel", role: .cancel) {}
+            } message: {Text("You scored \(vm.gameScore) points!")}
             
-            if vm.gameState == .won {
-                Alert(title: Text("You Won"), message: Text("You scored \(vm.gameScore) points!"), dismissButton: .default(Text("OK")))
-            } else if vm.gameState == .lost {
-                Alert(title: Text("You Lost"), message: Text("Better luck next time!"), dismissButton: .default(Text("OK")))
-            } else  {
-                Alert(title: Text("You haven't flagged every mine yet"), message: Text("Minus 500 points."), dismissButton: .default(Text("OK")))
-            }
+            .alert(isPresented: $vm.showGameStatusAlert, content: {
+                
+                if vm.gameState == .won {
+                    Alert(title: Text("You Won"), message: Text("You scored \(vm.gameScore) points!"), dismissButton: .default(Text("OK")))
+                } else if vm.gameState == .lost {
+                    Alert(title: Text("You Lost"), message: Text("Better luck next time!"), dismissButton: .default(Text("OK")))
+                } else  {
+                    Alert(title: Text("You haven't flagged every mine yet"), message: Text("Minus 500 points."), dismissButton: .default(Text("OK")))
+                }
+                    
+                })
+                .padding()
+                .ignoresSafeArea(orientation.isLandscape ? .all : [])
             
-        })
-        .padding()
-        
+//        }
     }
     
     @MainActor

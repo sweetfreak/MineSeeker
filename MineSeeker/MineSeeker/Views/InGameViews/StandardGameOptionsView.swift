@@ -8,23 +8,33 @@
 import SwiftUI
 
 struct StandardGameOptionsView: View {
+    @EnvironmentObject var orientation: OrientationModel
+
     //@Environment(\.horizontalSizeClass) var horizontalSizeClass
     @State var vm: FieldViewModel
-    
+    //var isLandscape: Bool
     
     var body: some View {
         VStack(alignment: .center, spacing: 1) {
             HStack {
-                
+                if orientation.isLandscape {
+                    ScoreView(vm: vm)
+                        .font(Font.caption2)
+                }
                 DraggableItemView(vm: vm, textToDrag: "Flag", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
                 DraggableItemView(vm: vm, textToDrag: "Shovel", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
                 CheckButtonView(vm: vm)
+                if orientation.isLandscape {
+                    InstructionsButtonView(vm: vm)
+                        .font(.caption.bold())
+                }
             }
-            VStack {
-                InstructionsButtonView(vm: vm)
+            if !orientation.isLandscape {
+                VStack {
+                    InstructionsButtonView(vm: vm)
+                }
+                .font(.caption.bold())
             }
-            .font(.caption.bold())
-                
             
                 
         }

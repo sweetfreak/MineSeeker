@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ScoreView: View {
+    @EnvironmentObject var orientation: OrientationModel
     
     @State var vm: FieldViewModel
     
@@ -15,12 +16,12 @@ struct ScoreView: View {
         
         HStack {
             Text("SCORE:")
-                .font(Font.largeTitle.bold())
+                .bold()
             
             
             //Text("100000")
             Text("\(vm.gameScore)")
-                .font(Font.largeTitle)
+                
                 .foregroundStyle(vm.newHighScore ? .green : .primary)
             
         }
@@ -28,6 +29,7 @@ struct ScoreView: View {
         .padding(.horizontal, 15)
         .background(.blue)
         .cornerRadius(20)
+        .font(orientation.isLandscape ? Font.title : Font.largeTitle)
     }
 }
 

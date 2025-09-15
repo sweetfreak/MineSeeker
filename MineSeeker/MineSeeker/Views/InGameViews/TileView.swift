@@ -11,7 +11,7 @@ import SwiftUI
 struct TileView: View {
     
     @Environment(\.verticalSizeClass) var verticalSizeClass
-    var isLandscape: Bool { verticalSizeClass == .compact }
+    //var isLandscape: Bool { verticalSizeClass == .compact }
     
     @Binding var tile: Tile
     //@State private var droppedText: String = ""
@@ -20,10 +20,10 @@ struct TileView: View {
     @State var gameState: GameState = .playing
     var imageCache: ImageCache = ImageCache()
 
-    var onPhoneW = 44.0
-    var onPhoneH = 40.0
-    var onPadW = 66.0
-    var onPadH = 60.0
+    var onPhoneW: Double {vm.iPhoneWidth}
+    var onPhoneH: Double {vm.iPhoneWidth * 0.85}
+    var onPadW: Double {vm.iPadWidth}
+    var onPadH: Double {vm.iPadWidth * 0.85}
     var width: Double { UIDevice.isIPhone ? onPhoneW : onPadW }
     var height: Double { UIDevice.isIPhone ? onPhoneH : onPadH }
     
@@ -34,11 +34,10 @@ struct TileView: View {
         ZStack {
             Rectangle()
                 .tileDimensions(fillColor: tile.isMine ? .red : Color(.tileBack), width: width, height: height)
-                .padding(0)
 
             Rectangle()
                 .tileDimensions(fillColor: tile.isRevealed ? Color.clear :Color(vm.gameState == .won && tile.isFlagged ? .green : .tileTop), width: width, height: height)
-                .padding(0)
+                
             //                .rotation3DEffect(
             //                    .degrees(animationAmount),
             //                    axis: (x: 0, y: 1, z: 0)
@@ -69,7 +68,7 @@ struct TileView: View {
             
             
             tileContent(tile:tile)
-                .padding(0)
+                
                 .allowsHitTesting(false)
             
 
@@ -92,9 +91,9 @@ struct TileView: View {
 //          }
         
         }
-        .rotationEffect(isLandscape ? .degrees(90) : .degrees(0))
+       // .rotationEffect(vm.isLandscape ? .degrees(90) : .degrees(0))
         //.rotationEffect(<#T##angle: Angle##Angle#>, anchor: .center)
-        .padding(0)
+        
 //        .dropDestination(for: String.self, ) { items, location in
 //            // Action to perform when items are dropped
 //            if let firstItem = items.first {
@@ -124,6 +123,8 @@ struct TileView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: width, height: height)
+                        .padding(0)
+
                 )
             } else if tile.isMine && tile.isRevealed {
                 return AnyView(
@@ -131,15 +132,21 @@ struct TileView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: width, height: height)
+                        .padding(0)
+
                 )
             } else if tile.isRevealed && tile.surroundingMineCount > 0 {
                 return AnyView(
                     Text("\(tile.surroundingMineCount)")
-                        .font(Font.title.bold())
+                        .font(Font.title2.bold())
+                        .frame(width: width, height: height)
                     
                 )
             } else {
-                return AnyView(EmptyView())
+                return AnyView(EmptyView()
+)
+                    
+
                 
             }
         
@@ -159,6 +166,7 @@ extension Rectangle {
 }
 
 #Preview {
+    
     @Previewable @State var myTile = Tile(row: 0, column: 0, isMine: false, surroundingMineCount: 1)
     @Previewable @State var mineTile = Tile(row: 1, column: 0, isMine: true)
     

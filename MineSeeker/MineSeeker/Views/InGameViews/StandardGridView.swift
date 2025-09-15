@@ -8,10 +8,11 @@ import SwiftUI
 
 struct StandardGridView: View {
     @State var vm: FieldViewModel
+    @EnvironmentObject var orientation: OrientationModel
 //    @Environment(\.verticalSizeClass) var verticalSizeClass
 //    var isLandscape: Bool { verticalSizeClass == .compact }
 
-    var width: Double { UIDevice.isIPhone ? 42.0 : 62.0 }
+    var width: Double { UIDevice.isIPhone ? vm.iPhoneWidth : vm.iPadWidth + 4.0 }
     
     var body: some View {
         if vm.gameStarted {
@@ -36,7 +37,7 @@ struct StandardGridView: View {
                                         vm.setTileFrame(index: i, frame: frame)
                                     }
                                     
-                            }
+                                }
                                 .onChange(of: geo.frame(in: .global)) {_, newFrame in
                                     
                                     vm.setTileFrame(index: i, frame: newFrame)
@@ -45,7 +46,7 @@ struct StandardGridView: View {
                         })
                 }
             }
-            
+//           
             .padding(0)
 //            .onAppear {
 //                vm.isLandscape = isLandscape

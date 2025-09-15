@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct NewGameButton: View {
+    @EnvironmentObject var orientation: OrientationModel
+
     
     @State var animationAmount = 1.0
 
@@ -19,7 +21,7 @@ struct NewGameButton: View {
             vm.gameStarted = false
             vm.gameTiles.removeAll()
             //vm.gameState = .reloadingGame
-            vm.setUpGame()
+            vm.setUpGame(isLandscape: orientation.isLandscape)
             
             withAnimation(.spring(duration:0.3, bounce: 0.5)){
                 animationAmount += 720

@@ -34,14 +34,14 @@ final class FieldViewModel {
     
     //@Environment(\.verticalSizeClass) var verticalSizeClass
    
-    var isLandscape = false
+    //var isLandscape = false
     
     //App Setup
     var gameState = GameState.home
     var hsvm = HighScoresViewModel()
     
     //MineField SetUp
-    var gridSize = GridSize.med
+    var gridSize = GridSize.big
     var rowCount: Int = 5
     var columnCount: Int = 5
     var gameTiles: [Tile] = []
@@ -50,6 +50,8 @@ final class FieldViewModel {
     var chanceOfMine: Int = 15
     
     //Tile Setup (Draggable)
+    var iPhoneWidth = 40.0
+    var iPadWidth = 60.0
     var tileFrames: [CGRect] = []
     var framesReady = false
     var shouldMeasureFrames = false
@@ -109,8 +111,6 @@ final class FieldViewModel {
     }
     
     func startMusic() {
-
-        
         if musicFile == nil {
             if let url = Bundle.main.url(forResource: "mineFindSong", withExtension: "caf") {
                             do {
@@ -155,69 +155,102 @@ final class FieldViewModel {
         }
     }
     
-    func setUpGame() {
+    func rotateForOrientation( isLandscape: Bool) {
+        // Save old dimensions
+        let oldRows = rowCount
+        let oldCols = columnCount
+
+        // Update row/column counts for new orientation
+        rowCount = getRowCount(size: gridSize, isLandscape: isLandscape)
+        columnCount = getColumnCount(size: gridSize, isLandscape: isLandscape)
         
-        //**changed isLandscape to false
-        rowCount = getRowCount(size: gridSize, isLandscape: false)
-        columnCount = getColumnCount(size: gridSize, isLandscape: false)
+        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
+
+        rotateTilesForOrientation(isLandscape: isLandscape, oldRows: oldRows, oldCols: oldCols)
+    }
+
+    func rotateTilesForOrientation(isLandscape: Bool, oldRows: Int, oldCols: Int) {
+        var newTiles: [Tile] = Array(repeating: Tile(row: 0, column: 0, isMine: false), count: rowCount * columnCount)
+
+        for oldRow in 0..<oldRows {
+            for oldCol in 0..<oldCols {
+                let oldIndex = oldRow * oldCols + oldCol
+                let oldTile = gameTiles[oldIndex]
+                
+                var newRow: Int
+                var newCol: Int
+                
+                if isLandscape {
+                    // 90° clockwise
+                    newRow = oldCol
+                    newCol = oldRows - 1 - oldRow
+                } else {
+                    // 90° counterclockwise (back to portrait)
+                    newRow = oldCols - 1 - oldCol
+                    newCol = oldRow
+                }
+                
+                var newTile = oldTile
+                newTile.row = newRow
+                newTile.column = newCol
+                let newIndex = newRow * columnCount + newCol
+                newTiles[newIndex] = newTile
+            }
+        }
+
+        gameTiles = newTiles
+    }
+    
+    
+//    func rotateForOrientation(_ isLandscape: Bool) {
+//        //self.isLandscape = isLandscape
+//        print("Landscape: \(isLandscape)")
+//        rowCount = getRowCount(size: gridSize, isLandscape: isLandscape)
+//        columnCount = getColumnCount(size: gridSize, isLandscape: isLandscape)
+//        
+//        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
+//        
+//        rotateTilesForLandscape()
+//        
+//    }
+//    func rotateTilesForLandscape() {
+//        let oldTiles = gameTiles
+//        gameTiles = []
+//        
+//        for row in 0..<rowCount {
+//            for col in 0..<columnCount {
+//                let oldRow = col
+//                let oldCol = rowCount - 1 - row
+//                
+//                if let oldTile = oldTiles.first(where: { $0.row == oldRow && $0.column == oldCol}) {
+//                    var newTile = oldTile
+//                    newTile.row = row
+//                    newTile.column = col
+//                    gameTiles.append(newTile)
+//                }
+//            }
+//        }
+//    }
+    
+    
+    func setUpGame(isLandscape: Bool) {
+        //self.isLandscape = isLandscape
+        rowCount = getRowCount(size: gridSize, isLandscape: isLandscape)
+        columnCount = getColumnCount(size: gridSize, isLandscape: isLandscape)
         mineCount = 0
         
         isFirstTile = true
         gameIsOver = false
-        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
-        framesReady = false
         lostGame = false
         
+        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
+        framesReady = false
+        
+        
         gameTiles = createTiles()
-        
-        //**added these
-//        baselineTiles = createTiles()
-//        baselineRowCount = rowCount
-//        baselineColumnCount = columnCount
-        
-        //gameTiles = baselineTiles
     }
     
-//    func applyOrientation(isLandscape: Bool) {
-//        if isLandscape {
-//            rotateBaselineToLandscape()
-//        } else {
-//            rowCount = baselineRowCount
-//            columnCount = baselineColumnCount
-//            gameTiles = baselineTiles
-//            tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
-//        }
-//    }
-//    
-//    func rotateBaselineToLandscape() {
-//        let newRowCount = baselineColumnCount
-//        let newColumnCount = baselineRowCount
-//        
-//        var newGameTiles: [Tile] = Array(
-//            repeating: Tile(row: 0, column: 0, isMine: false),
-//            count: baselineRowCount * baselineColumnCount
-//        )
-//        
-//        for oldRow in 0..<baselineRowCount {
-//            for oldCol in 0..<baselineColumnCount {
-//                let oldIndex = oldRow * baselineColumnCount + oldCol
-//                let newRow = oldCol
-//                let newCol = newColumnCount - 1 - oldRow
-//                let newIndex = newRow * newColumnCount + newCol
-//                
-//                var newTile = baselineTiles[oldIndex]
-//                newTile.row = newRow
-//                newTile.column = newCol
-//                newGameTiles[newIndex] = newTile
-//            }
-//        }
-//        
-//        rowCount = newRowCount
-//        columnCount = newColumnCount
-//        gameTiles = newGameTiles
-//        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
-//        
-//    }
+
     
     
     //CREAT TILES/set up
@@ -285,37 +318,7 @@ final class FieldViewModel {
             self.gameTiles[i].surroundingMineCount = thisMineCount
         }
     }
-    
-//    func rotateGrid() {
-//        let newRowCount = columnCount
-//        let newColumnCount = rowCount
-//        
-//        var newGameTiles: [Tile] = Array(repeating: Tile(row:0,column:0,isMine:false), count: rowCount * columnCount)
-//        
-//        for oldRow in 0..<rowCount {
-//            for oldCol in 0..<columnCount {
-//                let oldIndex = oldRow * columnCount + oldCol
-//                let newRow = oldCol
-//                let newCol = newColumnCount - 1 - oldRow
-//                let newIndex = newRow * newColumnCount + newCol
-//                
-//                var newTile = gameTiles[oldIndex]
-//                newTile.row = newRow
-//                newTile.column = newCol
-//                newGameTiles[newIndex] = newTile
-//            }
-//        }
-//        
-//        // Update counts and replace tiles
-//        rowCount = newRowCount
-//        columnCount = newColumnCount
-//        gameTiles = newGameTiles
-//        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
-//        
-//        recountSurroundingMines(gameTiles: gameTiles)
-//    }
-    
-    
+  
     
     func MineRandomizer(percentChance: Int) -> Bool {
        // var minegoal = floor(Double((rowCount * columnCount)/4))
@@ -501,9 +504,11 @@ final class FieldViewModel {
 
     
     func setTileFrame(index: Int, frame: CGRect) {
-        tileFrames[index] = frame
-        if !tileFrames.contains(.zero) {
-            framesReady = true
+        if tileFrames[index] != frame {
+            tileFrames[index] = frame
+            if !tileFrames.contains(.zero) {
+                framesReady = true
+            }
         }
     }
     
@@ -560,3 +565,75 @@ extension UIDevice {
 //print($0)
 //print(location)
 
+
+
+//    func rotateGrid() {
+//        let newRowCount = columnCount
+//        let newColumnCount = rowCount
+//
+//        var newGameTiles: [Tile] = Array(repeating: Tile(row:0,column:0,isMine:false), count: rowCount * columnCount)
+//
+//        for oldRow in 0..<rowCount {
+//            for oldCol in 0..<columnCount {
+//                let oldIndex = oldRow * columnCount + oldCol
+//                let newRow = oldCol
+//                let newCol = newColumnCount - 1 - oldRow
+//                let newIndex = newRow * newColumnCount + newCol
+//
+//                var newTile = gameTiles[oldIndex]
+//                newTile.row = newRow
+//                newTile.column = newCol
+//                newGameTiles[newIndex] = newTile
+//            }
+//        }
+//
+//        // Update counts and replace tiles
+//        rowCount = newRowCount
+//        columnCount = newColumnCount
+//        gameTiles = newGameTiles
+//        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
+//
+//        recountSurroundingMines(gameTiles: gameTiles)
+//    }
+
+
+//    func applyOrientation(isLandscape: Bool) {
+//        if isLandscape {
+//            rotateBaselineToLandscape()
+//        } else {
+//            rowCount = baselineRowCount
+//            columnCount = baselineColumnCount
+//            gameTiles = baselineTiles
+//            tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
+//        }
+//    }
+//
+//    func rotateBaselineToLandscape() {
+//        let newRowCount = baselineColumnCount
+//        let newColumnCount = baselineRowCount
+//
+//        var newGameTiles: [Tile] = Array(
+//            repeating: Tile(row: 0, column: 0, isMine: false),
+//            count: baselineRowCount * baselineColumnCount
+//        )
+//
+//        for oldRow in 0..<baselineRowCount {
+//            for oldCol in 0..<baselineColumnCount {
+//                let oldIndex = oldRow * baselineColumnCount + oldCol
+//                let newRow = oldCol
+//                let newCol = newColumnCount - 1 - oldRow
+//                let newIndex = newRow * newColumnCount + newCol
+//
+//                var newTile = baselineTiles[oldIndex]
+//                newTile.row = newRow
+//                newTile.column = newCol
+//                newGameTiles[newIndex] = newTile
+//            }
+//        }
+//
+//        rowCount = newRowCount
+//        columnCount = newColumnCount
+//        gameTiles = newGameTiles
+//        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
+//
+//    }

@@ -14,7 +14,8 @@ enum DragState {
 }
 
 struct DraggableItemView: View {
-    
+    @EnvironmentObject var orientation: OrientationModel
+
     //@State var standardGridView: StandardGridView
     @State var vm: FieldViewModel
     @State private var dragAmount = CGSize.zero
@@ -46,14 +47,14 @@ struct DraggableItemView: View {
         ZStack {
             Rectangle()
                 .fill(Color.secondary)
-                .frame(width: 70, height: 70)
+                .frame(width: orientation.isLandscape ? 50 : 70, height: orientation.isLandscape ? 50 : 70)
                 .cornerRadius(20)
                 
                 
             
             Image(textToDrag)
                 .resizable()
-                .frame(width: 90, height: 90)
+                .frame(width: orientation.isLandscape ? 70 : 90, height: orientation.isLandscape ? 70 : 90)
                 .offset(dragAmount)
                 .zIndex(dragAmount == .zero ? 0 : 1)
                 .shadow(color: shadowColor,
