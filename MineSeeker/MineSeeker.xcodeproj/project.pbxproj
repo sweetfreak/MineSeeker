@@ -91,6 +91,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2F1C2E322E786DCB00E97C54 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				2F1C2E282E77662400E97C54 /* lose2.mp3 */,
+				2F1C2E292E77662400E97C54 /* win1.mp3 */,
+				2F1C2E2C2E777AC000E97C54 /* buttondown1.mp3 */,
+				2F1C2E2D2E777AC000E97C54 /* buttonUp1.mp3 */,
+				2F1C2E302E777CCE00E97C54 /* mineFindSong.caf */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
 		2F5182072E5772070045EB4A = {
 			isa = PBXGroup;
 			children = (
@@ -113,11 +125,7 @@
 			children = (
 				2F1719532E749E9A0050AC6C /* Info.plist */,
 				2F5183322E5914420045EB4A /* Assets.xcassets */,
-				2F1C2E282E77662400E97C54 /* lose2.mp3 */,
-				2F1C2E292E77662400E97C54 /* win1.mp3 */,
-				2F1C2E2C2E777AC000E97C54 /* buttondown1.mp3 */,
-				2F1C2E2D2E777AC000E97C54 /* buttonUp1.mp3 */,
-				2F1C2E302E777CCE00E97C54 /* mineFindSong.caf */,
+				2F1C2E322E786DCB00E97C54 /* Sounds */,
 				2F5183352E5914420045EB4A /* MineSeekerApp.swift */,
 				2F51835A2E5CF8280045EB4A /* Views */,
 				2F51835B2E5CF8310045EB4A /* Models */,

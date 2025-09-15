@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVFoundation
+import CoreHaptics
 
 //the string/codable/caseIterable are so it cane be stored in the high score model w/ swiftdata
 enum GridSize: String, Codable, CaseIterable {
@@ -59,6 +60,10 @@ final class FieldViewModel {
     var gameIsOver = false
     var showGameStatusAlert = false
     var isFirstTile = true
+    
+    //HAPTICS
+    var engine: CHHapticEngine?
+
     
     //SOUNDS
     var musicFile: AVAudioPlayer?
@@ -499,6 +504,18 @@ final class FieldViewModel {
         tileFrames[index] = frame
         if !tileFrames.contains(.zero) {
             framesReady = true
+        }
+    }
+    
+    
+    func prepareHaptics() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        
+        do {
+            engine = try CHHapticEngine()
+            try engine?.start()
+        } catch {
+            print("There was an error creating the engine \(error.localizedDescription)")
         }
     }
     

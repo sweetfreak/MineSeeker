@@ -59,31 +59,6 @@ struct ContentView: View {
             
         }
         .animation(.smooth, value: vm.gameState)
-//        .onAppear {
-//            if vm.music {
-//                if let url = Bundle.main.url(forResource: "song-v1", withExtension: "mp3") {
-//                    do {
-//                        try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
-//                        try AVAudioSession.sharedInstance().setActive(true, options: [])
-//                        musicFile = try AVAudioPlayer(contentsOf: url)
-//                        musicFile?.numberOfLoops = -1
-//                        musicFile?.prepareToPlay()
-//                        musicFile?.play()
-//                    } catch {
-//                        print("[ContentView] Failed to play sound: \(error)")
-//                    }
-//                } else {
-//                    print("[Content] Missing resource song-v1.mp3")
-//                }
-//            }
-//        }
-//        .onChange(of: vm.music) {
-//            if vm.music {
-//                musicFile?.play()
-//            } else {
-//                musicFile?.stop()
-//            }
-//        }
     }
 }
 

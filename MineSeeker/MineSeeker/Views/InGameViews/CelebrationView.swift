@@ -7,17 +7,12 @@
 
 import SwiftUI
 import Vortex
-//import AVFoundation
-
+import CoreHaptics
 struct CelebrationView: View {
     
     var vm: FieldViewModel
-    
-  //  @State private var fanfareSfx: AVAudioPlayer?
 
-    
     var body: some View {
-        //VortexViewReader { proxy in
             VortexView(createFallingConfetti()) {
                 Rectangle()
                     .fill(.white)
@@ -27,10 +22,11 @@ struct CelebrationView: View {
             }
             .onAppear { //location in
                 vm.playSFX("win1")
+                vm.prepareHaptics()
+                celebrationHaptic()
             }
             
-            //Button("Burst", action: proxy.burst)
-      //  }
+
         .allowsHitTesting(false)
         
     }
@@ -54,7 +50,39 @@ struct CelebrationView: View {
 
         return system
     }
+    
+    func celebrationHaptic() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        
+        var events = [CHHapticEvent]()
+        
+        
+        let rumbleIntensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0)
+        let rumbleSharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.2)
+        let continuous = CHHapticEvent(eventType: .hapticContinuous, parameters: [rumbleIntensity, rumbleSharpness], relativeTime: 0.05, duration: 0.3)
+        events.append(continuous)
+
+        
+        for i in stride(from: 0, to: 1, by: 0.1) {
+            let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: Float(1 - i))
+            let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: Float(1 - i))
+
+            let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: i)
+            events.append(event)
+        }
+        
+        do {
+            let pattern = try CHHapticPattern(events: events, parameters: [])
+            let player = try vm.engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch {
+            print("Failed to play pattern \(error.localizedDescription)")
+        }
+    }
+    
 }
+
+
 
 #Preview {
     CelebrationView(vm: FieldViewModel())

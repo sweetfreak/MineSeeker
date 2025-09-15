@@ -13,10 +13,7 @@ import CoreHaptics
 struct ExplosionView: View {
 
     var vm: FieldViewModel
-    @State private var engine: CHHapticEngine?
     
-    //@State private var bombSfx: AVAudioPlayer?
-//    @State var hapticTrigger = false
 
     //@State var vm: FieldViewModel
 //    var xCoord: CGFloat
@@ -42,7 +39,7 @@ struct ExplosionView: View {
                     tapThrough = true
                 }
                 vm.playSFX("lose2")
-                prepareHaptics()
+                vm.prepareHaptics()
                 explosionHaptic()
             }
             
@@ -73,17 +70,6 @@ struct ExplosionView: View {
         
 
         return system
-    }
-    
-    func prepareHaptics() {
-        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
-        
-        do {
-            engine = try CHHapticEngine()
-            try engine?.start()
-        } catch {
-            print("There was an error creating the engine \(error.localizedDescription)")
-        }
     }
     
     func explosionHaptic() {
@@ -129,7 +115,7 @@ struct ExplosionView: View {
         
         do {
             let pattern = try CHHapticPattern(events: events, parameters: [])
-            let player = try engine?.makePlayer(with: pattern)
+            let player = try vm.engine?.makePlayer(with: pattern)
             try player?.start(atTime: 0)
         } catch {
             print("Failed to play pattern \(error.localizedDescription)")
