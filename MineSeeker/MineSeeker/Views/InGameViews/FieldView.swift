@@ -25,18 +25,16 @@ struct FieldView: View {
     
     
     var body: some View {
-//        OrientationReader { isLandscape in
             ZStack {
                 VStack {
+                    if UIDevice.isIPad {
+                        Spacer().frame(height: vm.gridSize == .big || vm.gridSize == .huge ? 40 : 100 )
+//                        Spacer().frame(height: orientation.isLandscape ? 40 : vm.gridSize == .big || vm.gridSize == .huge ? 50 : 100)
+                    }
                     if !orientation.isLandscape {
                         ScoreView(vm: vm)
                     }
-                    //ScoreView(vm: vm)
-                    
-                    
-                    //this was so the newGame buttons mostly stay in place
-                    //                    Color.clear
-                    //                        .frame(width: 350, height: 350)
+
                     ScrollView(.vertical, showsIndicators: false) {
                         StandardGridView(vm: vm)
                             .allowsHitTesting(vm.gameState == .playing ? true : false)
@@ -46,16 +44,14 @@ struct FieldView: View {
                             )
                             .animation(nil, value: vm.gameState)
                     }
-                    .padding(0)
+                    .padding()
                     .scrollDisabled(true)
-                    .frame(
-                        maxWidth: .infinity,
-                        maxHeight: (UIDevice.isIPad || vm.gridSize == .big) ? .infinity : 350)
+//                    .frame(
+//                        maxWidth: .infinity,
+//                        maxHeight: (UIDevice.isIPad || vm.gridSize == .big) ? .infinity : 350)
                     
                     
                     HStack {
-                        
-                        
                         VStack {
                             if vm.gameState == .playing {
                                 StandardGameOptionsView(vm: vm)
@@ -63,7 +59,10 @@ struct FieldView: View {
                                         insertion: .opacity,
                                         //insertion: .offset(x: 1000),
                                         removal: .offset(x: 1000))
+                                                
                                     )
+                                  
+
                             } else {
                                 HStack{
                                     if orientation.isLandscape {
@@ -77,23 +76,20 @@ struct FieldView: View {
                                     insertion: .opacity,
                                     removal: .offset(x: 1000))
                                 )
+                                .padding()
                             }
                         }
                     }
+                    
                 }
                 .animation(.smooth, value: vm.gameState)
                 
-                if vm.gameState == .lost {
-                    ExplosionView(vm: vm)
-                    
-                }
-                
-                if vm.gameState == .won {
-                    CelebrationView(vm: vm)
-                }
+                if vm.gameState == .lost {ExplosionView(vm: vm)}
+                if vm.gameState == .won {CelebrationView(vm: vm) }
             }
             .padding(0)
-            
+            .ignoresSafeArea(UIDevice.isIPhone && orientation.isLandscape ? [.all] : [])
+        
             //ALERTS
             .alert("New High Score!", isPresented: ($vm.newHighScore)) {
                 TextField("New High Score!\nEnter your name", text: $name)
@@ -112,10 +108,8 @@ struct FieldView: View {
                 }
                     
                 })
-                .padding()
-                .ignoresSafeArea(orientation.isLandscape ? .all : [])
+                
             
-//        }
     }
     
     @MainActor
@@ -137,4 +131,9 @@ struct FieldView: View {
 
 #Preview {
     FieldView(vm: FieldViewModel())
+        .environmentObject({
+            let mock = OrientationModel()
+            mock.current = .landscapeLeft
+            return mock
+        }())
 }

@@ -12,7 +12,7 @@ struct StandardGridView: View {
 //    @Environment(\.verticalSizeClass) var verticalSizeClass
 //    var isLandscape: Bool { verticalSizeClass == .compact }
 
-    var width: Double { UIDevice.isIPhone ? vm.iPhoneWidth : vm.iPadWidth + 4.0 }
+    var width: Double { UIDevice.isIPhone ? vm.iPhoneWidth : vm.iPadWidth + 2.0 }
     
     var body: some View {
         if vm.gameStarted {
@@ -87,4 +87,9 @@ struct StandardGridView: View {
 
 #Preview {
     StandardGridView(vm: FieldViewModel())
+        .environmentObject({
+            let mock = OrientationModel()
+            mock.current = .landscapeLeft
+            return mock
+        }())
 }

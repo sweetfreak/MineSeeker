@@ -47,14 +47,14 @@ struct DraggableItemView: View {
         ZStack {
             Rectangle()
                 .fill(Color.secondary)
-                .frame(width: orientation.isLandscape ? 50 : 70, height: orientation.isLandscape ? 50 : 70)
+                .frame(width: orientation.isLandscape ? 55 : 70, height: orientation.isLandscape ? 55 : 70)
                 .cornerRadius(20)
                 
                 
             
             Image(textToDrag)
                 .resizable()
-                .frame(width: orientation.isLandscape ? 70 : 90, height: orientation.isLandscape ? 70 : 90)
+                .frame(width: orientation.isLandscape ? 75 : 90, height: orientation.isLandscape ? 75 : 90)
                 .offset(dragAmount)
                 .zIndex(dragAmount == .zero ? 0 : 1)
                 .shadow(color: shadowColor,

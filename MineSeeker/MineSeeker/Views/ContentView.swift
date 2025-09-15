@@ -52,7 +52,6 @@ struct ContentView: View {
                             insertion: .offset(x: -1000),
                             removal: .offset(x: 1000))
                         )
-                        .ignoresSafeArea(.all, edges: .bottom)
                     
                 }
                 

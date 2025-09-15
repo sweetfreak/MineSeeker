@@ -520,7 +520,7 @@ final class FieldViewModel {
         case .big:
             return isLandscape ? 8 : 14
         case .huge:
-            return isLandscape ? 10 : 15
+            return isLandscape ? 12 : 16
         }
     }
     
@@ -533,7 +533,7 @@ final class FieldViewModel {
         case .big:
             return isLandscape ? 14 : 8
         case .huge:
-            return isLandscape ? 15 : 10
+            return isLandscape ? 16 : 12
         }
     }
     
