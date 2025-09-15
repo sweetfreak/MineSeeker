@@ -15,6 +15,7 @@ struct HighScoreListButtonView: View {
     var body: some View {
         Button {
             vm.gameState = .highScoreList
+            vm.playSFX("buttonUp1")
         } label: {
             Label("High Scores", systemImage: "list.number")
                 .symbolRenderingMode(.multicolor)
@@ -22,7 +23,8 @@ struct HighScoreListButtonView: View {
         }
         //.buttonStyle(.glassProminent)
         .buttonStyle(.borderedProminent)
-        
+        .sensoryFeedback(.success, trigger: vm.gameState == .highScoreList)
+
     }
 }
 

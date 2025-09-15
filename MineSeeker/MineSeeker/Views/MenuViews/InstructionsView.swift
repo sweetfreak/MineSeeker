@@ -107,6 +107,7 @@ struct InstructionsView: View {
             if vm.gameStarted {
                 Button{
                 vm.gameState = .playing
+                    vm.playSFX("buttondown1")
             } label: {
                 Label("Back", systemImage: "arrow.left")
             }

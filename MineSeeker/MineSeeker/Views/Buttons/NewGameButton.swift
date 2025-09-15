@@ -27,7 +27,7 @@ struct NewGameButton: View {
                 vm.gameStarted = true
                 vm.gameState = .playing
             }
-            
+            vm.playSFX("buttonUp1")
             
         } label: {
             Label("New Game", systemImage: "plus.circle.fill")
@@ -37,7 +37,8 @@ struct NewGameButton: View {
         }
         //.buttonStyle(.glassProminent)
         .buttonStyle(.borderedProminent)
-        
+        .sensoryFeedback(.success, trigger: vm.gameState == .playing)
+
 //        .rotation3DEffect(
 //            .degrees(animationAmount),
 //            axis: (x: 0, y: 1, z: 0)

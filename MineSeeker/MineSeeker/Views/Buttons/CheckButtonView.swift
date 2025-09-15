@@ -41,8 +41,10 @@ struct CheckButtonView: View {
         //.buttonStyle(.glassProminent)
         .buttonStyle(.borderedProminent)
         //.disabled(vm.gameScore <= 0 ? true : false)
-        // .sensoryFeedback(.impact(weight: .heavy, intensity: 1), trigger: vm.gameState == .lost)
+        .sensoryFeedback(.error, trigger: vm.showGameStatusAlert)
+
     }
+
 }
 
 #Preview {

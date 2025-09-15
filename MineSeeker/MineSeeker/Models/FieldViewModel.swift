@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-//import AVFoundation
+import AVFoundation
 
 //the string/codable/caseIterable are so it cane be stored in the high score model w/ swiftdata
 enum GridSize: String, Codable, CaseIterable {
@@ -61,8 +61,21 @@ final class FieldViewModel {
     var isFirstTile = true
     
     //SOUNDS
-    var sfx = true
-    var music = true
+    var musicFile: AVAudioPlayer?
+    var sfxPlayers: [String:AVAudioPlayer] = [:]
+    var sfx: Bool
+    var music: Bool {
+        didSet {
+            guard music != oldValue else { return }
+            
+            if music {
+                startMusic()
+            } else {
+                stopMusic()
+            }
+            UserDefaults.standard.set(music, forKey:"music")
+        }
+    }
 //    var bombSfx: AVAudioPlayer?
     
    
@@ -76,6 +89,66 @@ final class FieldViewModel {
 //    private var baselineTiles: [Tile] = []
 //    private var baselineRowCount: Int = 0
 //    private var baselineColumnCount: Int = 0
+    
+    
+    init() {
+        self.sfx = UserDefaults.standard.bool(forKey: "sfx")
+        let savedMusic = UserDefaults.standard.bool(forKey: "music")
+        self.music = UserDefaults.standard.bool(forKey: "music")
+        
+        if savedMusic && !AVAudioSession.sharedInstance().isOtherAudioPlaying {
+            startMusic()
+        } else {
+            music = false
+        }
+    }
+    
+    func startMusic() {
+
+        
+        if musicFile == nil {
+            if let url = Bundle.main.url(forResource: "mineFindSong", withExtension: "caf") {
+                            do {
+                                //try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
+                                try AVAudioSession.sharedInstance().setActive(true, options: [])
+                                musicFile = try AVAudioPlayer(contentsOf: url)
+                                musicFile?.volume = 0.2
+                                musicFile?.numberOfLoops = -1
+                                musicFile?.prepareToPlay()
+                            } catch {
+                                print("[FieldViewModel] Failed to initialize music: \(error)")
+                            }
+                        } else {
+                            print("[FieldViewModel] Missing resource mineFindSong.caf")
+                        }
+                    }
+                    musicFile?.play()
+        }
+    
+    private func stopMusic() {
+        musicFile?.stop()
+    }
+
+    func playSFX(_ name: String, ext: String = "mp3") {
+        guard sfx else {return}
+        
+        if let player = sfxPlayers[name] {
+            player.currentTime = 0
+            player.play()
+        } else if let url = Bundle.main.url(forResource: name, withExtension: ext) {
+            do {
+                try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
+                let newPlayer = try AVAudioPlayer(contentsOf: url)
+                newPlayer.prepareToPlay()
+                sfxPlayers[name] = newPlayer
+                newPlayer.play()
+            } catch {
+                print("[FieldViewModel] failed to load sfx: \(error)")
+            }
+        } else {
+            print("[FieldViewModel]  missing sfx resource: \(name).\(ext)")
+        }
+    }
     
     func setUpGame() {
         
@@ -348,6 +421,7 @@ final class FieldViewModel {
         } else {
             gameScore -= 500
             showGameStatusAlert = true
+            playSFX("buttondown1")
         }
         
         

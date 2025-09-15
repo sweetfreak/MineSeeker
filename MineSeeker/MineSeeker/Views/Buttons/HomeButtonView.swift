@@ -16,12 +16,14 @@ struct HomeButtonView: View {
         Button("Home", systemImage: "house.circle.fill") {
             vm.gameStarted = false
             vm.gameState = .home
+            vm.playSFX("buttondown1")
         }
         //.buttonStyle(.glassProminent)
         .buttonStyle(.borderedProminent)
         .symbolRenderingMode(.multicolor)
         .symbolEffect(.bounce)
-        
+        .sensoryFeedback(.impact(weight: .heavy), trigger: vm.gameState == .home)
+
         
     }
 }

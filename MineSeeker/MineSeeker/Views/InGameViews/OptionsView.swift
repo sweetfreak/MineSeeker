@@ -9,6 +9,9 @@ import SwiftUI
 
 struct OptionsView: View {
     
+    @AppStorage("sfx") var sfxSave = true
+    @AppStorage("music") var musicSave = true
+    
     var vm: FieldViewModel
     
     var body: some View {
@@ -16,6 +19,10 @@ struct OptionsView: View {
         Spacer()
         Button {
             vm.sfx.toggle()
+            UserDefaults.standard.set(vm.sfx, forKey: "sfx")
+            if vm.sfx {
+                vm.playSFX("buttonUp1")
+            }
         } label: {
             Label(vm.sfx ? "Sound Effects On" : "Sound Effects Off", systemImage: "waveform.circle")
                 .symbolRenderingMode(.multicolor)
@@ -29,6 +36,11 @@ struct OptionsView: View {
         
         Button {
             vm.music.toggle()
+            if vm.sfx {
+                vm.playSFX("buttonUp1")
+            } else {
+                vm.playSFX("buttondown1")
+            }
         } label: {
             Label(vm.music ? "Music On" : "Music Off", systemImage: "music.quarternote.3")
                 .symbolRenderingMode(.multicolor)

@@ -12,6 +12,7 @@ struct InstructionsButtonView: View {
     var body: some View {
         Button {
             vm.gameState = .instructions
+            vm.playSFX("buttonUp1")
         } label: {
             Label("How to Play ", systemImage: "questionmark.text.page.fill")
                 .symbolRenderingMode(.multicolor)
@@ -19,6 +20,7 @@ struct InstructionsButtonView: View {
         }
         //.buttonStyle(.glassProminent)
         .buttonStyle(.borderedProminent)
+        .sensoryFeedback(.impact(weight: .heavy), trigger: vm.gameState == .instructions)
     }
 }
     

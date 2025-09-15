@@ -7,13 +7,13 @@
 
 import SwiftUI
 import Vortex
-import AVFoundation
+//import AVFoundation
 
 struct CelebrationView: View {
     
     var vm: FieldViewModel
     
-    @State private var fanfareSfx: AVAudioPlayer?
+  //  @State private var fanfareSfx: AVAudioPlayer?
 
     
     var body: some View {
@@ -26,21 +26,7 @@ struct CelebrationView: View {
                     .frame(width: 10, height: 10)
             }
             .onAppear { //location in
-                if vm.sfx {
-                    if let url = Bundle.main.url(forResource: "fanfare", withExtension: "mp3") {
-                        do {
-                            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
-                            try AVAudioSession.sharedInstance().setActive(true, options: [])
-                            fanfareSfx = try AVAudioPlayer(contentsOf: url)
-                            fanfareSfx?.prepareToPlay()
-                            fanfareSfx?.play()
-                        } catch {
-                            print("[CelebrationView] Failed to play sound: \(error)")
-                        }
-                    } else {
-                        print("[CelebrationView] Missing resource fanfare.mp3")
-                    }
-                }
+                vm.playSFX("win1")
             }
             
             //Button("Burst", action: proxy.burst)

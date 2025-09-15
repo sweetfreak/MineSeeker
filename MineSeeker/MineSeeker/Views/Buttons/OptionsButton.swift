@@ -15,6 +15,7 @@ struct OptionsButton: View {
     var body: some View {
         Button {
             vm.gameState = .options
+            vm.playSFX("buttonUp1")
         } label: {
             Label("Options", systemImage: "gearshape")
                 .symbolRenderingMode(.multicolor)
@@ -22,6 +23,8 @@ struct OptionsButton: View {
         }
         //.buttonStyle(.glassProminent)
         .buttonStyle(.borderedProminent)
+        .sensoryFeedback(.start, trigger: vm.gameState == .options)
+
     }
 }
 

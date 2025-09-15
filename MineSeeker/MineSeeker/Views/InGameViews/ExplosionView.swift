@@ -7,14 +7,16 @@
 
 import SwiftUI
 import Vortex
-import AVFoundation
+//import AVFoundation
+import CoreHaptics
 
 struct ExplosionView: View {
 
     var vm: FieldViewModel
+    @State private var engine: CHHapticEngine?
     
-    @State private var bombSfx: AVAudioPlayer?
-    @State var hapticTrigger = false
+    //@State private var bombSfx: AVAudioPlayer?
+//    @State var hapticTrigger = false
 
     //@State var vm: FieldViewModel
 //    var xCoord: CGFloat
@@ -36,25 +38,12 @@ struct ExplosionView: View {
           
             .onAppear { //location in
                 proxy.burst()
-                hapticTrigger = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
                     tapThrough = true
                 }
-                if vm.sfx {
-                    if let url = Bundle.main.url(forResource: "bombsfx", withExtension: "mp3") {
-                        do {
-                            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
-                            try AVAudioSession.sharedInstance().setActive(true, options: [])
-                            bombSfx = try AVAudioPlayer(contentsOf: url)
-                            bombSfx?.prepareToPlay()
-                            bombSfx?.play()
-                        } catch {
-                            print("[ExplosionView] Failed to play sound: \(error)")
-                        }
-                    } else {
-                        print("[ExplosionView] Missing resource bombExplosionSfx.mp3")
-                    }
-                }
+                vm.playSFX("lose2")
+                prepareHaptics()
+                explosionHaptic()
             }
             
             
@@ -84,6 +73,67 @@ struct ExplosionView: View {
         
 
         return system
+    }
+    
+    func prepareHaptics() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        
+        do {
+            engine = try CHHapticEngine()
+            try engine?.start()
+        } catch {
+            print("There was an error creating the engine \(error.localizedDescription)")
+        }
+    }
+    
+    func explosionHaptic() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        
+        var events = [CHHapticEvent]()
+        
+        let blastIntensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0)
+        let blastSharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 1.0)
+        let blast = CHHapticEvent(eventType: .hapticTransient, parameters: [blastIntensity, blastSharpness], relativeTime: 0)
+        events.append(blast)
+
+        let decaySteps = 25
+            for i in 0..<decaySteps {
+                let t = Double(i) * 0.1  // spacing events every 0.1 sec
+                let intensity = Float(1.0 - Double(i) / Double(decaySteps)) // fade out
+                let sharpness = Float(0.2 + 0.3 * (1.0 - Double(i) / Double(decaySteps))) // slight taper
+                let continuous = CHHapticEvent(
+                    eventType: .hapticContinuous,
+                    parameters: [
+                        CHHapticEventParameter(parameterID: .hapticIntensity, value: intensity),
+                        CHHapticEventParameter(parameterID: .hapticSharpness, value: sharpness)
+                    ],
+                    relativeTime: t,
+                    duration: 0.1
+                )
+                events.append(continuous)
+        
+        
+//        let rumbleIntensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0)
+//        let rumbleSharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.2)
+//        let continuous = CHHapticEvent(eventType: .hapticContinuous, parameters: [rumbleIntensity, rumbleSharpness], relativeTime: 0.05, duration: 0.3)
+//        events.append(continuous)
+
+        
+//        for i in stride(from: 0, to: 1, by: 0.1) {
+//            let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: Float(1 - i))
+//            let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: Float(1 - i))
+//            
+//            let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: i)
+//            events.append(event)
+        }
+        
+        do {
+            let pattern = try CHHapticPattern(events: events, parameters: [])
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch {
+            print("Failed to play pattern \(error.localizedDescription)")
+        }
     }
     
 }
