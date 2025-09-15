@@ -93,10 +93,6 @@ struct FieldView: View {
                 }
             }
             .padding(0)
-            .onChange(of: orientation.isLandscape) {_, newValue in
-                
-                vm.rotateForOrientation(isLandscape: newValue)
-            }
             
             //ALERTS
             .alert("New High Score!", isPresented: ($vm.newHighScore)) {

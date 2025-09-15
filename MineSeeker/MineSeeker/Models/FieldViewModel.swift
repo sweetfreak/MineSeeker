@@ -155,41 +155,83 @@ final class FieldViewModel {
         }
     }
     
-    func rotateForOrientation( isLandscape: Bool) {
-        // Save old dimensions
+    func handleOrientationChange(from oldOrientation: UIDeviceOrientation, to newOrientation: UIDeviceOrientation) {
+        guard !gameTiles.isEmpty else { return }
+
+        switch (oldOrientation, newOrientation) {
+        case (.portrait, .landscapeLeft):
+            // Device rotated left → grid should rotate counterclockwise
+            rotateTilesForOrientation(isClockwise: false)
+        case (.portrait, .landscapeRight):
+            // Device rotated right → grid should rotate clockwise
+            rotateTilesForOrientation(isClockwise: true)
+        case (.landscapeLeft, .portrait):
+            // Coming back to portrait from landscapeLeft → rotate clockwise
+            rotateTilesForOrientation(isClockwise: true)
+        case (.landscapeRight, .portrait):
+            // Coming back to portrait from landscapeRight → rotate counterclockwise
+            rotateTilesForOrientation(isClockwise: false)
+        case (.landscapeLeft, .landscapeRight), (.landscapeRight, .landscapeLeft):
+            // Full 180° rotation between landscape modes
+            rotateTilesForOrientation(isClockwise: true)
+            rotateTilesForOrientation(isClockwise: true)
+        default:
+            break
+        }
+    }
+    
+    private func rotateClockwise90() {
+        rotateTilesForOrientation(isClockwise: true)
+    }
+
+    private func rotateCounterClockwise90() {
+        rotateTilesForOrientation(isClockwise: false)
+    }
+
+    private func rotate180() {
+        rotateClockwise90()
+        rotateClockwise90()
+    }
+    
+//    func rotateForOrientation( isLandscape: Bool) {
+//        // Save old dimensions
+//        let oldRows = rowCount
+//        let oldCols = columnCount
+//
+//        // Update row/column counts for new orientation
+//        rowCount = getRowCount(size: gridSize, isLandscape: isLandscape)
+//        columnCount = getColumnCount(size: gridSize, isLandscape: isLandscape)
+//        
+//        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
+//
+//        rotateTilesForOrientation(isLandscape: isLandscape, oldRows: oldRows, oldCols: oldCols)
+//    }
+
+    private func rotateTilesForOrientation(isClockwise: Bool) {
+        //
         let oldRows = rowCount
         let oldCols = columnCount
 
-        // Update row/column counts for new orientation
-        rowCount = getRowCount(size: gridSize, isLandscape: isLandscape)
-        columnCount = getColumnCount(size: gridSize, isLandscape: isLandscape)
-        
-        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
+        // Swap row/column counts
+        rowCount = oldCols
+        columnCount = oldRows
 
-        rotateTilesForOrientation(isLandscape: isLandscape, oldRows: oldRows, oldCols: oldCols)
-    }
-
-    func rotateTilesForOrientation(isLandscape: Bool, oldRows: Int, oldCols: Int) {
         var newTiles: [Tile] = Array(repeating: Tile(row: 0, column: 0, isMine: false), count: rowCount * columnCount)
 
         for oldRow in 0..<oldRows {
             for oldCol in 0..<oldCols {
                 let oldIndex = oldRow * oldCols + oldCol
                 let oldTile = gameTiles[oldIndex]
-                
-                var newRow: Int
-                var newCol: Int
-                
-                if isLandscape {
-                    // 90° clockwise
+                let (newRow, newCol): (Int, Int)
+
+                if isClockwise {
                     newRow = oldCol
                     newCol = oldRows - 1 - oldRow
                 } else {
-                    // 90° counterclockwise (back to portrait)
                     newRow = oldCols - 1 - oldCol
                     newCol = oldRow
                 }
-                
+
                 var newTile = oldTile
                 newTile.row = newRow
                 newTile.column = newCol
@@ -200,6 +242,38 @@ final class FieldViewModel {
 
         gameTiles = newTiles
     }
+    
+//    func rotateTilesForOrientation(isLandscape: Bool, oldRows: Int, oldCols: Int) {
+//        var newTiles: [Tile] = Array(repeating: Tile(row: 0, column: 0, isMine: false), count: rowCount * columnCount)
+//
+//        for oldRow in 0..<oldRows {
+//            for oldCol in 0..<oldCols {
+//                let oldIndex = oldRow * oldCols + oldCol
+//                let oldTile = gameTiles[oldIndex]
+//                
+//                var newRow: Int
+//                var newCol: Int
+//                
+//                if isLandscape {
+//                    // 90° clockwise
+//                    newRow = oldCol
+//                    newCol = oldRows - 1 - oldRow
+//                } else {
+//                    // 90° counterclockwise (back to portrait)
+//                    newRow = oldCols - 1 - oldCol
+//                    newCol = oldRow
+//                }
+//                
+//                var newTile = oldTile
+//                newTile.row = newRow
+//                newTile.column = newCol
+//                let newIndex = newRow * columnCount + newCol
+//                newTiles[newIndex] = newTile
+//            }
+//        }
+//
+//        gameTiles = newTiles
+//    }
     
     
 //    func rotateForOrientation(_ isLandscape: Bool) {

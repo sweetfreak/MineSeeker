@@ -57,7 +57,13 @@ struct ContentView: View {
                 }
                 
             }
+            .onChange(of: orientation.current) {_, newOrientation in
+                vm.handleOrientationChange(from: orientation.previous, to: newOrientation)
+                orientation.previous = newOrientation
+
+            }
             .animation(.smooth, value: vm.gameState)
+        
     }
 }
 

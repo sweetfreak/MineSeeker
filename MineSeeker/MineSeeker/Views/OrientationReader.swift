@@ -22,12 +22,16 @@ import Combine
 
 @Observable
 final class OrientationModel: ObservableObject {
-    var isLandscape: Bool = UIDevice.current.orientation.isLandscape
-//    var previousOrientation: UIDeviceOrientation = .portrait
+    var current: UIDeviceOrientation = UIDevice.current.orientation
+    var previous: UIDeviceOrientation = .portrait
+    
+    var isLandscape: Bool {
+        current.isLandscape
+    }
 }
 
 struct OrientationReaderView: View {
-    var onChange: (Bool) -> Void
+    var onChange: (UIDeviceOrientation) -> Void
     
     var body: some View {
         GeometryReader { proxy in
@@ -44,49 +48,12 @@ struct OrientationReaderView: View {
     }
     
     private func reportOrientation(proxy: GeometryProxy) {
-        let isLandscape = proxy.size.width > proxy.size.height
-        onChange(isLandscape)
+        let orientation: UIDeviceOrientation
+        if proxy.size.width > proxy.size.height {
+            orientation = UIDevice.current.orientation.isLandscape ? UIDevice.current.orientation : .landscapeLeft
+        } else {
+            orientation = .portrait
+        }
+        onChange(orientation)
     }
 }
-
-//struct OrientationReaderView: View {
-//    var onChange: (Bool) -> Void
-//    
-//    var body: some View {
-//        GeometryReader { geometry in
-//            let isLandscape = geometry.size.width > geometry.size.height
-//            Color.clear
-//                .preference(key: OrientationPreferenceKey.self, value: isLandscape)
-//        }
-//        .frame(width: 0, height: 0) // occupies no space
-//        .onPreferenceChange(OrientationPreferenceKey.self) { value in
-//            onChange(value)
-//        }
-//        .allowsHitTesting(false) // ignores taps
-//    }
-//}
-
-//struct OrientationPreferenceKey: PreferenceKey {
-//    static var defaultValue: Bool = false
-//    static func reduce(value: inout Bool, nextValue: () -> Bool) {
-//        value = nextValue()
-//    }
-//}
-
-
-//struct OrientationReader<Content: View>: View {
-//    @StateObject private var orientation = OrientationModel()
-//    let content: (Bool) -> Content
-//    
-//    var body: some View {
-//        GeometryReader { geo in
-//            let landscape = geo.size.width > geo.size.height
-//            Color.clear
-//                .onAppear { orientation.isLandscape = landscape }
-//                .onChange(of: geo.size) {_, newSize in
-//                    orientation.isLandscape = newSize.width > newSize.height
-//                }
-//            content(orientation.isLandscape)
-//        }
-//    }
-//}

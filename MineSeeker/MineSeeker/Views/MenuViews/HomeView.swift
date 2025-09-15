@@ -57,15 +57,7 @@ struct HomeView: View {
         case .huge: return "Huge"
         }
     }
-    
-//    private func iPadLabel(for size: iPadGridSize) -> String {
-//        switch size {
-//        case .small: return "Small"
-//        case .med: return "Medium"
-//        case .big: return "Big"
-//        case .huge: return "Huge"
-//        }
-//    }
+   
 }
 
 #Preview {
