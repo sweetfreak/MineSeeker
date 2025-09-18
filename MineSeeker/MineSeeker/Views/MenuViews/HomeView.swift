@@ -9,6 +9,9 @@ import SwiftUI
 
 struct HomeView: View {
     
+    @EnvironmentObject var orientation: OrientationModel
+
+    
     @State var vm: FieldViewModel
     private var gridSizeOptions: [GridSize] {
         if UIDevice.isIPhone {
@@ -18,10 +21,22 @@ struct HomeView: View {
         }
     }
     
+    
     var body: some View {
-        Text("MineFind")
-            .font(.largeTitle)
-            .bold()
+        Spacer()
+        HStack {
+            Text("MineFind")
+                .font(.largeTitle)
+                .bold()
+            if orientation.isLandscape {
+                DraggableItemView(vm: vm, imageToDrag: "Flag")
+            }
+            
+        }
+        
+        if !orientation.isLandscape {
+            DraggableItemView(vm: vm, imageToDrag: "Flag")
+        }
         
         Spacer()
         Text("Choose a minefield size:")
@@ -37,13 +52,13 @@ struct HomeView: View {
         
         HStack {
             NewGameButton(vm: vm)
-                .padding(5)
             InstructionsButtonView(vm: vm)
         }
         HStack {
             HighScoreListButtonView(vm: vm)
             OptionsButton(vm: vm)
         }
+        .padding(.bottom, 10)
         Spacer()
         
         

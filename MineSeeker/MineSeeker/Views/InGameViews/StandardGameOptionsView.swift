@@ -21,8 +21,8 @@ struct StandardGameOptionsView: View {
                     ScoreView(vm: vm)
                         .font(Font.caption2)
                 }
-                DraggableItemView(vm: vm, textToDrag: "Flag", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
-                DraggableItemView(vm: vm, textToDrag: "Shovel", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
+                DraggableItemView(vm: vm, imageToDrag: "Flag", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
+                DraggableItemView(vm: vm, imageToDrag: "Shovel", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
                 CheckButtonView(vm: vm)
                 if orientation.isLandscape {
                     InstructionsButtonView(vm: vm)

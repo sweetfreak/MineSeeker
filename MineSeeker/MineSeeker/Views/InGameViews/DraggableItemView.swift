@@ -19,10 +19,8 @@ struct DraggableItemView: View {
     //@State var standardGridView: StandardGridView
     @State var vm: FieldViewModel
     @State private var dragAmount = CGSize.zero
-    @State var draggable = false
     @State var dragState: DragState = .notOnTile
-    
-    var textToDrag: String
+    var imageToDrag: String
     
     var onChanged: ((CGPoint, String) -> DragState)?
     var onEnded: ((CGPoint, String) -> Void)?
@@ -52,7 +50,7 @@ struct DraggableItemView: View {
                 
                 
             
-            Image(textToDrag)
+            Image(imageToDrag)
                 .resizable()
                 .frame(width: orientation.isLandscape ? 75 : 90, height: orientation.isLandscape ? 75 : 90)
                 .offset(dragAmount)
@@ -63,22 +61,26 @@ struct DraggableItemView: View {
                 .gesture(
                     DragGesture(coordinateSpace: .global)
                         .onChanged {
+                            //print("Changed draggable")
                             self.dragAmount = CGSize(width: $0.translation.width, height: $0.translation.height)
                             
                             self.dragState = self.onChanged?(
                                 $0.location,
-                                self.textToDrag
+                                self.imageToDrag
                             ) ?? .notOnTile
                         }
                         .onEnded{value in
                             if self.dragState == .canPlaceOnTile {
-                                self.onEnded?(value.location, self.textToDrag)
+                                self.onEnded?(value.location, self.imageToDrag)
                             }
                             
                             self.dragAmount = .zero
                             self.dragState = .notOnTile
                         }
                 )
+                .sensoryFeedback(.impact(weight: .medium, intensity: 0.7), trigger: dragState == .canPlaceOnTile)
+                .sensoryFeedback(.impact(weight: .heavy, intensity: 1.0), trigger: dragAmount == .zero)
+                
         }
         .padding(0)
     }
@@ -86,7 +88,12 @@ struct DraggableItemView: View {
 
 
 #Preview {
-    DraggableItemView(vm: FieldViewModel(), textToDrag: "Flag")
+    DraggableItemView(vm: FieldViewModel(), imageToDrag: "Flag")
+        .environmentObject({
+            let mock = OrientationModel()
+            mock.current = .landscapeLeft
+            return mock
+        }())
 }
 
 

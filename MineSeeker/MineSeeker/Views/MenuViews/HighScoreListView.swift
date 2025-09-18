@@ -15,6 +15,15 @@ struct HighScoreListView: View {
     @Environment(\.modelContext) private var modelContext
     @State var vm: FieldViewModel
 
+    var highScoresExamples: [HighScore] = [
+        HighScore(id: UUID(), name: "Jesse S", score: 3000, date: Date(), gridSize: .big, hintsUsed: 0, duration: 1000, mineCount: 10),
+        HighScore(id: UUID(), name: "Florian R", score: 5000, date: Date(), gridSize: .big, hintsUsed: 0, duration: 1000, mineCount: 10),
+        HighScore(id: UUID(), name: "Jon K", score: 4000, date: Date(), gridSize: .big, hintsUsed: 0, duration: 1000, mineCount: 10),
+        HighScore(id: UUID(), name: "Victoria R", score: 2000, date: Date(), gridSize: .small, hintsUsed: 0, duration: 1000, mineCount: 10),
+        HighScore(id: UUID(), name: "Mel S", score: 8000, date: Date(), gridSize: .big, hintsUsed: 0, duration: 1000, mineCount: 10),
+        HighScore(id: UUID(), name: "Alex Y", score: 3500, date: Date(), gridSize: .small, hintsUsed: 0, duration: 1000, mineCount: 10),
+        HighScore(id: UUID(), name: "Maria E", score: 6000, date: Date(), gridSize: .big, hintsUsed: 0, duration: 1000, mineCount: 10),
+        ]
     
     var body: some View {
         
@@ -41,11 +50,13 @@ struct HighScoreListView: View {
                             .font(Font.title3.bold())
                             Divider()
                             if vm.hsvm.highScores.isEmpty {
+//                            if !vm.hsvm.highScores.isEmpty {
                                 Text("There are no high scores yet.")
                                     .font(Font.caption)
                                 
                             } else {
                                 ForEach(vm.hsvm.highScores.prefix(10)) { highScore in
+//                                ForEach(highScoresExamples.prefix(10)) { highScore in
                                     GridRow {
                                         Text(highScore.name)
                                         // .gridCellAnchor(UnitPoint(x: 1, y: 0.5))
@@ -85,6 +96,12 @@ struct HighScoreListView: View {
                 }
             }
             HomeButtonView(vm: vm)
+//            Button {
+//                for highScore in highScoresExamples
+//                        
+//            } label: {
+//                Text("Add Names to UI")
+//            }
         }
         .onAppear {
             vm.hsvm.fetchHighScores(from: modelContext)
@@ -105,3 +122,10 @@ struct HighScoreListView: View {
 #Preview {
     HighScoreListView(vm: FieldViewModel())
 }
+
+//example demo stuff
+//#Preview {
+//    let vm = FieldViewModel()
+//    let  vm.hsvm.highScores = highScoreExamples //mockData
+//    return HighScoresListView(vm: vm) // or whatever your view is
+//}

@@ -14,23 +14,23 @@ struct FieldView: View {
     @EnvironmentObject var orientation: OrientationModel
     // @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
+    @AppStorage("playerName") private var playerName: String = ""
     
     @State var explosion = false
     
     @State var vm: FieldViewModel
     
     
-    //TEMP VARS?
-    @State var name = ""
+    
+    
+    
     
     
     var body: some View {
             ZStack {
                 VStack {
-                    if UIDevice.isIPad {
-                        Spacer().frame(height: vm.gridSize == .big || vm.gridSize == .huge ? 40 : 100 )
-//                        Spacer().frame(height: orientation.isLandscape ? 40 : vm.gridSize == .big || vm.gridSize == .huge ? 50 : 100)
-                    }
+                    Spacer().frame(height: spacerHeight(isLandscape: orientation.isLandscape, gridSize: vm.gridSize))
+                    
                     if !orientation.isLandscape {
                         ScoreView(vm: vm)
                     }
@@ -42,14 +42,12 @@ struct FieldView: View {
                                 insertion: .offset(x: 1000),
                                 removal: .offset(x: 1000))
                             )
-                            .animation(nil, value: vm.gameState)
+                        
+                        //this .anim makes bombs appear automatically instead of fade in
+                           .animation(nil, value: vm.gameState)
                     }
                     .padding()
                     .scrollDisabled(true)
-//                    .frame(
-//                        maxWidth: .infinity,
-//                        maxHeight: (UIDevice.isIPad || vm.gridSize == .big) ? .infinity : 350)
-                    
                     
                     HStack {
                         VStack {
@@ -80,7 +78,9 @@ struct FieldView: View {
                             }
                         }
                     }
-                    
+                    if vm.gridSize != .big {
+                        Spacer().frame(height: UIDevice.isIPhone && orientation.isLandscape ? 20 : 30)
+                    }
                 }
                 .animation(.smooth, value: vm.gameState)
                 
@@ -88,12 +88,12 @@ struct FieldView: View {
                 if vm.gameState == .won {CelebrationView(vm: vm) }
             }
             .padding(0)
-            .ignoresSafeArea(UIDevice.isIPhone && orientation.isLandscape ? [.all] : [])
+            .ignoresSafeArea(UIDevice.isIPhone && vm.gridSize != .small && orientation.isLandscape ? [.all] : [])
         
             //ALERTS
             .alert("New High Score!", isPresented: ($vm.newHighScore)) {
-                TextField("New High Score!\nEnter your name", text: $name)
-                Button("Enter") { saveHighScore(name: name)}
+                TextField("New High Score!\nEnter your name", text: $playerName)
+                Button("Enter") { saveHighScore(name: playerName)}
                 Button("Cancel", role: .cancel) {}
             } message: {Text("You scored \(vm.gameScore) points!")}
             
@@ -104,12 +104,50 @@ struct FieldView: View {
                 } else if vm.gameState == .lost {
                     Alert(title: Text("You Lost"), message: Text("Better luck next time!"), dismissButton: .default(Text("OK")))
                 } else  {
-                    Alert(title: Text("You haven't flagged every mine yet"), message: Text("Minus 500 points."), dismissButton: .default(Text("OK")))
+                    Alert(title: vm.checkedTooSoonText, message: Text(vm.minusPointsText), dismissButton: .default(Text("OK")))
                 }
                     
                 })
-                
+    }
+    
+    func spacerHeight(isLandscape: Bool, gridSize: GridSize) -> CGFloat {
+        let deviceType: String = UIDevice.isIPad ? "iPad" : "iPhone"
+        
+        switch (deviceType, gridSize, isLandscape) {
             
+        // iPad cases
+        case ("iPad", .small, true):
+            return 200
+        case ("iPad", .small, false):
+            return 325
+        case ("iPad", .med, true):
+            return 100
+        case ("iPad", .med, false):
+            return 200
+        case ("iPad", .big, _):
+            return 100
+
+        case ("iPad", .huge, _):
+            return 20   // same regardless of orientation
+        
+        // iPhone cases
+        case ("iPhone", .small, true):
+            return 50
+        case ("iPhone", .small, false):
+            return 250
+        case ("iPhone", .med, true):
+            return 10
+        case ("iPhone", .med, false):
+            return 180
+        case ("iPhone", .big, _):
+            return 0
+//        case ("iPhone", .big, false):
+//            return 0
+        
+        // fallback
+        default:
+            return 30
+        }
     }
     
     @MainActor
@@ -123,7 +161,7 @@ struct FieldView: View {
                 modelContext.delete(score)
             }
         }
-        vm.newHighScore = false
+        
         
     }
 

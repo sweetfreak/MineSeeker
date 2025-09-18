@@ -25,6 +25,12 @@ struct InstructionsButtonView: View {
 }
     
 #Preview {
+    
     InstructionsButtonView(vm: FieldViewModel())
+        .environmentObject({
+            let mock = OrientationModel()
+            mock.current = .landscapeLeft
+            return mock
+        }())
 }
 

@@ -11,24 +11,25 @@ struct NewGameButton: View {
     @EnvironmentObject var orientation: OrientationModel
 
     
-    @State var animationAmount = 1.0
+    //@State var animationAmount = 1.0
 
     @State var vm: FieldViewModel
     
     var body: some View {
         Button {
-            vm.gameScore = 0
-            vm.gameStarted = false
-            vm.gameTiles.removeAll()
             //vm.gameState = .reloadingGame
+            //vm.gameScore = 0
+            //vm.gameStarted = false
+            //vm.gameTiles.removeAll()
+            
             vm.setUpGame(isLandscape: orientation.isLandscape)
             
-            withAnimation(.spring(duration:0.3, bounce: 0.5)){
-                animationAmount += 720
-            } completion: {
-                vm.gameStarted = true
-                vm.gameState = .playing
-            }
+//            withAnimation(.spring(duration:0.3, bounce: 0.5)){
+//             //   animationAmount += 720
+//            } completion: {
+//                vm.gameStarted = true
+//                vm.gameState = .playing
+//            }
             vm.playSFX("buttonUp1")
             
         } label: {

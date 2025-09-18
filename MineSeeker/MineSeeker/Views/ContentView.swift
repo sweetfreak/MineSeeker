@@ -23,42 +23,35 @@ struct ContentView: View {
                             insertion: .opacity.animation(.smooth),
                             removal: .offset(x: 1000))
                         )
-                    
-                    
                 } else if vm.gameState == .instructions {
                     InstructionsView(vm: vm)
                         .transition(.asymmetric(
                             insertion: .opacity.animation(.smooth),
                             removal: .offset(x: 1000))
                         )
-                    
                 } else if vm.gameState == .highScoreList {
                     HighScoreListView(vm: vm)
                         .transition(.asymmetric(
                             insertion: .opacity.animation(.smooth),
                             removal: .offset(x: 1000))
                         )
-                    
                 } else if vm.gameState == .options {
                     OptionsView(vm: vm)
                         .transition(.asymmetric(
                             insertion: .opacity.animation(.smooth),
                             removal: .offset(x: 1000))
                         )
-                    
                 } else {
                     FieldView(vm: vm)
                         .transition(.asymmetric(
                             insertion: .offset(x: -1000),
                             removal: .offset(x: 1000))
                         )
-                    
                 }
-                
             }
             .onChange(of: orientation.current) {_, newOrientation in
-                vm.handleOrientationChange(from: orientation.previous, to: newOrientation)
-                orientation.previous = newOrientation
+                //print("change orientation")
+                vm.handleOrientationChange(to: newOrientation)
 
             }
             .animation(.smooth, value: vm.gameState)

@@ -29,6 +29,13 @@ enum GameState {
     case options
 }
 
+enum GridRotation: Int {
+    case portraitUp = 0
+    case landscapeRight = 1
+    case portraitDown = 2
+    case landscapeLeft = 3
+}
+
 @Observable
 final class FieldViewModel {
     
@@ -62,10 +69,15 @@ final class FieldViewModel {
     var gameIsOver = false
     var showGameStatusAlert = false
     var isFirstTile = true
+    var checkedTooSoonText: Text = Text("")
+    var minusPointsText = ""
     
     //HAPTICS
     var engine: CHHapticEngine?
-
+    
+    //rotation stuff?
+    private var gridRotation: GridRotation = .portraitUp
+    
     
     //SOUNDS
     var musicFile: AVAudioPlayer?
@@ -83,7 +95,6 @@ final class FieldViewModel {
             UserDefaults.standard.set(music, forKey:"music")
         }
     }
-//    var bombSfx: AVAudioPlayer?
     
    
     //Scoring (and Saving)
@@ -92,12 +103,7 @@ final class FieldViewModel {
     var gameScore: Int = 0
     var mineCount: Int = 0
     
-    //**added these
-//    private var baselineTiles: [Tile] = []
-//    private var baselineRowCount: Int = 0
-//    private var baselineColumnCount: Int = 0
-    
-    
+
     init() {
         self.sfx = UserDefaults.standard.bool(forKey: "sfx")
         let savedMusic = UserDefaults.standard.bool(forKey: "music")
@@ -155,66 +161,40 @@ final class FieldViewModel {
         }
     }
     
-    func handleOrientationChange(from oldOrientation: UIDeviceOrientation, to newOrientation: UIDeviceOrientation) {
-        guard !gameTiles.isEmpty else { return }
-
-        switch (oldOrientation, newOrientation) {
-        case (.portrait, .landscapeLeft):
-            // Device rotated left → grid should rotate counterclockwise
-            rotateTilesForOrientation(isClockwise: false)
-        case (.portrait, .landscapeRight):
-            // Device rotated right → grid should rotate clockwise
-            rotateTilesForOrientation(isClockwise: true)
-        case (.landscapeLeft, .portrait):
-            // Coming back to portrait from landscapeLeft → rotate clockwise
-            rotateTilesForOrientation(isClockwise: true)
-        case (.landscapeRight, .portrait):
-            // Coming back to portrait from landscapeRight → rotate counterclockwise
-            rotateTilesForOrientation(isClockwise: false)
-        case (.landscapeLeft, .landscapeRight), (.landscapeRight, .landscapeLeft):
-            // Full 180° rotation between landscape modes
-            rotateTilesForOrientation(isClockwise: true)
-            rotateTilesForOrientation(isClockwise: true)
-        default:
-            break
+    private func gridRotation(for orientation: UIDeviceOrientation) -> GridRotation? {
+        switch orientation {
+        case .portrait: return .portraitUp
+        case .landscapeRight: return .landscapeRight
+        case .portraitUpsideDown: return .portraitDown
+        case .landscapeLeft: return .landscapeLeft
+        default: return nil
         }
     }
     
-    private func rotateClockwise90() {
-        rotateTilesForOrientation(isClockwise: true)
-    }
+        func handleOrientationChange(to newOrientation: UIDeviceOrientation) {
+            guard let newRotation = gridRotation(for: newOrientation),
+                  !gameTiles.isEmpty else { return }
 
-    private func rotateCounterClockwise90() {
-        rotateTilesForOrientation(isClockwise: false)
-    }
+            let oldRotation = gridRotation
+            let delta = (newRotation.rawValue - oldRotation.rawValue + 4) % 4
 
-    private func rotate180() {
-        rotateClockwise90()
-        rotateClockwise90()
-    }
-    
-//    func rotateForOrientation( isLandscape: Bool) {
-//        // Save old dimensions
-//        let oldRows = rowCount
-//        let oldCols = columnCount
-//
-//        // Update row/column counts for new orientation
-//        rowCount = getRowCount(size: gridSize, isLandscape: isLandscape)
-//        columnCount = getColumnCount(size: gridSize, isLandscape: isLandscape)
-//        
-//        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
-//
-//        rotateTilesForOrientation(isLandscape: isLandscape, oldRows: oldRows, oldCols: oldCols)
-//    }
+            for _ in 0..<delta {
+                rotateTilesForOrientation(isClockwise: true)
+            }
 
-    private func rotateTilesForOrientation(isClockwise: Bool) {
+            gridRotation = newRotation
+        }
+
+     func rotateTilesForOrientation(isClockwise: Bool) {
         //
         let oldRows = rowCount
         let oldCols = columnCount
 
         // Swap row/column counts
-        rowCount = oldCols
-        columnCount = oldRows
+         if oldRows != oldCols {
+             rowCount = oldCols
+             columnCount = oldRows
+         }
 
         var newTiles: [Tile] = Array(repeating: Tile(row: 0, column: 0, isMine: false), count: rowCount * columnCount)
 
@@ -239,92 +219,30 @@ final class FieldViewModel {
                 newTiles[newIndex] = newTile
             }
         }
-
         gameTiles = newTiles
     }
     
-//    func rotateTilesForOrientation(isLandscape: Bool, oldRows: Int, oldCols: Int) {
-//        var newTiles: [Tile] = Array(repeating: Tile(row: 0, column: 0, isMine: false), count: rowCount * columnCount)
-//
-//        for oldRow in 0..<oldRows {
-//            for oldCol in 0..<oldCols {
-//                let oldIndex = oldRow * oldCols + oldCol
-//                let oldTile = gameTiles[oldIndex]
-//                
-//                var newRow: Int
-//                var newCol: Int
-//                
-//                if isLandscape {
-//                    // 90° clockwise
-//                    newRow = oldCol
-//                    newCol = oldRows - 1 - oldRow
-//                } else {
-//                    // 90° counterclockwise (back to portrait)
-//                    newRow = oldCols - 1 - oldCol
-//                    newCol = oldRow
-//                }
-//                
-//                var newTile = oldTile
-//                newTile.row = newRow
-//                newTile.column = newCol
-//                let newIndex = newRow * columnCount + newCol
-//                newTiles[newIndex] = newTile
-//            }
-//        }
-//
-//        gameTiles = newTiles
-//    }
-    
-    
-//    func rotateForOrientation(_ isLandscape: Bool) {
-//        //self.isLandscape = isLandscape
-//        print("Landscape: \(isLandscape)")
-//        rowCount = getRowCount(size: gridSize, isLandscape: isLandscape)
-//        columnCount = getColumnCount(size: gridSize, isLandscape: isLandscape)
-//        
-//        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
-//        
-//        rotateTilesForLandscape()
-//        
-//    }
-//    func rotateTilesForLandscape() {
-//        let oldTiles = gameTiles
-//        gameTiles = []
-//        
-//        for row in 0..<rowCount {
-//            for col in 0..<columnCount {
-//                let oldRow = col
-//                let oldCol = rowCount - 1 - row
-//                
-//                if let oldTile = oldTiles.first(where: { $0.row == oldRow && $0.column == oldCol}) {
-//                    var newTile = oldTile
-//                    newTile.row = row
-//                    newTile.column = col
-//                    gameTiles.append(newTile)
-//                }
-//            }
-//        }
-//    }
-    
     
     func setUpGame(isLandscape: Bool) {
-        //self.isLandscape = isLandscape
         rowCount = getRowCount(size: gridSize, isLandscape: isLandscape)
         columnCount = getColumnCount(size: gridSize, isLandscape: isLandscape)
         mineCount = 0
         
+        gameScore = 0
+        gameStarted = false
         isFirstTile = true
+        gameTiles.removeAll()
         gameIsOver = false
         lostGame = false
         
         tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
         framesReady = false
         
-        
+        newHighScore = false
         gameTiles = createTiles()
+        gameStarted = true
+        gameState = .playing
     }
-    
-
     
     
     //CREAT TILES/set up
@@ -459,14 +377,12 @@ final class FieldViewModel {
             for neighbor in neighbors {
                 //find the gameTile with matching coords
                 if let index = self.gameTiles.firstIndex(where: { $0.row == neighbor.0 && $0.column == neighbor.1 }) {
-                    //print index and howmany mines they're touching
-                    //print("mine count of neighbor \(index): \(gameTiles[index].surroundingMineCount)")
                     
                     //HOW DO I MAKE WORK!?
                     if !self.gameTiles[index].isRevealed {
                         self.gameTiles[index].isRevealed = true
                         self.gameTiles[index].isFlagged = false
-                        gameScore += gameTiles[index].surroundingMineCount * 10
+                        gameScore += gameTiles[index].surroundingMineCount * 2
                     } else {
                         continue
                     }
@@ -484,6 +400,7 @@ final class FieldViewModel {
     func checkForMines() {
         var mineTiles: [Tile] = []
         var flaggedTiles: [Tile] = []
+        var correctTiles: Int = 0
         //get tiles
         for myTile in gameTiles {
             if myTile.isMine {
@@ -492,18 +409,45 @@ final class FieldViewModel {
             if myTile.isFlagged {
                 flaggedTiles.append(myTile)
             }
+            if myTile.isMine && myTile.isFlagged {
+                correctTiles += 1
+            }
+            
         }
         
+        //if mineTiles == flaggedTiles {
         if mineTiles == flaggedTiles {
-            gameScore += 200 * mineTiles.count
+            gameScore += 500 + (200 * mineTiles.count)
             mineCount = mineTiles.count
             gameState = .won
             gameIsOver = true
-
         } else {
-            gameScore -= 500
+            
+            
+            //MAYBE CALCULATE EXTRA FLAGS AND MISLABELED FLAGS TOGEHTR?@?@
+            
+            
+            if flaggedTiles.count > mineTiles.count {
+                checkedTooSoonText = Text("There's ^[\(flaggedTiles.count - mineTiles.count) extra flag](inflect: true) on the field")
+                minusPointsText = "Minus 100 points for every extra flag"
+                gameScore -= (100 * (flaggedTiles.count - mineTiles.count))
+            } else if flaggedTiles.count > correctTiles {
+                checkedTooSoonText = Text("There's ^[\(flaggedTiles.count - correctTiles) misplaced flag](inflect:true) on the field")
+                minusPointsText = "Minus 100 points for every mislabeled flag"
+                gameScore -= (100 * (flaggedTiles.count - correctTiles))
+            } else if mineTiles.count > correctTiles {
+                checkedTooSoonText = Text("There's ^[\(mineTiles.count) mine](inflect: true) still unflagged")
+                minusPointsText = "Minus 100 points for every mislabeled flag"
+                gameScore -= (100 * (mineTiles.count - correctTiles))
+            } else {
+                checkedTooSoonText = Text("Nice try, but something about this isn't correct (and it could be a bug!)")
+                minusPointsText = "Minus 200 points"
+                gameScore -= 200
+            }
             showGameStatusAlert = true
             playSFX("buttondown1")
+            
+            
         }
         
         
@@ -557,7 +501,6 @@ final class FieldViewModel {
     }
     
     
-    
     func itemDropped(location: CGPoint, textToDrop: String) {
         guard let index = tileFrames.firstIndex(where: { $0.contains(location)}) else {return }
         guard !gameTiles[index].isRevealed else {return }
@@ -571,12 +514,8 @@ final class FieldViewModel {
         default:
             break
         }
-        
-        
-        
     }
 
-    
     func setTileFrame(index: Int, frame: CGRect) {
         if tileFrames[index] != frame {
             tileFrames[index] = frame
@@ -585,7 +524,6 @@ final class FieldViewModel {
             }
         }
     }
-    
     
     func prepareHaptics() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
@@ -597,7 +535,6 @@ final class FieldViewModel {
             print("There was an error creating the engine \(error.localizedDescription)")
         }
     }
-    
 }
 
 extension UIDevice {
@@ -612,102 +549,8 @@ extension UIDevice {
     static var isVision: Bool {
         UIDevice.current.userInterfaceIdiom == .vision
     }
-    
-    
+
 //    static var isOther: Bool {
 //        UIDevice.current.userInterfaceIdiom ==
 //    }
 }
-
-//    func refreshTileFrames() {
-//        // This will trigger a refresh of all tile frames
-//        // You might need to add a @Published property that triggers frame remeasurement
-//        frameRefreshTrigger.toggle()
-//    }
-
-//print("Drag location: \(location)")
-//print("TileFrames count: \(tileFrames.count)")
-
-
-//        for i in 0..<min(5, tileFrames.count) {
-//            print("Frame \(i): \(tileFrames[i])")
-//        }
-//        let matchingFrames = tileFrames.enumerated().filter { $0.element.contains(location) }
-//            print("Frames containing location: \(matchingFrames.map { $0.offset })")
-
-//print("Found match at index: \(match), frame: \(tileFrames[match])")
-//print($0)
-//print(location)
-
-
-
-//    func rotateGrid() {
-//        let newRowCount = columnCount
-//        let newColumnCount = rowCount
-//
-//        var newGameTiles: [Tile] = Array(repeating: Tile(row:0,column:0,isMine:false), count: rowCount * columnCount)
-//
-//        for oldRow in 0..<rowCount {
-//            for oldCol in 0..<columnCount {
-//                let oldIndex = oldRow * columnCount + oldCol
-//                let newRow = oldCol
-//                let newCol = newColumnCount - 1 - oldRow
-//                let newIndex = newRow * newColumnCount + newCol
-//
-//                var newTile = gameTiles[oldIndex]
-//                newTile.row = newRow
-//                newTile.column = newCol
-//                newGameTiles[newIndex] = newTile
-//            }
-//        }
-//
-//        // Update counts and replace tiles
-//        rowCount = newRowCount
-//        columnCount = newColumnCount
-//        gameTiles = newGameTiles
-//        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
-//
-//        recountSurroundingMines(gameTiles: gameTiles)
-//    }
-
-
-//    func applyOrientation(isLandscape: Bool) {
-//        if isLandscape {
-//            rotateBaselineToLandscape()
-//        } else {
-//            rowCount = baselineRowCount
-//            columnCount = baselineColumnCount
-//            gameTiles = baselineTiles
-//            tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
-//        }
-//    }
-//
-//    func rotateBaselineToLandscape() {
-//        let newRowCount = baselineColumnCount
-//        let newColumnCount = baselineRowCount
-//
-//        var newGameTiles: [Tile] = Array(
-//            repeating: Tile(row: 0, column: 0, isMine: false),
-//            count: baselineRowCount * baselineColumnCount
-//        )
-//
-//        for oldRow in 0..<baselineRowCount {
-//            for oldCol in 0..<baselineColumnCount {
-//                let oldIndex = oldRow * baselineColumnCount + oldCol
-//                let newRow = oldCol
-//                let newCol = newColumnCount - 1 - oldRow
-//                let newIndex = newRow * newColumnCount + newCol
-//
-//                var newTile = baselineTiles[oldIndex]
-//                newTile.row = newRow
-//                newTile.column = newCol
-//                newGameTiles[newIndex] = newTile
-//            }
-//        }
-//
-//        rowCount = newRowCount
-//        columnCount = newColumnCount
-//        gameTiles = newGameTiles
-//        tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
-//
-//    }

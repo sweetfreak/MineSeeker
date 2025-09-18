@@ -15,33 +15,33 @@ struct TileView: View {
     
     @Binding var tile: Tile
     //@State private var droppedText: String = ""
-    @State private var isDropTargeted: Bool = false
+    //@State private var isDropTargeted: Bool = false
     @State var vm: FieldViewModel
     @State var gameState: GameState = .playing
     var imageCache: ImageCache = ImageCache()
 
     var onPhoneW: Double {vm.iPhoneWidth}
-    var onPhoneH: Double {vm.iPhoneWidth * 0.85}
+    var onPhoneH: Double {vm.iPhoneWidth * 0.8}
     var onPadW: Double {vm.iPadWidth}
-    var onPadH: Double {vm.iPadWidth * 0.85}
+    var onPadH: Double {vm.iPadWidth * 0.8}
     var width: Double { UIDevice.isIPhone ? onPhoneW : onPadW }
     var height: Double { UIDevice.isIPhone ? onPhoneH : onPadH }
     
-    
+    var animationAmount = 0.0
     
     var body: some View {
         
         ZStack {
             Rectangle()
-                .tileDimensions(fillColor: tile.isMine ? .red : Color(.tileBack), width: width, height: height)
+                .tileDimensions(fillColor: tile.isMine && tile.isRevealed ? .red : Color(.tileBack), width: width, height: height)
+                .cornerRadius(10)
+            
 
             Rectangle()
                 .tileDimensions(fillColor: tile.isRevealed ? Color.clear :Color(vm.gameState == .won && tile.isFlagged ? .green : .tileTop), width: width, height: height)
-                
-            //                .rotation3DEffect(
-            //                    .degrees(animationAmount),
-            //                    axis: (x: 0, y: 1, z: 0)
-            //                )
+            
+                    
+            
                 .onTapGesture {
                     if vm.isFirstTile {
                         vm.isFirstTile = false
@@ -70,50 +70,10 @@ struct TileView: View {
             tileContent(tile:tile)
                 
                 .allowsHitTesting(false)
-            
-
-//            if isDropTargeted {
-//                Rectangle()
-//                    .fill(.blue)
-//                    .frame(width: 48, height: 40)
-//                //.border(.blue, width: 10)
-//                    .cornerRadius(10)
-//                
-//            }
-            
-            
-//            Image(tile.droppedText)
-//                .onLongPressGesture {
-//                    if !tile.isRevealed {
-//                        tile.droppedText = "Flag"
-//                        tile.isFlagged.toggle()
-//                    }
-//          }
-        
         }
-       // .rotationEffect(vm.isLandscape ? .degrees(90) : .degrees(0))
-        //.rotationEffect(<#T##angle: Angle##Angle#>, anchor: .center)
-        
-//        .dropDestination(for: String.self, ) { items, location in
-//            // Action to perform when items are dropped
-//            if let firstItem = items.first {
-//                // Update the text with the dropped item
-//                tile.droppedText = firstItem
-//                
-//                if !tile.isRevealed {
-//                    if tile.droppedText == "Flag" {
-//                    tile.isFlagged = true
-//                    } else if tile.droppedText == "" {
-//                        tile.isFlagged = false
-//                    }
-//                }
-//                
-//            }
-//            return true // Indicate successful drop
-//        } isTargeted: { targeted in
-//            isDropTargeted = targeted
-//        }
+        .frame(width: width, height: height)
 
+        
     }
     
     func tileContent(tile: Tile) -> some View {
@@ -124,6 +84,7 @@ struct TileView: View {
                         .scaledToFit()
                         .frame(width: width, height: height)
                         .padding(0)
+                    
 
                 )
             } else if tile.isMine && tile.isRevealed {
@@ -133,7 +94,8 @@ struct TileView: View {
                         .scaledToFit()
                         .frame(width: width, height: height)
                         .padding(0)
-
+                    
+                    
                 )
             } else if tile.isRevealed && tile.surroundingMineCount > 0 {
                 return AnyView(
@@ -144,10 +106,7 @@ struct TileView: View {
                 )
             } else {
                 return AnyView(EmptyView()
-)
-                    
-
-                
+                )
             }
         
     }
@@ -156,23 +115,35 @@ struct TileView: View {
 
 extension Rectangle {
     func tileDimensions(fillColor: Color, width: Double, height: Double) -> some View {
-        self
+        let radius: CGFloat = 10
+            return self
             .fill(fillColor)
-            .aspectRatio(1, contentMode: .fit)
             .frame(width: width, height: height)
-            .border(.secondary, width: 5)
-            .cornerRadius(10)
+            .cornerRadius(radius)
+            .overlay(
+                RoundedRectangle(cornerRadius: radius)
+                    .strokeBorder(.secondary, lineWidth: 3)
+                    //.strokeBorder(.black, lineWidth: )
+            )
+            .aspectRatio(1, contentMode: .fit)
+
     }
 }
 
 #Preview {
     
-    @Previewable @State var myTile = Tile(row: 0, column: 0, isMine: false, surroundingMineCount: 1)
-    @Previewable @State var mineTile = Tile(row: 1, column: 0, isMine: true)
+//    @Previewable @State var myTile = Tile(row: 1, column: 1, isMine: false, surroundingMineCount: 1)
+//    @Previewable @State var mineTile = Tile(row: 2, column: 1, isMine: true)
+//    
+//    TileView(tile: $myTile, vm: FieldViewModel())
+//    TileView(tile: $mineTile, vm: FieldViewModel())
     
-    TileView(tile: $myTile, vm: FieldViewModel())
-    TileView(tile: $mineTile, vm: FieldViewModel())
-    
+    FieldView(vm:FieldViewModel())
+        .environmentObject({
+            let mock = OrientationModel()
+            mock.current = .landscapeLeft
+            return mock
+        }())
 }
 
 //        } else if tile.surroundingMineCount == 0 {

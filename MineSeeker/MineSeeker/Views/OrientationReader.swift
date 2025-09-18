@@ -41,6 +41,7 @@ struct OrientationReaderView: View {
                     reportOrientation(proxy: proxy)
                 }
                 .onChange(of: proxy.size) {
+                    //print("change proxy size")
                     reportOrientation(proxy: proxy)
                 }
         }
@@ -54,6 +55,7 @@ struct OrientationReaderView: View {
         } else {
             orientation = .portrait
         }
+        //print("change orientationreport")
         onChange(orientation)
     }
 }

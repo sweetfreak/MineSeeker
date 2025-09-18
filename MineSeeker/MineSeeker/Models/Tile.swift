@@ -3,9 +3,9 @@
 //  MineSeeker
 //
 //  Created by Jesse Sheehan on 8/21/25.
-//
+
+
 import SwiftUI
-//import Observation
 
 struct Tile: Identifiable, Equatable {
     var id = UUID()
@@ -18,21 +18,6 @@ struct Tile: Identifiable, Equatable {
     var gameOver = false
     
     var tileText: String = ""
-//    {
-//        if !isRevealed {
-//            if isFlagged {
-//                return "Flag"
-//            } else {
-//                return ""
-//            }
-//        } else {
-//            if surroundingMineCount > 0  {
-//                return "\(surroundingMineCount)"
-//            } else {
-//                return ""
-//            }
-//        }
-//    }
     
     var coordinates: (Int, Int) {
         return (self.row, self.column)

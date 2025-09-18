@@ -24,7 +24,7 @@ struct InstructionsView: View {
                 
                 HStack {
                     VStack(alignment: .leading) {
-                        Text("Objective:")
+                        Text("Objective")
                             .bold()
                         HStack{
                             Text("Find all the mines and mark each one with a flag.")
@@ -39,13 +39,13 @@ struct InstructionsView: View {
                 
                 HStack {
                     VStack(alignment: .leading) {
-                        Text("Directions:")
+                        Text("Directions")
                             .bold()
                         
                         HStack {
                             Text("Tap on a tile to reveal what's underneath. The revealed number indicates how many surrounding tiles are mines.")
                             Spacer()
-                            TileView(tile: $demoTileReveal, vm: vm, )
+                            TileView(tile: $demoTileReveal, vm: vm)
                                 .font(.title)
                         }
                         Divider()
@@ -60,6 +60,7 @@ struct InstructionsView: View {
                         
                         HStack {
                             Text("Mark each mine by dragging a flag over to the tile.")
+                            Spacer()
                             ZStack {
                                 Circle()
                                     .fill(Color("tileBack"))
@@ -75,6 +76,7 @@ struct InstructionsView: View {
                         HStack {
                             Text("To remove a flag from a tile, drag and drop the shovel over the flag.")
                             Spacer()
+                            
                             ZStack {
                                 Circle()
                                     .fill(Color("tileBack"))
@@ -105,6 +107,25 @@ struct InstructionsView: View {
                         
                     }
                 }
+                Divider()
+                
+                VStack(alignment: .leading) {
+                    Text("Points")
+                        .bold()
+                    
+                        Text("• 50+ points times number on the tapped tile")
+
+                        Text("• 25+ points per additional tile revealed")
+                    
+                        Text("• 500+ points + 200 per mine at end of game.")
+                        
+                        Text("• Lose points when checking for mines too early")
+                }
+                .padding()
+                .border(Color(.secondarySystemBackground), width: 5)
+                
+                Divider()
+                
                 
                 if vm.gameStarted {
                     Button{
@@ -127,4 +148,9 @@ struct InstructionsView: View {
 
 #Preview {
     InstructionsView(vm: FieldViewModel())
+        .environmentObject({
+            let mock = OrientationModel()
+            mock.current = .landscapeLeft
+            return mock
+        }())
 }
