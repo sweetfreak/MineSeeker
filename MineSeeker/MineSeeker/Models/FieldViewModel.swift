@@ -79,6 +79,7 @@ final class FieldViewModel {
     var gameScore: Int = 0
     var mineCount: Int = 0
     var flagCount: Int = 0
+    var hintsUsed: Int = 0
     
     //HAPTICS
     var engine: CHHapticEngine?
@@ -238,6 +239,7 @@ final class FieldViewModel {
         gameTiles.removeAll()
         gameIsOver = false
         lostGame = false
+        hintsUsed = 0
         
         tileFrames = Array(repeating: .zero, count: rowCount * columnCount)
         framesReady = false
@@ -446,23 +448,24 @@ final class FieldViewModel {
         
         if flaggedTiles.count > mineTiles.count {
             checkedTooSoonText = Text("There's ^[\(flaggedTiles.count - mineTiles.count) extra flag](inflect: true) on the field")
-            minusPointsText = "Minus 100 points for every extra flag"
-            gameScore -= (100 * (flaggedTiles.count - mineTiles.count))
+            minusPointsText = "Minus 50 points for every extra flag"
+            gameScore -= (50 * (flaggedTiles.count - mineTiles.count))
             
         } else if flaggedTiles.count > correctTiles {
             checkedTooSoonText = Text("There's ^[\(flaggedTiles.count - correctTiles) misplaced flag](inflect:true) on the field")
-            minusPointsText = "Minus 100 points for every mislabeled flag"
-            gameScore -= (100 * (flaggedTiles.count - correctTiles))
+            minusPointsText = "Minus 25 points for each mislabeled flag"
+            gameScore -= (25 * (flaggedTiles.count - correctTiles))
             
         } else if mineTiles.count > correctTiles {
             checkedTooSoonText = Text("There's ^[\(mineTiles.count) mine](inflect: true) still unflagged")
-            minusPointsText = "Minus 100 points for every mislabeled flag"
-            gameScore -= (100 * (mineTiles.count - correctTiles))
+            minusPointsText = "Minus 10 points for every unmarked bomb"
+            gameScore -= (10 * (mineTiles.count - correctTiles))
         } else {
             checkedTooSoonText = Text("Nice try, but something about this isn't correct (and it could be a bug!)")
             minusPointsText = "Minus 200 points"
             gameScore -= 200
         }
+        hintsUsed += 1
         showGameStatusAlert = true
         playSFX("buttondown1")
     }

@@ -36,31 +36,6 @@ class HighScoresViewModel {
                 return 0
             }
         }
-    
-    
-    
-//    func checkHighScores(name: String, gameScore: Int, gridSize: GridSize, hintsUsed: Int, duration: TimeInterval, mineCount: Int) {
-//        let newestHighScore = HighScore(id: UUID(), name: name, score: gameScore, date: .now, gridSize: gridSize, hintsUsed: 0, duration: nil, mineCount: mineCount)
-//        
-//        fetchHighScores(from: modelContext)
-//        print("lowest Score: \(getLowestHighScore(using: modelContext))")
-//    }
-//    
-//    
-//    @MainActor
-//    func saveHighScore(name: String, modelContext: ModelContext, newestScore: HighScore) {
-//        
-//        modelContext.insert(newestScore)
-//        if highScores.count > 10 {
-//            fetchHighScores(from: modelContext)
-//            let scoresToDelete = highScores.suffix(from: 10)
-//            for score in scoresToDelete {
-//                modelContext.delete(score)
-//            }
-//        }
-//        
-//        
-//    }
 }
 
 extension Date {

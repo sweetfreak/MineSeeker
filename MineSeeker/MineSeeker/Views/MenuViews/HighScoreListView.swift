@@ -10,8 +10,7 @@ import SwiftData
 
 struct HighScoreListView: View {
     
-    
-    
+    @EnvironmentObject var orientation: OrientationModel
     @Environment(\.modelContext) private var modelContext
     @State var vm: FieldViewModel
 
@@ -32,46 +31,55 @@ struct HighScoreListView: View {
                 .font(Font.largeTitle.bold())
             
             Spacer()
-            
-            VStack {
+            Spacer()
+            Spacer()
+            VStack(alignment: .center) {
                 if UIDevice.isIPhone {
                     List {
-                        Grid {
-                            GridRow {
-                                Text("Name")
-                                //.gridCellAnchor(UnitPoint(x: 1, y: 0.5))
-                                Spacer()
-                                Text("Score")
-                                Spacer()
-                                Text("Size")
-                                Spacer()
-                                Text("Date")
-                            }
-                            .font(Font.title3.bold())
-                            Divider()
-                            if vm.hsvm.highScores.isEmpty {
-//                            if !vm.hsvm.highScores.isEmpty {
-                                Text("There are no high scores yet.")
-                                    .font(Font.caption)
-                                
-                            } else {
-                                ForEach(vm.hsvm.highScores.prefix(10)) { highScore in
-//                                ForEach(highScoresExamples.prefix(10)) { highScore in
-                                    GridRow {
-                                        Text(highScore.name)
-                                        // .gridCellAnchor(UnitPoint(x: 1, y: 0.5))
-                                        Spacer()
-                                        Text(String(highScore.score))
-                                        Spacer()
-                                        Text(String(label(for: highScore.gridSize)))
-                                        Spacer()
-                                        Text(highScore.date.shortFormat)
-                                        //.gridCellAnchor(UnitPoint(x: 0, y: 0.5))
-                                        //.gridCellAnchor(UnitPoint(x: 0, y: 0.5))
-                                    }
-                                    .font(Font.caption)
-                                    if highScore != vm.hsvm.highScores.last {
-                                        Divider()
+                        ScrollView(.horizontal) {
+                            Grid(alignment: .center, horizontalSpacing: orientation.isLandscape ? 25 : 10) {
+                                GridRow(alignment: .center) {
+                                    Text("Name")
+                                    //.gridCellAnchor(UnitPoint(x: 1, y: 0.5))
+                                    Spacer()
+                                    Text("Score")
+                                    Spacer()
+                                    Text("Mines")
+                                    Spacer()
+                                    Text("Size")
+                                    Spacer()
+                                    Text("Hints?")
+                                    Spacer()
+                                    Text("Date")
+                                }
+                                .font(Font.title3.bold())
+                                Divider()
+//                                if vm.hsvm.highScores.isEmpty {
+                                                                if !vm.hsvm.highScores.isEmpty {
+                                    Text("There are no high scores yet.")
+                                        .font(Font.caption)
+                                    
+                                } else {
+//                                    ForEach(vm.hsvm.highScores.prefix(10)) { highScore in
+                                                                        ForEach(highScoresExamples.prefix(10)) { highScore in
+                                        GridRow(alignment: .center) {
+                                            Text(highScore.name)
+                                            //.gridCellAnchor(UnitPoint(x: 1, y: 0.5))
+                                            Spacer()
+                                            Text(String(highScore.score))
+                                            Spacer()
+                                            Text(String(highScore.mineCount))
+                                            Spacer()
+                                            Text(String(label(for: highScore.gridSize)))
+                                            Spacer()
+                                            Text(String(highScore.hintsUsed))
+                                            Spacer()
+                                            Text(highScore.date.shortFormat)
+                                        }
+                                        .font(Font.caption)
+                                        if highScore != vm.hsvm.highScores.last {
+                                            Divider()
+                                        }
                                     }
                                 }
                             }
@@ -83,6 +91,12 @@ struct HighScoreListView: View {
                         TableColumn("Name", value: \.name)
                         TableColumn("Date") { entry in
                             Text(entry.date, format: .dateTime.day().month().year())
+                        }
+                        TableColumn("Mine Count") {entry in
+                            Text(String(entry.mineCount))
+                        }
+                        TableColumn("Hints Used") {entry in
+                            Text(String(entry.hintsUsed))
                         }
                         TableColumn("GridSize") {entry in
                             Text(label(for: entry.gridSize))
@@ -121,6 +135,11 @@ struct HighScoreListView: View {
 
 #Preview {
     HighScoreListView(vm: FieldViewModel())
+        .environmentObject({
+            let mock = OrientationModel()
+            mock.current = .portrait
+            return mock
+        }())
 }
 
 //example demo stuff

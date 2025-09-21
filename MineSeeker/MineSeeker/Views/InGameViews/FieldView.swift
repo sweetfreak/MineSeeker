@@ -165,7 +165,7 @@ struct FieldView: View {
         
         print("lowest Score: \(vm.hsvm.getLowestHighScore(using: modelContext))")
         
-        if vm.gameScore > vm.hsvm.getLowestHighScore(using: modelContext) || vm.hsvm.highScores.count < 10  {
+        if vm.gameScore > vm.hsvm.getLowestHighScore(using: modelContext) || vm.hsvm.highScores.count < 20  {
             vm.newHighScore = true
         } else {
             vm.showGameStatusAlert = true
@@ -174,7 +174,16 @@ struct FieldView: View {
     
     @MainActor
     func saveHighScore(name: String) {
-        let newestHighScore = HighScore(id: UUID(), name: name, score: vm.gameScore, date: .now, gridSize: vm.gridSize, hintsUsed: 0, duration: nil, mineCount: vm.mineCount)
+        let newestHighScore = HighScore(
+            id: UUID(),
+            name: name,
+            score: vm.gameScore,
+            date: .now,
+            gridSize: vm.gridSize,
+            hintsUsed: vm.hintsUsed,
+            duration: nil,
+            mineCount: vm.mineCount
+        )
         modelContext.insert(newestHighScore)
         if vm.hsvm.highScores.count > 10 {
             vm.hsvm.fetchHighScores(from: modelContext)
