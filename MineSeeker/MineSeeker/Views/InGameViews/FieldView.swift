@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import Combine
 //import Vortex
 
 struct FieldView: View {
@@ -20,83 +21,91 @@ struct FieldView: View {
     
     @State var vm: FieldViewModel
     
-    
-    
-    
-    
+    let textLimit = 20
     
     
     var body: some View {
-            ZStack {
-                VStack {
-                    Spacer().frame(height: spacerHeight(isLandscape: orientation.isLandscape, gridSize: vm.gridSize))
+        ZStack {
+            VStack {
+                Spacer().frame(height: spacerHeight(isLandscape: orientation.isLandscape, gridSize: vm.gridSize))
+                
+                if !orientation.isLandscape {
+                    ScoreView(vm: vm)
+                }
+                
+                ScrollView(.vertical, showsIndicators: false) {
+                    StandardGridView(vm: vm)
+                        .allowsHitTesting(vm.gameState == .playing ? true : false)
+                        .transition(.asymmetric(
+                            insertion: .offset(x: 1000),
+                            removal: .offset(x: 1000))
+                        )
                     
-                    if !orientation.isLandscape {
-                        ScoreView(vm: vm)
-                    }
-
-                    ScrollView(.vertical, showsIndicators: false) {
-                        StandardGridView(vm: vm)
-                            .allowsHitTesting(vm.gameState == .playing ? true : false)
-                            .transition(.asymmetric(
-                                insertion: .offset(x: 1000),
-                                removal: .offset(x: 1000))
-                            )
-                        
-                        //this .anim makes bombs appear automatically instead of fade in
-                           .animation(nil, value: vm.gameState)
-                    }
-                    .padding()
-                    .scrollDisabled(true)
-                    
-                    HStack {
-                        VStack {
-                            if vm.gameState == .playing {
-                                StandardGameOptionsView(vm: vm)
-                                    .transition(.asymmetric(
-                                        insertion: .opacity,
-                                        //insertion: .offset(x: 1000),
-                                        removal: .offset(x: 1000))
-                                                
-                                    )
-                                  
-
-                            } else {
-                                HStack{
-                                    if orientation.isLandscape {
-                                        ScoreView(vm: vm)
-                                            //.font(Font.title2)
-                                    }
-                                    NewGameButton(vm: vm)
-                                    HomeButtonView(vm: vm)
-                                }
+                    //this .anim makes bombs appear automatically instead of fade in
+                        .animation(nil, value: vm.gameState)
+                }
+                .padding()
+                .scrollDisabled(true)
+                
+                HStack {
+                    VStack {
+                        if vm.gameState == .playing {
+                            StandardGameOptionsView(vm: vm)
                                 .transition(.asymmetric(
                                     insertion: .opacity,
+                                    //insertion: .offset(x: 1000),
                                     removal: .offset(x: 1000))
+                                            
                                 )
-                                .padding()
+                            
+                            
+                        } else {
+                            HStack{
+                                if orientation.isLandscape {
+                                    ScoreView(vm: vm)
+                                    //.font(Font.title2)
+                                }
+                                NewGameButton(vm: vm)
+                                HomeButtonView(vm: vm)
                             }
+                            .transition(.asymmetric(
+                                insertion: .opacity,
+                                removal: .offset(x: 1000))
+                            )
+                            .padding()
                         }
                     }
-                    if vm.gridSize != .big {
-                        Spacer().frame(height: UIDevice.isIPhone && orientation.isLandscape ? 20 : 30)
-                    }
                 }
-                .animation(.smooth, value: vm.gameState)
-                
-                if vm.gameState == .lost {ExplosionView(vm: vm)}
-                if vm.gameState == .won {CelebrationView(vm: vm) }
+                if vm.gridSize != .big {
+                    Spacer().frame(height: UIDevice.isIPhone && orientation.isLandscape ? 20 : 30)
+                }
             }
-            .padding(0)
-            .ignoresSafeArea(UIDevice.isIPhone && vm.gridSize != .small && orientation.isLandscape ? [.all] : [])
-        
-            //ALERTS
-            .alert("New High Score!", isPresented: ($vm.newHighScore)) {
-                TextField("New High Score!\nEnter your name", text: $playerName)
-                Button("Enter") { saveHighScore(name: playerName)}
-                Button("Cancel", role: .cancel) {}
-            } message: {Text("You scored \(vm.gameScore) points!")}
+            .animation(.smooth, value: vm.gameState)
             
+            if vm.gameState == .lost {ExplosionView(vm: vm)}
+            if vm.gameState == .won {
+                CelebrationView(vm: vm)
+                    .onAppear {
+                        checkForHighScore()
+                    }
+            }
+        }
+        .padding(0)
+        .ignoresSafeArea(UIDevice.isIPhone && vm.gridSize != .small && orientation.isLandscape ? [.all] : [])
+        
+        
+        
+        
+        //ALERTS
+        .alert("New High Score!", isPresented: ($vm.newHighScore)) {
+            TextField("New High Score!\nEnter your name", text: $playerName)
+                .onReceive(Just(playerName)) { _ in limitText(textLimit) }
+            
+            
+            Button("Enter") { saveHighScore(name: playerName)}
+            Button("Cancel", role: .cancel) {}
+        } message: {Text("You scored \(vm.gameScore) points!")}
+        
             .alert(isPresented: $vm.showGameStatusAlert, content: {
                 
                 if vm.gameState == .won {
@@ -106,10 +115,11 @@ struct FieldView: View {
                 } else  {
                     Alert(title: vm.checkedTooSoonText, message: Text(vm.minusPointsText), dismissButton: .default(Text("OK")))
                 }
-                    
-                })
+                
+            })
     }
-    
+
+
     func spacerHeight(isLandscape: Bool, gridSize: GridSize) -> CGFloat {
         let deviceType: String = UIDevice.isIPad ? "iPad" : "iPhone"
         
@@ -150,6 +160,18 @@ struct FieldView: View {
         }
     }
     
+    func checkForHighScore() {
+        vm.hsvm.fetchHighScores(from: modelContext)
+        
+        print("lowest Score: \(vm.hsvm.getLowestHighScore(using: modelContext))")
+        
+        if vm.gameScore > vm.hsvm.getLowestHighScore(using: modelContext) || vm.hsvm.highScores.count < 10  {
+            vm.newHighScore = true
+        } else {
+            vm.showGameStatusAlert = true
+        }
+    }
+    
     @MainActor
     func saveHighScore(name: String) {
         let newestHighScore = HighScore(id: UUID(), name: name, score: vm.gameScore, date: .now, gridSize: vm.gridSize, hintsUsed: 0, duration: nil, mineCount: vm.mineCount)
@@ -161,17 +183,20 @@ struct FieldView: View {
                 modelContext.delete(score)
             }
         }
-        
-        
     }
-
+    
+    func limitText(_ upper: Int) {
+            if playerName.count > upper {
+                playerName = String(playerName.prefix(upper))
+            }
+        }
 }
 
 #Preview {
     FieldView(vm: FieldViewModel())
         .environmentObject({
             let mock = OrientationModel()
-            mock.current = .landscapeLeft
+            mock.current = .portrait
             return mock
         }())
 }

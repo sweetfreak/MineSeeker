@@ -21,8 +21,8 @@ struct HighScoreListButtonView: View {
                 .symbolRenderingMode(.multicolor)
                 .symbolEffect(.bounce)
         }
-        //.buttonStyle(.glassProminent)
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.glassProminent)
+        //.buttonStyle(.borderedProminent)
         .sensoryFeedback(.success, trigger: vm.gameState == .highScoreList)
 
     }

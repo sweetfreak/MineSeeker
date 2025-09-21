@@ -35,8 +35,8 @@ struct ScoreView: View {
 
 #Preview {
     
-    @Previewable @State var myVm = FieldViewModel()
+//    @Previewable @State var myVm = FieldViewModel()
     //@Previewable @State myVm.gameScore = 100
     
-    ScoreView(vm: myVm)
+//    ScoreView(vm: myVm)
 }

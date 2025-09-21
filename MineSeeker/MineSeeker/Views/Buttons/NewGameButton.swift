@@ -38,8 +38,8 @@ struct NewGameButton: View {
                 .symbolEffect(.bounce)
                 .symbolEffect(.rotate)
         }
-        //.buttonStyle(.glassProminent)
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.glassProminent)
+        //.buttonStyle(.borderedProminent)
         .sensoryFeedback(.success, trigger: vm.gameState == .playing)
 
 //        .rotation3DEffect(

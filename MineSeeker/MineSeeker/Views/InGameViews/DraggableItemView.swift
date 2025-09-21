@@ -14,6 +14,7 @@ enum DragState {
 }
 
 struct DraggableItemView: View {
+    //@Environment(\.modelContext) private var modelContext
     @EnvironmentObject var orientation: OrientationModel
 
     //@State var standardGridView: StandardGridView
@@ -72,6 +73,9 @@ struct DraggableItemView: View {
                         .onEnded{value in
                             if self.dragState == .canPlaceOnTile {
                                 self.onEnded?(value.location, self.imageToDrag)
+                                
+                                
+                               //vm.checkForMines(modelContext: modelContext)
                             }
                             
                             self.dragAmount = .zero

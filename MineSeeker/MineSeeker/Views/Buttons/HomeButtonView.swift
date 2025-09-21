@@ -18,8 +18,8 @@ struct HomeButtonView: View {
             vm.gameState = .home
             vm.playSFX("buttondown1")
         }
-        //.buttonStyle(.glassProminent)
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.glassProminent)
+        //.buttonStyle(.borderedProminent)
         .symbolRenderingMode(.multicolor)
         .symbolEffect(.bounce)
         .sensoryFeedback(.impact(weight: .heavy), trigger: vm.gameState == .home)

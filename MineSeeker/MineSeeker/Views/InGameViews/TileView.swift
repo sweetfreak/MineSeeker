@@ -48,6 +48,7 @@ struct TileView: View {
                         if tile.isMine {
                             tile.isMine.toggle()
                             print("this was a mine!")
+                            vm.mineCount -= 1
                             vm.recountSurroundingMines(gameTiles: vm.gameTiles)
                         }
                     }
@@ -57,7 +58,7 @@ struct TileView: View {
                         tile.isRevealed = true
                         tile.isFlagged = false
                         vm.adjacentReveal(tile: self.tile)
-                        vm.gameScore += tile.surroundingMineCount * 50
+                        vm.gameScore += tile.surroundingMineCount == 0 ? 10 : (tile.surroundingMineCount * 50)
                         
                         if tile.isMine {
                             vm.gameOver()
@@ -138,7 +139,7 @@ extension Rectangle {
 //    TileView(tile: $myTile, vm: FieldViewModel())
 //    TileView(tile: $mineTile, vm: FieldViewModel())
     
-    FieldView(vm:FieldViewModel())
+    FieldView(vm: FieldViewModel())
         .environmentObject({
             let mock = OrientationModel()
             mock.current = .landscapeLeft

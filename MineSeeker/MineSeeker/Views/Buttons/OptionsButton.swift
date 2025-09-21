@@ -21,8 +21,8 @@ struct OptionsButton: View {
                 .symbolRenderingMode(.multicolor)
                 .symbolEffect(.rotate)
         }
-        //.buttonStyle(.glassProminent)
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.glassProminent)
+        //.buttonStyle(.borderedProminent)
         .sensoryFeedback(.start, trigger: vm.gameState == .options)
 
     }

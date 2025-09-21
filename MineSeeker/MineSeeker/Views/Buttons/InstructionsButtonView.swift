@@ -18,8 +18,8 @@ struct InstructionsButtonView: View {
                 .symbolRenderingMode(.multicolor)
                 .symbolEffect(.bounce)
         }
-        //.buttonStyle(.glassProminent)
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.glassProminent)
+        //.buttonStyle(.borderedProminent)
         .sensoryFeedback(.impact(weight: .heavy), trigger: vm.gameState == .instructions)
     }
 }

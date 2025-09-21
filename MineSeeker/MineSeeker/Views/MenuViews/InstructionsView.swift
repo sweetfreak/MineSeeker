@@ -20,23 +20,20 @@ struct InstructionsView: View {
                 Text("How to play MineFinder")
                     .font(.largeTitle)
                     .padding(10)
-                
-                
-                HStack {
-                    VStack(alignment: .leading) {
+
+                    VStack(alignment: .center) {
                         Text("Objective")
                             .bold()
-                        HStack{
-                            Text("Find all the mines and mark each one with a flag.")
+                        
+                        HStack(alignment: .center) {
+                            Text("Find all the mines and\nmark each one with a flag.")
+                                .multilineTextAlignment(.center)
                         }
                     }
+                    .font(.title2)
+                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
                     Spacer()
-                }
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
-                .scrollDisabled(orientation.isLandscape ? false : true)
 
-                
-                
                 HStack {
                     VStack(alignment: .leading) {
                         Text("Directions")
@@ -51,7 +48,7 @@ struct InstructionsView: View {
                         Divider()
                         
                         HStack {
-                            Text("If you tap on a mine tile, it explodes.\n(Which is bad)")
+                            Text("If you tap on a mine tile, it explodes.\n(Which means you lose)")
                             Spacer()
                             TileView(tile: $demoTileBomb, vm: vm)
                                 .font(.title)
@@ -90,22 +87,23 @@ struct InstructionsView: View {
                         Divider()
                         VStack(alignment: .leading){
                             HStack {
-                                Text("Tap the check button if you think you've flagged all the mines. ")
+                                Text("Tap the hint button to find out where you might have an issue.")
                                 Spacer()
                                 Button {} label: {
-                                    Label("Check", systemImage: "checkmark.circle.fill")
-                                    
+                                    Label("Hint", systemImage: "lightbulb.fill")
+                                        .symbolRenderingMode(.multicolor)
                                         .symbolEffect(.bounce)
                                 }
-                                //.buttonStyle(.glassProminent)
-                                .buttonStyle(.borderedProminent)
+                                .buttonStyle(.glassProminent)
                             }
-                            Text("Incorrect flag placement will deduct 500 points")
+                            Text("But be careful: tapping on it will cost you points!")
                                 .font(.caption2)
                             
                         }
                         
                     }
+                    .padding()
+                    .border(Color(.secondarySystemBackground), width: 5)
                 }
                 Divider()
                 
@@ -113,13 +111,13 @@ struct InstructionsView: View {
                     Text("Points")
                         .bold()
                     
-                        Text("• 50+ points times number on the tapped tile")
+                        Text("• Tapped tiles earn 50 points times the number of mines surrounding it")
 
-                        Text("• 25+ points per additional tile revealed")
+                        Text("• Earn 25 points per additional tile revealed")
                     
-                        Text("• 500+ points + 200 per mine at end of game.")
+                        Text("• At end of game, earn 500 points + 200/mine")
                         
-                        Text("• Lose points when checking for mines too early")
+                        Text("• Lose points when tapping the \"Hint\" Button")
                 }
                 .padding()
                 .border(Color(.secondarySystemBackground), width: 5)

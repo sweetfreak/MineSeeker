@@ -71,6 +71,14 @@ final class FieldViewModel {
     var isFirstTile = true
     var checkedTooSoonText: Text = Text("")
     var minusPointsText = ""
+    var usedCheckButton = false
+   
+    //Scoring (and Saving)
+    var newHighScore = false
+    //
+    var gameScore: Int = 0
+    var mineCount: Int = 0
+    var flagCount: Int = 0
     
     //HAPTICS
     var engine: CHHapticEngine?
@@ -97,11 +105,7 @@ final class FieldViewModel {
     }
     
    
-    //Scoring (and Saving)
-    var newHighScore = false
-    //
-    var gameScore: Int = 0
-    var mineCount: Int = 0
+ 
     
 
     init() {
@@ -227,7 +231,7 @@ final class FieldViewModel {
         rowCount = getRowCount(size: gridSize, isLandscape: isLandscape)
         columnCount = getColumnCount(size: gridSize, isLandscape: isLandscape)
         mineCount = 0
-        
+        flagCount = 0
         gameScore = 0
         gameStarted = false
         isFirstTile = true
@@ -240,8 +244,12 @@ final class FieldViewModel {
         
         newHighScore = false
         gameTiles = createTiles()
+        
         gameStarted = true
         gameState = .playing
+        
+        gridRotation = isLandscape ? .landscapeRight : .portraitUp
+
     }
     
     
@@ -258,7 +266,7 @@ final class FieldViewModel {
         }
         
         //if no mines found, adds one
-        if mineCount == 0, !tiles.isEmpty {
+        if mineCount == 0 && !tiles.isEmpty {
             if let randomIndex = tiles.indices.randomElement() {
                 tiles[randomIndex].isMine = true
                 print("added a mine to \(tiles[randomIndex].row), + \(tiles[randomIndex].column) ")
@@ -382,7 +390,7 @@ final class FieldViewModel {
                     if !self.gameTiles[index].isRevealed {
                         self.gameTiles[index].isRevealed = true
                         self.gameTiles[index].isFlagged = false
-                        gameScore += gameTiles[index].surroundingMineCount * 2
+                        gameScore += (gameTiles[index].surroundingMineCount * 25)
                     } else {
                         continue
                     }
@@ -400,6 +408,28 @@ final class FieldViewModel {
     func checkForMines() {
         var mineTiles: [Tile] = []
         var flaggedTiles: [Tile] = []
+
+        for myTile in gameTiles {
+            if myTile.isMine {
+                mineTiles.append(myTile)
+            }
+            if myTile.isFlagged {
+                flaggedTiles.append(myTile)
+            }
+        }
+        //if mineTiles is same as flaggedTiles, you won
+        if mineTiles == flaggedTiles {
+            gameScore += 500 + (200 * mineTiles.count)
+            mineCount = mineTiles.count
+            gameState = .won
+            gameIsOver = true
+            
+        }
+    }
+    
+    func hintButton() {
+        var mineTiles: [Tile] = []
+        var flaggedTiles: [Tile] = []
         var correctTiles: Int = 0
         //get tiles
         for myTile in gameTiles {
@@ -412,47 +442,29 @@ final class FieldViewModel {
             if myTile.isMine && myTile.isFlagged {
                 correctTiles += 1
             }
-            
         }
         
-        //if mineTiles == flaggedTiles {
-        if mineTiles == flaggedTiles {
-            gameScore += 500 + (200 * mineTiles.count)
-            mineCount = mineTiles.count
-            gameState = .won
-            gameIsOver = true
+        if flaggedTiles.count > mineTiles.count {
+            checkedTooSoonText = Text("There's ^[\(flaggedTiles.count - mineTiles.count) extra flag](inflect: true) on the field")
+            minusPointsText = "Minus 100 points for every extra flag"
+            gameScore -= (100 * (flaggedTiles.count - mineTiles.count))
+            
+        } else if flaggedTiles.count > correctTiles {
+            checkedTooSoonText = Text("There's ^[\(flaggedTiles.count - correctTiles) misplaced flag](inflect:true) on the field")
+            minusPointsText = "Minus 100 points for every mislabeled flag"
+            gameScore -= (100 * (flaggedTiles.count - correctTiles))
+            
+        } else if mineTiles.count > correctTiles {
+            checkedTooSoonText = Text("There's ^[\(mineTiles.count) mine](inflect: true) still unflagged")
+            minusPointsText = "Minus 100 points for every mislabeled flag"
+            gameScore -= (100 * (mineTiles.count - correctTiles))
         } else {
-            
-            
-            //MAYBE CALCULATE EXTRA FLAGS AND MISLABELED FLAGS TOGEHTR?@?@
-            
-            
-            if flaggedTiles.count > mineTiles.count {
-                checkedTooSoonText = Text("There's ^[\(flaggedTiles.count - mineTiles.count) extra flag](inflect: true) on the field")
-                minusPointsText = "Minus 100 points for every extra flag"
-                gameScore -= (100 * (flaggedTiles.count - mineTiles.count))
-            } else if flaggedTiles.count > correctTiles {
-                checkedTooSoonText = Text("There's ^[\(flaggedTiles.count - correctTiles) misplaced flag](inflect:true) on the field")
-                minusPointsText = "Minus 100 points for every mislabeled flag"
-                gameScore -= (100 * (flaggedTiles.count - correctTiles))
-            } else if mineTiles.count > correctTiles {
-                checkedTooSoonText = Text("There's ^[\(mineTiles.count) mine](inflect: true) still unflagged")
-                minusPointsText = "Minus 100 points for every mislabeled flag"
-                gameScore -= (100 * (mineTiles.count - correctTiles))
-            } else {
-                checkedTooSoonText = Text("Nice try, but something about this isn't correct (and it could be a bug!)")
-                minusPointsText = "Minus 200 points"
-                gameScore -= 200
-            }
-            showGameStatusAlert = true
-            playSFX("buttondown1")
-            
-            
+            checkedTooSoonText = Text("Nice try, but something about this isn't correct (and it could be a bug!)")
+            minusPointsText = "Minus 200 points"
+            gameScore -= 200
         }
-        
-        
-        
-        
+        showGameStatusAlert = true
+        playSFX("buttondown1")
     }
     
     func getRowCount(size: GridSize, isLandscape: Bool) -> Int {
@@ -509,8 +521,15 @@ final class FieldViewModel {
         switch textToDrop {
         case "Flag":
             gameTiles[index].isFlagged = true
+            flagCount += 1
+            if mineCount == flagCount {
+                checkForMines()
+            }
         case "Shovel":
             gameTiles[index].isFlagged = false
+            flagCount -= 1
+            checkForMines()
+
         default:
             break
         }

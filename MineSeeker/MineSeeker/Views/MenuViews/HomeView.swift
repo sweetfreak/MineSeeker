@@ -28,6 +28,7 @@ struct HomeView: View {
             Text("MineFind")
                 .font(.largeTitle)
                 .bold()
+                
             if orientation.isLandscape {
                 DraggableItemView(vm: vm, imageToDrag: "Flag")
             }
