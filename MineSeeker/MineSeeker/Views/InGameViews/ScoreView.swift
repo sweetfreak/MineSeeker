@@ -15,19 +15,17 @@ struct ScoreView: View {
     var body: some View {
         
         HStack {
-            Text("SCORE:")
+            Text(vm.gameState == .lost ? "GAME OVER!" : "SCORE:")
                 .bold()
             
-            
             //Text("100000")
-            Text("\(vm.gameScore)")
-                
+            Text(vm.gameState == .lost ? "" : "\(vm.gameScore)")
                 .foregroundStyle(vm.newHighScore ? .green : .primary)
             
         }
         .padding(.vertical, 5)
         .padding(.horizontal, 15)
-        .background(.blue)
+        .background(vm.gameState == .lost ? .red : .blue)
         .cornerRadius(20)
         .font(orientation.isLandscape ? Font.title : Font.largeTitle)
     }

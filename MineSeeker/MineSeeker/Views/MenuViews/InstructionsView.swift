@@ -122,7 +122,6 @@ struct InstructionsView: View {
                 .padding()
                 .border(Color(.secondarySystemBackground), width: 5)
                 
-                Divider()
                 
                 
                 if vm.gameStarted {

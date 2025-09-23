@@ -11,11 +11,8 @@ import SwiftUI
 struct TileView: View {
     
     @Environment(\.verticalSizeClass) var verticalSizeClass
-    //var isLandscape: Bool { verticalSizeClass == .compact }
     
     @Binding var tile: Tile
-    //@State private var droppedText: String = ""
-    //@State private var isDropTargeted: Bool = false
     @State var vm: FieldViewModel
     @State var gameState: GameState = .playing
     var imageCache: ImageCache = ImageCache()
@@ -43,27 +40,11 @@ struct TileView: View {
                     
             
                 .onTapGesture {
-                    if vm.isFirstTile {
-                        vm.isFirstTile = false
-                        if tile.isMine {
-                            tile.isMine.toggle()
-                            print("this was a mine!")
-                            vm.mineCount -= 1
-                            vm.recountSurroundingMines(gameTiles: vm.gameTiles)
-                        }
-                    }
+                    vm.firstTileRule(at: tile.index)
                     
                     
-                    if !tile.isRevealed {
-                        tile.isRevealed = true
-                        tile.isFlagged = false
-                        vm.adjacentReveal(tile: self.tile)
-                        vm.gameScore += tile.surroundingMineCount == 0 ? 10 : (tile.surroundingMineCount * 50)
-                        
-                        if tile.isMine {
-                            vm.gameOver()
-                        }
-                    }
+                    vm.handleTileReveal(at: tile.index)
+                    
                 }
             
             

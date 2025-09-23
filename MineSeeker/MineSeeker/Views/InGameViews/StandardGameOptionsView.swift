@@ -25,24 +25,65 @@ struct StandardGameOptionsView: View {
                 DraggableItemView(vm: vm, imageToDrag: "Shovel", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
                 CheckButtonView(vm: vm)
                 if orientation.isLandscape {
-                    InstructionsButtonView(vm: vm)
-                        .font(.caption.bold())
+                    HStack {
+                        if vm.difficultyLabel(for: vm.chanceOfMine) == "Beginner" {
+                            InstructionsButtonView(vm: vm)
+    
+                        }
+                        HomeButtonView(vm: vm)
+                    }
+                    .font(.caption.bold())
                 }
             }
             if !orientation.isLandscape {
-                VStack {
-                    InstructionsButtonView(vm: vm)
+                HStack {
+                    if vm.difficultyLabel(for: vm.chanceOfMine) == "Beginner" {
+                        InstructionsButtonView(vm: vm)
+                    }
+                    HomeButtonView(vm: vm)
+    
                 }
                 .font(.caption.bold())
             }
-            
-                
+    
+    
         }
-
-            
-        
+    
+    
+    
     }
+    
+
 }
 #Preview {
     StandardGameOptionsView(vm: FieldViewModel())
 }
+
+//var body: some View {
+//    VStack(alignment: .center, spacing: 1) {
+//        HStack {
+//            if orientation.isLandscape {
+//                ScoreView(vm: vm)
+//                    .font(Font.caption2)
+//            }
+//            DraggableItemView(vm: vm, imageToDrag: "Flag", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
+//            DraggableItemView(vm: vm, imageToDrag: "Shovel", onChanged: vm.itemMoved, onEnded: vm.itemDropped)
+//            CheckButtonView(vm: vm)
+//            if orientation.isLandscape {
+//                InstructionsButtonView(vm: vm)
+//                    .font(.caption.bold())
+//            }
+//        }
+//        if !orientation.isLandscape {
+//            VStack {
+//                InstructionsButtonView(vm: vm)
+//            }
+//            .font(.caption.bold())
+//        }
+//        
+//            
+//    }
+//
+//        
+//    
+//}

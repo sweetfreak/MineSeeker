@@ -8,6 +8,7 @@
 import SwiftUI
 import AVFoundation
 import CoreHaptics
+import GameKit
 
 //the string/codable/caseIterable are so it cane be stored in the high score model w/ swiftdata
 enum GridSize: String, Codable, CaseIterable {
@@ -48,13 +49,13 @@ final class FieldViewModel {
     var hsvm = HighScoresViewModel()
     
     //MineField SetUp
-    var gridSize = GridSize.big
+    var gridSize = GridSize.med
     var rowCount: Int = 5
     var columnCount: Int = 5
     var gameTiles: [Tile] = []
     
     var lastWasMine: Bool = false
-    var chanceOfMine: Int = 15
+    var chanceOfMine: Int = 14
     
     //Tile Setup (Draggable)
     var iPhoneWidth = 40.0
@@ -224,7 +225,11 @@ final class FieldViewModel {
                 newTiles[newIndex] = newTile
             }
         }
-        gameTiles = newTiles
+        //gameTiles = newTiles
+         for i in newTiles.indices {
+             newTiles[i].index = i
+         }
+         gameTiles = newTiles
     }
     
     
@@ -282,6 +287,7 @@ final class FieldViewModel {
         for i in tiles.indices {
             //for each tile...
             let tile = tiles[i]
+            tiles[i].index = i
             //collect it's neighbors...
             let neighbors = neighborCoordinates(tile: tile)
             //take each neighbor...
@@ -368,9 +374,9 @@ final class FieldViewModel {
             gameTiles[i].isRevealed = true
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.showGameStatusAlert = true
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//            self.showGameStatusAlert = true
+//        }
         
     }
     
@@ -429,6 +435,38 @@ final class FieldViewModel {
         }
     }
     
+    func firstTileRule(at index: Int) {
+        if isFirstTile {
+            isFirstTile = false
+            if gameTiles[index].isMine {
+                gameTiles[index].isMine.toggle()
+                print("this was a mine!")
+                mineCount -= 1
+                if mineCount == 0  {
+                    if let randomIndex = gameTiles.indices.randomElement() {
+                        gameTiles[randomIndex].isMine = true
+                        print("added a mine to \(gameTiles[randomIndex].row), + \(gameTiles[randomIndex].column) ")
+                        mineCount += 1
+                    }
+                }
+                recountSurroundingMines(gameTiles: gameTiles)
+            }
+        }
+    }
+    
+    func handleTileReveal(at index: Int) {
+        if !gameTiles[index].isRevealed {
+            gameTiles[index].isRevealed = true
+            gameTiles[index].isFlagged = false
+            adjacentReveal(tile: gameTiles[index])
+            gameScore += gameTiles[index].surroundingMineCount == 0 ? 10 : (gameTiles[index].surroundingMineCount * 50)
+            
+            if gameTiles[index].isMine {
+                gameOver()
+            }
+        }
+    }
+    
     func hintButton() {
         var mineTiles: [Tile] = []
         var flaggedTiles: [Tile] = []
@@ -461,9 +499,9 @@ final class FieldViewModel {
             minusPointsText = "Minus 10 points for every unmarked bomb"
             gameScore -= (10 * (mineTiles.count - correctTiles))
         } else {
-            checkedTooSoonText = Text("Nice try, but something about this isn't correct (and it could be a bug!)")
-            minusPointsText = "Minus 200 points"
-            gameScore -= 200
+            checkedTooSoonText = Text("You may have found a bug! Try removing a flag and then placing it again.")
+            minusPointsText = "Earned 1 point for finding a bug!"
+            gameScore += 1
         }
         hintsUsed += 1
         showGameStatusAlert = true
@@ -475,7 +513,7 @@ final class FieldViewModel {
         case .small:
             return 4
         case .med:
-            return 7
+            return isLandscape ? 7 : 9
         case .big:
             return isLandscape ? 8 : 14
         case .huge:
@@ -488,13 +526,14 @@ final class FieldViewModel {
         case .small:
             return 4
         case .med:
-            return 7
+            return isLandscape ? 9 : 7
         case .big:
             return isLandscape ? 14 : 8
         case .huge:
             return isLandscape ? 16 : 12
         }
     }
+    
     
     
     func itemMoved(location: CGPoint, textToDrag: String) -> DragState {
@@ -525,9 +564,8 @@ final class FieldViewModel {
         case "Flag":
             gameTiles[index].isFlagged = true
             flagCount += 1
-            if mineCount == flagCount {
-                checkForMines()
-            }
+            checkForMines()
+            
         case "Shovel":
             gameTiles[index].isFlagged = false
             flagCount -= 1
@@ -557,6 +595,43 @@ final class FieldViewModel {
             print("There was an error creating the engine \(error.localizedDescription)")
         }
     }
+    
+    
+    //ONLINE
+    
+    func authenticateUser() {
+        GKLocalPlayer.local.authenticateHandler = { _, error in
+                guard error == nil else {
+                    print(error?.localizedDescription ?? "")
+                    return
+                }
+            }
+    }
+    
+    //me.jesse.sheehan.MineFind.classicboard
+    
+    
+    //LABELS
+    
+    func sizeLabel(for size: GridSize) -> String {
+        switch size {
+        case .small: return "Small"
+        case .med: return "Medium"
+        case .big: return "Big"
+        case .huge: return "Huge"
+        }
+    }
+    
+     func difficultyLabel(for chance: Int) -> String {
+        switch chance {
+        case 5: return "Beginner"
+        case 14: return "Normal"
+        case 25: return "Advanced"
+        //case 40: return "Impossible"
+        default: return "Normal"
+        }
+    }
+    
 }
 
 extension UIDevice {

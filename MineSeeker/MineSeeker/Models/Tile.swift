@@ -16,7 +16,7 @@ struct Tile: Identifiable, Equatable {
     var surroundingMineCount: Int = 0
     var isFlagged = false
     var gameOver = false
-    
+    var index = 0
     var tileText: String = ""
     
     var coordinates: (Int, Int) {

@@ -18,7 +18,6 @@ struct ContentView: View {
                 
                 if vm.gameState == .home || vm.gameState == .reloadingGame {
                     HomeView(vm: vm)
-                        .padding(.top, 20)
                         .transition(.asymmetric(
                             insertion: .opacity.animation(.smooth),
                             removal: .offset(x: 1000))
@@ -49,6 +48,9 @@ struct ContentView: View {
                         )
                 }
             }
+            .onAppear {
+                vm.authenticateUser()
+            }
             .onChange(of: orientation.current) {_, newOrientation in
                 //print("change orientation")
                 vm.handleOrientationChange(to: newOrientation)
@@ -62,4 +64,9 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environmentObject({
+            let mock = OrientationModel()
+            mock.current = .portrait
+            return mock
+        }())
 }

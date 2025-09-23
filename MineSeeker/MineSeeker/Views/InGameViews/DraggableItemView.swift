@@ -48,6 +48,7 @@ struct DraggableItemView: View {
                 .fill(Color.secondary)
                 .frame(width: orientation.isLandscape ? 55 : 70, height: orientation.isLandscape ? 55 : 70)
                 .cornerRadius(20)
+                .padding(0)
                 
                 
             
@@ -58,7 +59,7 @@ struct DraggableItemView: View {
                 .zIndex(dragAmount == .zero ? 0 : 1)
                 .shadow(color: shadowColor,
                         radius: dragAmount == .zero ? 0 : 10)
-                //.
+                .padding(0)
                 .gesture(
                     DragGesture(coordinateSpace: .global)
                         .onChanged {

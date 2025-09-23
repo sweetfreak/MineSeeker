@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @Model
-class HighScore {
+class HighScore: Comparable {
     var id: UUID
     var name: String
     var score: Int
@@ -18,6 +18,8 @@ class HighScore {
     var hintsUsed: Int = 0
     var duration: TimeInterval? = nil
     var mineCount: Int = 0
+    var difficulty: Int = 15
+    var wonGame: Bool = true
     
 
     
@@ -27,7 +29,7 @@ class HighScore {
         }
     
     
-    init(id: UUID, name: String, score: Int, date: Date, gridSize: GridSize, hintsUsed: Int, duration: TimeInterval?, mineCount: Int) {
+    init(id: UUID, name: String, score: Int, date: Date, gridSize: GridSize, hintsUsed: Int, duration: TimeInterval?, mineCount: Int, difficulty: Int, wonGame: Bool) {
         self.id = id
         self.name = name
         self.score = score
@@ -36,5 +38,7 @@ class HighScore {
         self.hintsUsed = hintsUsed
         self.duration = duration
         self.mineCount = mineCount
+        self.difficulty = difficulty
+        self.wonGame = wonGame
     }
 }

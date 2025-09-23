@@ -19,18 +19,6 @@ struct CheckButtonView: View {
         Button {
             if vm.gameState == .playing {
                 vm.hintButton()
-//                if vm.gameState == .won {
-//                    
-//                    vm.hsvm.fetchHighScores(from: modelContext)
-//                    
-//                    print("lowest Score: \(vm.hsvm.getLowestHighScore(using: modelContext))")
-//                    
-//                    if vm.gameScore > vm.hsvm.getLowestHighScore(using: modelContext) || vm.hsvm.highScores.count < 10  {
-//                        vm.newHighScore = true
-//                    } else {
-//                        vm.showGameStatusAlert = true
-//                    }
-//                }
                 
             }
         } label: {

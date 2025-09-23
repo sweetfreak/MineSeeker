@@ -1,0 +1,33 @@
+{
+  "meta" : {
+    "version" : "2024-11-15"
+  },
+  "resources" : {
+    "leaderboardLocalizations" : {
+      "me.jesse.sheehan.MineFind.classicboard" : [
+        {
+          "description" : "Play MineFind and your best scores will be added to the leaderboard!",
+          "formatterOverride" : "INTEGER",
+          "formatterSuffix" : "points",
+          "formatterSuffixSingular" : "point",
+          "locale" : "en-US",
+          "localID" : "me.jesse.sheehan.MineFind.classicboard-en-US",
+          "name" : "MineFind Leaderboard"
+        }
+      ]
+    },
+    "leaderboards" : [
+      {
+        "archived" : false,
+        "defaultFormatter" : "INTEGER",
+        "referenceName" : "classicGlobal",
+        "scoreRangeEnd" : null,
+        "scoreRangeStart" : null,
+        "scoreSortType" : "DESC",
+        "submissionType" : "BEST_SCORE",
+        "vendorIdentifier" : "me.jesse.sheehan.MineFind.classicboard",
+        "visibility" : "SHOW_FOR_ALL"
+      }
+    ]
+  }
+}

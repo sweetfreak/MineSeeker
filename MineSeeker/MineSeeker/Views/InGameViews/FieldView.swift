@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import Combine
+import GameKit
 //import Vortex
 
 struct FieldView: View {
@@ -110,8 +111,8 @@ struct FieldView: View {
                 
                 if vm.gameState == .won {
                     Alert(title: Text("You Won"), message: Text("You scored \(vm.gameScore) points!"), dismissButton: .default(Text("OK")))
-                } else if vm.gameState == .lost {
-                    Alert(title: Text("You Lost"), message: Text("Better luck next time!"), dismissButton: .default(Text("OK")))
+//                } else if vm.gameState == .lost {
+//                    Alert(title: Text("You Lost"), message: Text("Better luck next time!"), dismissButton: .default(Text("OK")))
                 } else  {
                     Alert(title: vm.checkedTooSoonText, message: Text(vm.minusPointsText), dismissButton: .default(Text("OK")))
                 }
@@ -182,17 +183,41 @@ struct FieldView: View {
             gridSize: vm.gridSize,
             hintsUsed: vm.hintsUsed,
             duration: nil,
-            mineCount: vm.mineCount
+            mineCount: vm.mineCount,
+            difficulty: vm.chanceOfMine,
+            wonGame: true
         )
         modelContext.insert(newestHighScore)
-        if vm.hsvm.highScores.count > 10 {
+        if vm.hsvm.highScores.count > 20 {
             vm.hsvm.fetchHighScores(from: modelContext)
-            let scoresToDelete = vm.hsvm.highScores.suffix(from: 10)
+            let scoresToDelete = vm.hsvm.highScores.suffix(from: 20)
             for score in scoresToDelete {
                 modelContext.delete(score)
             }
         }
+        
+        do {
+            try modelContext.save()
+            print("High score saved")
+        } catch {
+            print("Failed to save high score: \(error)")
+        }
     }
+    
+    
+//    func submitClassicScore() async {
+//        Task{
+//            try await GKLeaderboard.submitScore(
+//                vm.gameScore,
+//                context: 0,
+//                player: GKLocalPlayer.local,
+//                leaderboardIDs: ["me.jesse.sheehan.MineFind.classicboard"]
+//            )
+//        }
+//        //calculateAchievements()
+//    }
+    
+    
     
     func limitText(_ upper: Int) {
             if playerName.count > upper {
