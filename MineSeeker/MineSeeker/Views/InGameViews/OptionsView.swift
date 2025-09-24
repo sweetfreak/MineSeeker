@@ -53,6 +53,7 @@ struct OptionsView: View {
         }
         Spacer()
         HomeButtonView(vm: vm)
+        Text("version\(vm.currentVersion)")
         Spacer()
     }
 }

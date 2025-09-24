@@ -88,6 +88,8 @@ final class FieldViewModel {
     //rotation stuff?
     private var gridRotation: GridRotation = .portraitUp
     
+    //StoreKit Stuff
+    var currentVersion = "1.0.1" 
     
     //SOUNDS
     var musicFile: AVAudioPlayer?
@@ -106,7 +108,7 @@ final class FieldViewModel {
         }
     }
     
-   
+
  
     
 
@@ -430,8 +432,7 @@ final class FieldViewModel {
             gameScore += 500 + (200 * mineTiles.count)
             mineCount = mineTiles.count
             gameState = .won
-            gameIsOver = true
-            
+            gameIsOver = true            
         }
     }
     
@@ -495,8 +496,8 @@ final class FieldViewModel {
             gameScore -= (25 * (flaggedTiles.count - correctTiles))
             
         } else if mineTiles.count > correctTiles {
-            checkedTooSoonText = Text("There's ^[\(mineTiles.count) mine](inflect: true) still unflagged")
-            minusPointsText = "Minus 10 points for every unmarked bomb"
+            checkedTooSoonText = Text("There's ^[\(mineTiles.count - correctTiles) mine](inflect: true) still unflagged")
+            minusPointsText = "Minus 10 points for every unflagged mine"
             gameScore -= (10 * (mineTiles.count - correctTiles))
         } else {
             checkedTooSoonText = Text("You may have found a bug! Try removing a flag and then placing it again.")
@@ -631,6 +632,7 @@ final class FieldViewModel {
         default: return "Normal"
         }
     }
+
     
 }
 

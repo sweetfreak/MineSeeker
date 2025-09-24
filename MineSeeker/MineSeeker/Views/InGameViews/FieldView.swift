@@ -9,14 +9,20 @@ import SwiftUI
 import SwiftData
 import Combine
 import GameKit
+
 //import Vortex
 
 struct FieldView: View {
     @Environment(\.modelContext) var modelContext
     @EnvironmentObject var orientation: OrientationModel
+
+
     // @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
     @AppStorage("playerName") private var playerName: String = ""
+    @AppStorage("gamesWon") var gamesWon: Int = 0
+    @AppStorage("gamesLost") var gamesLost: Int = 0
+
     
     @State var explosion = false
     
@@ -83,10 +89,18 @@ struct FieldView: View {
             }
             .animation(.smooth, value: vm.gameState)
             
-            if vm.gameState == .lost {ExplosionView(vm: vm)}
+            if vm.gameState == .lost {
+                ExplosionView(vm: vm)
+            }
+            onAppear {
+                gamesLost += 1
+                //print("\(gamesLost) games lost")
+
+            }
             if vm.gameState == .won {
                 CelebrationView(vm: vm)
                     .onAppear {
+                        gamesWon += 1
                         checkForHighScore()
                     }
             }
@@ -202,6 +216,7 @@ struct FieldView: View {
         } catch {
             print("Failed to save high score: \(error)")
         }
+        
     }
     
     
