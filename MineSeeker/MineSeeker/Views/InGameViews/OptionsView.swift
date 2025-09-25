@@ -54,9 +54,15 @@ struct OptionsView: View {
         Spacer()
         HomeButtonView(vm: vm)
         Spacer()
+        Text("v\(vm.currentVersion)")
     }
 }
 
 #Preview {
     OptionsView(vm: FieldViewModel())
+        .environmentObject({
+            let mock = OrientationModel()
+            mock.current = .portrait
+            return mock
+        }())
 }

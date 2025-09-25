@@ -39,6 +39,10 @@ enum GridRotation: Int {
 
 @Observable
 final class FieldViewModel {
+    //var currentVersion = "1.0.1"
+    var currentVersion: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "N/A"
+    }
     
     //@Environment(\.verticalSizeClass) var verticalSizeClass
    
@@ -495,8 +499,8 @@ final class FieldViewModel {
             gameScore -= (25 * (flaggedTiles.count - correctTiles))
             
         } else if mineTiles.count > correctTiles {
-            checkedTooSoonText = Text("There's ^[\(mineTiles.count) mine](inflect: true) still unflagged")
-            minusPointsText = "Minus 10 points for every unmarked bomb"
+            checkedTooSoonText = Text("There's ^[\(mineTiles.count - correctTiles) mine](inflect: true) still unflagged")
+            minusPointsText = "Minus 10 points for every unflagged mine"
             gameScore -= (10 * (mineTiles.count - correctTiles))
         } else {
             checkedTooSoonText = Text("You may have found a bug! Try removing a flag and then placing it again.")

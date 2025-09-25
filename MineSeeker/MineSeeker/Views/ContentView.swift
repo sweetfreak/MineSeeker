@@ -7,9 +7,14 @@
 
 import SwiftUI
 import AVFoundation
+import StoreKit
 
 struct ContentView: View {
     @EnvironmentObject var orientation: OrientationModel
+    @Environment(\.requestReview) var requestReview
+
+    @AppStorage("gamesWon") var gamesWon: Int = 0
+    @AppStorage("lastVersionPromptedForReview") var lastVersionPromptedForReview: String = ""
     
     @State var vm = FieldViewModel()
     
@@ -54,8 +59,18 @@ struct ContentView: View {
             .onChange(of: orientation.current) {_, newOrientation in
                 //print("change orientation")
                 vm.handleOrientationChange(to: newOrientation)
-
             }
+            .onChange(of: gamesWon) {
+                print("\(gamesWon) gamewon")
+                print("\(lastVersionPromptedForReview) last version")
+                print("\(vm.currentVersion) current version")
+                if (gamesWon == 5 || gamesWon.isMultiple(of: 20)) && lastVersionPromptedForReview != vm.currentVersion {
+                    print ("\(gamesWon) games won")
+                    requestReview()
+                    lastVersionPromptedForReview = vm.currentVersion
+                    
+                }
+        }
             .animation(.smooth, value: vm.gameState)
         
     }
