@@ -1,6 +1,7 @@
 https://github.com/user-attachments/assets/9550578c-3850-4f13-b9f3-2002b12fe3d4
 
 # MineFind Puzzle Game
+[Download Now!](https://apps.apple.com/us/app/minefind-puzzle-game/id6752503126)
 
 MineFind is an SwiftUI-inspired reimagining of the classic mine-finding puzzle game. It was created in 
 
